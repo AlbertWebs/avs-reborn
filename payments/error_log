@@ -1,0 +1,2 @@
+[03-Nov-2021 19:54:37 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/amaniveh/public_html/payments/processTransactions.class.php on line 67
+[21-Oct-2022 11:59:31 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/amaniveh/public_html/payments/processTransactions.class.php on line 67
