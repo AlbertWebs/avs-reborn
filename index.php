@@ -110,7 +110,7 @@ visibility:hidden;
     </style>
 </head>
 <body>
-  <h1 style="display:none"> We offer car radios, midrange speakers, tweeters, subwoofers, amplifiers, Android car stereos</h1>
+  <h1 style="display:none"> We offer car radios, midrange speakers, tweeters, subwoofers, amplifiers, Android car stereos, Amani Vehicle Sounds</h1>
 <!--Div where the WhatsApp will be rendered-->
 <div style="z-index:100000" id="WAButton"></div>
     <div class="container">
