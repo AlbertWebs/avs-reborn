@@ -36,7 +36,7 @@
     <meta property="product:brand" content="{{$tProduct->brand}}" />
     <meta property="product:availability" content="in stock" />
     <meta property="product:condition" content="new" />
-    <meta property="product:price:amount" content="KES {{$tProduct->price}}.00" />
+    <meta property="product:price:amount" content="{{$tProduct->price}}.00" />
     <meta property="product:price:currency" content="KES" />
     <meta property="product:retailer_item_id" content="{{$tProduct->id}}" />
 
