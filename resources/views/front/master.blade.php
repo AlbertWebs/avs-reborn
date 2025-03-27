@@ -62,7 +62,7 @@
 </head>
 
 <body>
-    <h1 style="display:none">Get the best Car Android Radios, Car Audio Systems, Car Speakers, Car Sound Systems, and Car Stereos in Nairobi at unbeatable prices with Amani Vehicle Sounds. We offer high-quality car entertainment systems designed for superior sound clarity, seamless connectivity, and an immersive in-car experience. Whether you're upgrading your audio system or looking for professional installation, we have the perfect solution for you. Visit us today for the best car audio deals in Nairobi!</h1>
+    <h1 style="display:none">Get the best Car Android Radios, Car Audio Systems, Car Speakers, Car Sound Systems, and Car Stereos in Nairobi at unbeatable prices with Amani Vehicle Sounds. </h1>
 <!--Div where the WhatsApp will be rendered-->
 <div style="z-index:100000" id="WAButton"></div>
 {{--  --}}
