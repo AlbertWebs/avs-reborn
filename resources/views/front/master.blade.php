@@ -62,7 +62,7 @@
 </head>
 
 <body>
-    <h1 style="display:none">Get the best Car Android Radios, Car Audio Systems, Car Speakers, Car Sound Systems, and Car Stereos in Nairobi at unbeatable prices with Amani Vehicle Sounds. </h1>
+    <h1 style="display:none">Get the best Car Android Radios, Car Audio Systems, Car Speakers, Car Sound Systems, and Car Stereos in Nairobi. </h1>
 <!--Div where the WhatsApp will be rendered-->
 <div style="z-index:100000" id="WAButton"></div>
 {{--  --}}
