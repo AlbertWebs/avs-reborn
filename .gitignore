@@ -7,7 +7,7 @@
 /storage/pail
 /public/uploads/*
 /public/uploads
-/vendor
+# /vendor
 .env
 .env.backup
 .env.production
