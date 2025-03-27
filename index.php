@@ -115,7 +115,7 @@ visibility:hidden;
 <div style="z-index:100000" id="WAButton"></div>
     <div class="container">
         <img class="logo" src="https://amanivehiclesounds.co.ke/uploads/logo/amaniCropped.png" alt="Amani Vehicle Sounds Logo">
-        <h1>Weâ€™ll Be Back Soon!</h1>
+        <h1>We'll Be Back Soon!</h1>
         <p>Our website is currently undergoing maintenance. We are working hard to improve your experience.</p>
         <p>For inquiries, call us at <strong>0794301190</strong> or <strong>0755940308</strong></p>
         <p>Email: <a href="mailto:info@amanivehiclesounds.co.ke" style="color: #66139B;">info@amanivehiclesounds.co.ke</a></p>
