@@ -14,7 +14,7 @@ class UsersExport implements FromCollection
     */
     public function collection()
     {
-        return ProExcel::all();        
+        return ProExcel::all();
     }
 }
 

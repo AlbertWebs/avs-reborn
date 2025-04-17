@@ -127,6 +127,13 @@ Route::get('export', [DemoController::class, 'export'])->name('exporting');
 Route::get('importExportView', [DemoController::class, 'importExportView']);
 Route::get('import', [DemoController::class, 'import']);
 
+Route::get('export', [DemoController::class, 'export'])->name('exporting');
+Route::get('importExportView', [DemoController::class, 'importExportView']);
+Route::get('import', [DemoController::class, 'import']);
+Route::get('export-products', [DemoController::class, 'export_products'])->name('exporting-products');
+Route::get('change-links', [DemoController::class, 'create_image_link'])->name('create_image_link');
+
+
 Route::post('/secure-login', [App\Http\Controllers\HomeController::class, 'handleLogin']);
 
 Route::get('/sub',[App\Http\Controllers\HomeController::class, 'sub'])->name('sub');
@@ -634,7 +641,6 @@ Route::get('sitemap', function() {
 	// show your sitemap (options: 'xml' (default), 'html', 'txt', 'ror-rss', 'ror-rdf')
 	return $sitemap->render('xml');
 });
-
 
 
 
