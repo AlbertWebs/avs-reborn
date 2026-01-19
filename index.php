@@ -1,444 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html style="height:100%">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Meta Title -->
-    <title>Amani Vehicle Sounds | Best Car Audio Systems in Nairobi</title>
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Meta Description -->
-    <meta name="description" content="Upgrade your car audio with Amani Vehicle Sounds in Nairobi. We offer car radios, midrange speakers, tweeters, subwoofers, amplifiers, Android car stereos, and more. Visit us in Ngara, Parkroad Towers, 3rd Floor, Shop 3.08. Call ðŸ“ž 0794301190 / 0755940308.">
+<meta name="author" content="Designekta Studios">
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="rating" content="General">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#66139B">
 
-    <!-- Meta Keywords -->
-    <meta name="keywords" content="car radio, car speakers, car subwoofers, car amplifiers, car tweeters, Android car stereo, car sound systems, Nairobi car audio shop, best car speakers in Kenya, car amplifiers in Nairobi, car audio installation, midrange car speakers, Amani Vehicle Sounds">
+<title>Amani Vehicle Sounds | Car Audio Systems & Installation in Nairobi</title>
+<meta name="description" content="Amani Vehicle Sounds offers premium car audio systems, speakers, subwoofers, amplifiers, Android head units, and expert car audio installation in Nairobi, Kenya. Affordable pricing & professional service.">
+<meta name="keywords" content="Car Audio Nairobi, Car Sound Systems Kenya, Car Audio Installation Nairobi, Car Speakers, Subwoofers Kenya, Amplifiers, Android Car Stereo, Vehicle Entertainment Systems, Amani Vehicle Sounds">
+<link rel="canonical" href="https://amanivehiclesounds.com/">
 
-    <!-- Open Graph Tags (for social media sharing) -->
-    <meta property="og:title" content="Amani Vehicle Sounds | Best Car Audio Systems in Nairobi">
-    <meta property="og:description" content="Looking for the best car audio systems in Nairobi? Amani Vehicle Sounds offers top-quality car radios, speakers, amplifiers, subwoofers, and Android stereos at unbeatable prices. Visit us in Ngara, Parkroad Towers, 3rd Floor, Shop 3.08.">
-    <meta property="og:image" content="https://amanivehiclesounds.com/uploads/logo/amaniCropped.png">
-    <meta property="og:url" content="https://amanivehiclesounds.com/">
-    <meta property="og:type" content="website">
+<!-- Open Graph / Facebook -->
+<meta property="fb:app_id" content="431980657174772">
+<meta property="og:title" content="Amani Vehicle Sounds | Premium Car Audio & Installation in Nairobi">
+<meta property="og:description" content="Upgrade your driving experience with premium car audio systems, subwoofers, amplifiers & expert installation at Amani Vehicle Sounds, Nairobi.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://amanivehiclesounds.com/">
+<meta property="og:image" content="https://amanivehiclesounds.com/uploads/logo/amaniCropped.png">
+<meta property="og:site_name" content="Amani Vehicle Sounds">
+<meta property="og:locale" content="en_KE">
 
-    <!-- Twitter Card Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Amani Vehicle Sounds | Best Car Audio Systems in Nairobi">
-    <meta name="twitter:description" content="Nairobiâ€™s trusted car audio shop! Find car radios, amplifiers, subwoofers, speakers, Android stereos, and more at Amani Vehicle Sounds. Visit us in Ngara, Parkroad Towers, 3rd Floor, Shop 3.08.">
-    <meta name="twitter:image" content="https://amanivehiclesounds.com/uploads/logo/amaniCropped.png">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Amani Vehicle Sounds | Car Audio Experts in Nairobi">
+<meta name="twitter:description" content="Premium car audio systems, Android head units, speakers & professional installation in Nairobi, Kenya.">
+<meta name="twitter:site" content="@amanisounds">
+<meta name="twitter:image" content="https://amanivehiclesounds.com/uploads/logo/amaniCropped.png">
 
- <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Amani Vehicle Sounds",
-      "alternateName": "Amani Vehicle Sounds - Nairobi's Best Car Audio Shop",
-      "url": "https://amanivehiclesounds.com/",
-      "logo": "https://amanivehiclesounds.com/uploads/logo/amaniCropped.png",
-      "sameAs": [
-        "https://www.facebook.com/AmaniVehicleSounds",
-        "https://twitter.com/AmaniVehicleSounds",
-        "https://www.instagram.com/AmaniVehicleSounds"
-      ]
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "item": {
-            "@type": "WebPage",
-            "@id": "https://amanivehiclesounds.com/",
-            "name": "Home"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@type": "WebPage",
-            "@id": "https://amanivehiclesounds.com/products",
-            "name": "Products"
-          }
-        }
-      ]
-    }
-    </script>
- <!--Floating WhatsApp css-->
-     <link rel="stylesheet" href="https://rawcdn.githack.com/rafaelbotazini/floating-whatsapp/3d18b26d5c7d430a1ab0b664f8ca6b69014aed68/floating-wpp.min.css">
-     
-     <!-- Font Awesome for Icons -->
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Icons -->
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+<link rel="manifest" href="/favicon/manifest.json">
 
-   <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        /* Animated Background */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
-            animation: gridMove 20s linear infinite;
-        }
-        
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(100px, 100px); }
-        }
-        
-        .container {
-            max-width: 900px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 32px;
-            padding: 60px 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.8s ease-out;
-            backdrop-filter: blur(10px);
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .logo-wrapper {
-            margin-bottom: 40px;
-            animation: logoFloat 3s ease-in-out infinite;
-        }
-        
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .logo {
-            max-width: 200px;
-            height: auto;
-            filter: drop-shadow(0 10px 20px rgba(102, 126, 234, 0.3));
-            transition: transform 0.3s ease;
-        }
-        
-        .logo:hover {
-            transform: scale(1.05);
-        }
-        
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            line-height: 1.2;
-            letter-spacing: -1px;
-        }
-        
-        .subtitle {
-            font-size: 1.25rem;
-            color: #666;
-            margin-bottom: 40px;
-            line-height: 1.6;
-            font-weight: 400;
-        }
-        
-        .contact-info {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 40px 0;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-        }
-        
-        .contact-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin: 15px 0;
-            font-size: 1.1rem;
-            color: #333;
-        }
-        
-        .contact-item i {
-            font-size: 1.5rem;
-            color: #667eea;
-            width: 30px;
-            text-align: center;
-        }
-        
-        .contact-item a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .contact-item a:hover {
-            color: #764ba2;
-            text-decoration: underline;
-        }
-        
-        .phone-number {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #667eea;
-            letter-spacing: 1px;
-        }
-        
-        .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin-top: 50px;
-            opacity: 0;
-            animation: fadeIn 1s ease-out 0.5s forwards;
-        }
-        
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-        
-        .image-gallery img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 16px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 3px solid transparent;
-        }
-        
-        .image-gallery img:hover {
-            transform: translateY(-8px) scale(1.05);
-            box-shadow: 0 16px 32px rgba(102, 126, 234, 0.3);
-            border-color: #667eea;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        .divider {
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            margin: 30px auto;
-            border-radius: 2px;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 40px 25px;
-                border-radius: 24px;
-            }
-            
-            h1 {
-                font-size: 2.5rem;
-            }
-            
-            .subtitle {
-                font-size: 1.1rem;
-            }
-            
-            .contact-info {
-                padding: 20px;
-            }
-            
-            .contact-item {
-                font-size: 1rem;
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .phone-number {
-                font-size: 1.1rem;
-            }
-            
-            .image-gallery {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-            
-            .image-gallery img {
-                height: 150px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .logo {
-                max-width: 150px;
-            }
-            
-            .image-gallery {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* Loading Animation */
-        .loading-dots {
-            display: inline-flex;
-            gap: 8px;
-            margin-left: 10px;
-        }
-        
-        .loading-dots span {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #667eea;
-            animation: loadingDot 1.4s ease-in-out infinite;
-        }
-        
-        .loading-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        
-        .loading-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-        
-        @keyframes loadingDot {
-            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-            40% { transform: scale(1.2); opacity: 1; }
-        }
-    </style>
+<meta name="msapplication-TileColor" content="#66139B">
+<meta name="msapplication-TileImage" content="/favicon/ms-icon-144x144.png">
+<meta name="theme-color" content="#66139B">
+
+
+<!--- Proudly Hosted by OrangeHost.com
+
+          ~?JYYY7
+         :????7~.
+      .:::::.   .           ..
+   ^!?YYYYYYJ?!^  :~^         .^^.                               ::.
+ :?YYJ7~^:^~7JYY?:   .:.  .::     .:::..  .:.   :.   .:::.         .:::..  .:.      .::::.  :~^         .^~.      .....         ......     ^~.
+^YYY7.       .7YYY^ .JY7^?JYJ. .!?YYYYYJ7~JY~  ^YY~~JYYYYYJ!    .!?YYYYYJ7~JY!   :!JYYYYYJ?~.  :~^          ^^.   .^^^:::^^^.   .:^^::::^^.   ^~^^^^^
+?YYJ.         .JYY7 .JYYY7^:. ^JYY7^:.:!JYYY!  ^YYYY!:..^JYY7  ^JYY7^:.:!JYYY!  !YYJ~:..:7YYJ:  :~^::::::::::^^.  :~^.     .:~^  :~^           ^~:
+?YYJ.         .JYY7 .JYY7    .JYY!      :YYY!  ^YYY^     ~YYJ..JYY!      :YYY! :YYY?!777!7YYY?  :~^.........:^^. :~^         ^~: .:^^^^:::.    ^~.
+:JYY?:       :?YYJ: .JYY~    .JYY7      ^YYY!  ^YYY:     ~YYJ. JYY7      ^YYY! :YYY?~~~~~~~~~~  :~^          ^^. .~^         ^~:    ....::^^:  ^~.
+ :7YYY?!~^~!?YYY7:  .JYY~     :JYY?~^:^7YYYY!  ^YYY:     ~YYJ. :JYY?~^:^7YYYY!  ~YYY7^:::^~~  :~^         .^~.  :~^.     .^~:   .       :~^  ^~:
+   :~7JYYYYYJ7~:    .?JJ~      .~7JYYYJ?!^JJ~  :JJJ:     ~JJ?.  .~7JYYYJ?!JYY!   .~?JYYYYJJ?.  :^^         .^^.   .:^^^^^^^:.    :^^^^^^^^:   .^^^^^:
+       .....         ...          .....   ..    ...       ...       ...  ^YYY^       .....                         ...            ...         ..
+                                                                 7?!!~~!?YYJ~
+                                                                 !??JJJJ?!^.
+
+--->
+
 </head>
-<body>
-  <h1 style="display:none"> We offer car radios, midrange speakers, tweeters, subwoofers, amplifiers, Android car stereos, Amani Vehicle Sounds</h1>
-<!--Div where the WhatsApp will be rendered-->
-<div style="z-index:100000" id="WAButton"></div>
-    <div class="container">
-        <div class="logo-wrapper">
-            <img class="logo" src="https://amanivehiclesounds.com/uploads/logo/amaniCropped.png" alt="Amani Vehicle Sounds Logo">
-        </div>
-        
-        <div class="status-badge">🚧 Under Maintenance</div>
-        
-        <h1>We'll Be Back Soon!</h1>
-        
-        <p class="subtitle">
-            Our website is currently undergoing maintenance to bring you an even better experience.
-            <span class="loading-dots">
-                <span></span>
-                <span></span>
-                <span></span>
-            </span>
-        </p>
-        
-        <div class="divider"></div>
-        
-        <div class="contact-info">
-            <h2 style="font-size: 1.5rem; color: #333; margin-bottom: 20px; font-weight: 600;">Get in Touch</h2>
-            
-            <div class="contact-item">
-                <i class="fas fa-phone-alt"></i>
-                <div>
-                    <span style="display: block; margin-bottom: 5px; color: #666;">Call us:</span>
-                    <a href="tel:+254794301190" class="phone-number">0794 301 190</a>
-                    <span style="color: #999; margin: 0 10px;">or</span>
-                    <a href="tel:+254755940308" class="phone-number">0755 940 308</a>
-                </div>
-            </div>
-            
-            <div class="contact-item" style="margin-top: 25px;">
-                <i class="fas fa-envelope"></i>
-                <div>
-                    <span style="display: block; margin-bottom: 5px; color: #666;">Email us:</span>
-                    <a href="mailto:info@amanivehiclesounds.com">info@amanivehiclesounds.com</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="image-gallery">
-            <img src="https://amanivehiclesounds.com/uploads/categories/download.jpg" alt="Best car radios in Nairobi – Amani Vehicle Sounds" loading="lazy">
-            <img src="https://amanivehiclesounds.com/uploads/categories/Midrange%20Speakers%20(3).png" alt="High-quality midrange car speakers in Kenya" loading="lazy">
-            <img src="https://amanivehiclesounds.com/uploads/categories/Car%20Tweeters%20(1).png" alt="Car tweeters for clear and crisp sound" loading="lazy">
-            <img src="https://amanivehiclesounds.com/uploads/categories/subwoofers.jpg" alt="Deep bass subwoofers for car audio systems" loading="lazy">
-            <img src="https://amanivehiclesounds.com/uploads/categories/Pioneer%20Booster%20(1).png" alt="Powerful car amplifiers and boosters" loading="lazy">
-            <img src="https://amanivehiclesounds.com/uploads/categories/download.jpg" alt="Android car stereos and multimedia players" loading="lazy">
-        </div>
-    </div>
- <!--Floating WhatsApp javascript-->
-     <script type="text/javascript" src="https://rawcdn.githack.com/rafaelbotazini/floating-whatsapp/3d18b26d5c7d430a1ab0b664f8ca6b69014aed68/floating-wpp.min.js"></script>
 
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-     <script type="text/javascript">
-         $(function () {
-             $('#WAButton').floatingWhatsApp({
-                 phone: '+254794301190',
-                 headerTitle: 'Chat with us on WhatsApp!',
-                 popupMessage: 'Hello, how can we help you?',
-                 message: 'I have just visited *https://amanivehiclesounds.com*',
-                 showPopup: true,
-                 buttonImage: '<img src="https://amanivehiclesounds.com/uploads/icon/whatsapp.svg" />',
-                 position: "right"
-             });
-         });
-     </script>
-     
-     <style>
-     /* Hide WhatsApp button on mobile */
-     @media (max-width: 991px) {
-         #WAButton,
-         #WAButton * {
-             display: none !important;
-             visibility: hidden !important;
-             opacity: 0 !important;
-         }
-     }
-     </style>
+<style> @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');</style>
+
+<body style="color: #ffffff; margin:0;font: normal 14px/20px 'Roboto', sans-serif; height:100%; background-color: #242424;">
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+
+<div style="height:auto; min-height:100%; ">
+
+         <div style="text-align: center; width:800px; margin-left: -400px;position:absolute; top: 20%; left:50%;">
+
+                 <center><lottie-player src="https://lottie.host/9cb93fe9-b554-4b4c-bd47-53e1f44b6cb6/FIHye6Zzk5.json" background="transparent" speed="0.5" style="width: 600px; height: 300px;" autoplay></lottie-player></center>
+
+
+        <h1 style="margin:0; font-size:30px; line-height:0px;">Your website is now online!</h1>
+
+</div></div><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"1f27a074f86d48d8928ac0f477d05bf6","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>

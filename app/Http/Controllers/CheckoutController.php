@@ -33,6 +33,8 @@ use Hash;
 
 use App\Models\ReplyMessage;
 
+use App\Models\Notifications;
+
 use App\Http\Requests;
 use OpenGraph;
 use SEOMeta;
@@ -892,6 +894,133 @@ class CheckoutController extends Controller
             $keywords='Amani Vehicle Sounds';
             // return redirect()->route('cart/checkout/order','CheckoutController@checkout_confirm');
             return redirect()->action('CheckoutController@checkout_confirm',[$param]);
+        }
+    }
+
+    public function submitOrder(Request $request){
+        // Check For Empty Cart
+        $cart = Cart::count();
+        if($cart == 0){
+            return redirect()->route('cart')->with('error', 'Your cart is empty.');
+        }
+
+        // Update User Details
+        $id = Auth::user()->id;
+        $updateDetails = array(
+            'name'=>$request->name,
+            'address'=>$request->address,
+            'location'=>$request->location,
+            'mobile'=>$request->mobile,
+        );
+        DB::table('users')->where('id',$id)->update($updateDetails);
+
+        // Get Shipping Fee
+        $Shipping = session()->get('Shipping', 400);
+        
+        // Calculate Total Cost
+        if(Session::has('coupon-total')){
+            $WithCoupon = Session::get('coupon-total');
+            $PrepSubtotal = str_replace(',', '', $WithCoupon);
+            $WholeSubtotal = ceil($PrepSubtotal);
+            $TotalCost = $WholeSubtotal + $Shipping;
+        } else {
+            $Subtotal = Cart::subtotal();
+            $PrepSubtotal = str_replace(',', '', $Subtotal);
+            $WholeSubtotal = ceil($PrepSubtotal);
+            $TotalCost = $WholeSubtotal + $Shipping;
+        }
+
+        // Store TotalCost in session
+        session()->put('TotalCost', $TotalCost);
+
+        // Create Invoice Number if not exists
+        if(!Session::has('Invoice')){
+            $MPESA = DB::table('invoices')->orderBy('id','DESC')->Limit('1')->get();
+            $count_mpesa = count($MPESA);
+            if($count_mpesa == 0){
+                $InvoiceNumber = 'AVS001';
+                $OrderNumberNumber = 'AVS001';
+            }else{
+                foreach($MPESA as $mpesa){
+                    $LastID = $mpesa->id;
+                    $Next = $LastID+1;
+                    $InvoiceNumber = "AVS0".$Next;
+                    $OrderNumberNumber = "AVS10".$Next;
+                }
+            }
+            session()->put('Order', $OrderNumberNumber);
+            session()->put('Invoice', $InvoiceNumber);
+        } else {
+            $InvoiceNumber = session()->get('Invoice');
+            $OrderNumberNumber = session()->get('Order');
+        }
+
+        // Create Invoice Record if not exists
+        $CheckInvoice = DB::table('invoices')->where('number',$InvoiceNumber)->where('status','0')->where('user_id',Auth::user()->id)->get();
+        $CountCheckInvoice = count($CheckInvoice);
+        if($CountCheckInvoice == 0){
+            $Invoice = new Invoice;
+            $Invoice->invoice_number = $InvoiceNumber;
+            $Invoice->number = $InvoiceNumber;
+            $Invoice->user_id = Auth::user()->id;
+            $Invoice->amount = $TotalCost;
+            $Invoice->shipping = $Shipping;
+            $Invoice->products = serialize(Cart::content());
+            $Invoice->status = 0;
+            $Invoice->save();
+        }
+
+        // Create Order
+        Orders::createOrder();
+
+        // Send Emails
+        $email = Auth::user()->email;
+        $name = Auth::user()->name;
+        $phone = Auth::user()->mobile;
+        $InvoiceNumber = session()->get('Invoice');
+        $ShippingFee = session()->get('Shipping');
+        $TotalCost = session()->get('TotalCost');
+        
+        ReplyMessage::mailclient($email, $name, $InvoiceNumber, $ShippingFee, $TotalCost);
+        ReplyMessage::mailmerchant($email, $name, $phone);
+
+        // Destroy Cart
+        Cart::destroy();
+        
+        // Clear Sessions
+        session()->forget('Invoice');
+        session()->forget('Order');
+        session()->forget('Shipping');
+        session()->forget('TotalCost');
+        Session::forget('coupon');
+        Session::forget('coupon-code');
+        Session::forget('coupon-total');
+
+        // Load Thank You Page
+        $SEOSettings = DB::table('seosettings')->get();
+        foreach($SEOSettings as $Settings){
+            SEOMeta::setTitle('Thank You For Your Order - '.$Settings->sitename.' - Orders');
+            SEOMeta::setDescription(''.$Settings->welcome.'');
+            SEOMeta::setCanonical(''.$Settings->url.'/clientarea/thankyou');
+
+            OpenGraph::setDescription(''.$Settings->welcome.''); 
+            OpenGraph::setTitle(''.$Settings->sitename.' - '.$Settings->welcome.'');
+            OpenGraph::setUrl(''.$Settings->url.'/clientarea/thankyou');
+            OpenGraph::addProperty('type', 'articles');
+            
+            Twitter::setTitle(''.$Settings->sitename.' - '.$Settings->welcome.'');
+            Twitter::setSite(''.$Settings->twitter.'');
+        }
+        
+        $page_title = 'Thank You for your order';
+        $page_name = '';
+        $keywords = 'Amani Vehicle Sounds';
+        
+        // Check if thankyou view exists in dashboard or clientarea
+        if(view()->exists('dashboard.thankyou')){
+            return view('dashboard.thankyou', compact('page_title', 'page_name', 'keywords'));
+        } else {
+            return view('clientarea.thankyou', compact('page_title', 'page_name', 'keywords'));
         }
     }
 

@@ -42,11 +42,11 @@
 }
 
 .modern-breadcrumb {
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    padding: 1rem 0;
+    background: #66139B;
+    padding: 1rem 1.5rem;
     margin-top: 1rem;
     border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(102, 19, 155, 0.3);
 }
 
 .modern-breadcrumb .breadcrumb {
@@ -56,17 +56,26 @@
 }
 
 .modern-breadcrumb .breadcrumb-item a {
-    color: rgba(255,255,255,0.9);
+    color: white;
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .modern-breadcrumb .breadcrumb-item a:hover {
-    color: white;
+    color: rgba(255,255,255,0.8);
+    text-decoration: underline;
 }
 
 .modern-breadcrumb .breadcrumb-item.active {
     color: white;
+    font-weight: 600;
+}
+
+.modern-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    color: rgba(255,255,255,0.7);
+    padding: 0 0.75rem;
     font-weight: 600;
 }
 
@@ -459,6 +468,7 @@
                     <p id="coupon-processing" style="color:#667eea; font-weight:600; margin-top:1rem; display:none;">Processing...</p>
                 </div>
             	
+                @if(Session::has('coupon'))
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-xl-7">
                         <!-- Modern Order Summary -->
@@ -781,7 +791,7 @@
                         </div>
                     </div>
                 </div>
-                @endif
+                @else
                 <!-- Order Summary Without Coupon -->
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-xl-7">
@@ -922,261 +932,17 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endif
-		                			<div class="summary" style="margin:0px !important">
-		                				<h3 class="summary-title">Your Order #{{$OrderNumberNumber}}</h3><!-- End .summary-title -->
-
-		                				<table class="table table-summary">
-		                					<thead>
-		                						<tr>
-		                							<th>Product</th>
-		                							<th>Total</th>
-		                						</tr>
-		                					</thead>
-
-		                					<tbody>
-                                                @foreach($CartItems as $CartItem)
-                                                <?php 
-                                                                $Products = DB::table('product')->where('id',$CartItem->id)->get();
-                                                ?>
-                                                @foreach($Products as $Product)
-		                						<tr>
-		                							<td><a href="{{url('/')}}/product/{{$Product->slung}}">{{$Product->name}} <strong>x</strong> {{$CartItem->qty}}</a></td>
-		                							<td>KES {{$CartItem->price}}</td>
-		                						</tr>
-                                                @endforeach
-                                                @endforeach
-
-		                						
-		                						<tr class="summary-subtotal">
-		                							<td>Subtotal:</td>
-		                							<td>{{Cart::subtotal()}}</td>
-		                						</tr><!-- End .summary-subtotal -->
-		                						<tr>
-		                							<td>Shipping:</td>
-		                							<td>KES {{$Shipping}}</td>
-		                						</tr>
-		                						<tr class="summary-total">
-		                							<td>Total:</td>
-		                							<td>KES
-                                                        <?php 
-                                                          //remove comma   
-                                                          $Subtotal = Cart::subtotal();
-                                                          $PrepSubtotal = str_replace(',', '', $Subtotal);
-                                                          $WholeSubtotal = ceil($PrepSubtotal);
-                                                          $TheTotal = $WholeSubtotal + $Shipping;
-                                                          echo $TheTotal;
-                                                        ?>
-                                                     </td>
-		                						</tr><!-- End .summary-total -->
-		                					</tbody>
-		                				</table><!-- End .table table-summary -->
-
-		                				<div class="accordion-summary" id="accordion-payment">
-										    <div class="card">
-										        <div class="card-header" id="heading-1">
-										            <h2 class="card-title">
-										                <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
-										                    M-PESA PayBill
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
-										            <div class="card-body">
-										                {{--  --}}
-                                                        <p>
-                                                        <ul style="color:#333333"> 
-                                                            <li style="border-bottom:1px solid #666666">Go to your MPESA menu</li>
-                                                            <li style="border-bottom:1px solid #666666">Select Lipa Na MPESA</li>
-                                                            <li style="border-bottom:1px solid #666666">Select PayBill</li>
-                                                            <?php $SettingsTill = DB::table('sitesettings')->get(); ?>
-                                                            @foreach($SettingsTill as $set)
-                                                            <li style="border-bottom:1px solid #666666">Enter the Business Number <strong>{{$set->till}}</strong> </li>
-                                                            @endforeach
-                                                            <!-- Invoice Number -->
-                                                            <li style="border-bottom:1px solid #666666">Enter Account Number <strong>{{$InvoiceNumber}}</strong></li>
-                                                            <!-- Invoice Number -->
-                                                            <li style="border-bottom:1px solid #666666">Enter Amount KSH 
-                                                              <strong>
-                                                              <?php
-                                                                if(Session::has('campaign')){
-                                                                    $cost = Cart::total();
-                                                                    $percentage = 10;
-                                                                    $PrepeTotalCart = str_replace( ',', '', $cost );
-                                                                    $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                    $discount = ($percentage / 100) * $FormatTotalCart;
-                                                                    $TotalCart = ($FormatTotalCart - $discount);
-                                                                }else{
-                                                                    $cost = Cart::total();
-                                                                    $percentage = 10;
-                                                                    $PrepeTotalCart = str_replace( ',', '', $cost );
-                                                                    $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                    $TotalCart = $FormatTotalCart;
-                                                                }
-    
-                                                                  $PrepeTotalCart = str_replace( ',', '', $TotalCart );
-                                                                  $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                  $ShippingFee = $Shipping;
-                                                                  $TotalCost = $FormatTotalCart+$ShippingFee;
-                                                                  echo $TotalCost;
-                                                                
-                                                              ?>
-                                                              </strong>
-                                                            </li>
-                                                            <li style="border-bottom:1px solid #666666">Then press ok to confirm</li>
-                                                            <li style="border-bottom:1px solid #666666">Enter the transaction code below</li>
-                                                            <li style="border-bottom:1px solid #666666">Click verify to verify payment</li>
-                                                            <form method="POST" action="#" id="verify">
-                                                              {{ csrf_field() }}
-                                                              <input type="hidden" name="invoice" value="{{$InvoiceNumber}}">
-                                                                    <?php
-                                                                        if(Session::has('campaign')){
-                                                                            $cost = Cart::total();
-                                                                            $percentage = 10;
-                                                                            $PrepeTotalCart = str_replace( ',', '', $cost );
-                                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                            $discount = ($percentage / 100) * $FormatTotalCart;
-                                                                            $TotalCart = ($FormatTotalCart - $discount);
-                                                                        }else{
-                                                                            $cost = Cart::total();
-                                                                            $percentage = 10;
-                                                                            $PrepeTotalCart = str_replace( ',', '', $cost );
-                                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                            $TotalCart = $FormatTotalCart;
-                                                                        }
-            
-                                                                        $PrepeTotalCart = str_replace( ',', '', $TotalCart );
-                                                                        $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                        $ShippingFee = $Shipping;
-                                                                        $TotalCost = $FormatTotalCart+$ShippingFee;
-                                                                        
-                                                                    
-                                                                    ?>
-                                                              <input type="hidden" name="amount" value="{{$TotalCost}}">
-                                                              <div class="col-md-12">
-                                                                  <div class="form-group">
-                                                                      <p for="email">Enter Your MPESA Transaction Code <span>*</span></p>
-                                                                      <input type="text" name="TransactionID" class="form-control" required placeholder="NJL4E9WJ96" id="email" autocomplete="off">
-                                                                  </div>
-                                                                <div class="pull-left"><button id="veryfyID" class="btn btn-outline-primary-2 btn-order btn-block" type="submit"> Veryfy Payment &nbsp;<i class="fa fa-arrow-right"></i> </button></div>
-                                                              </div>
-                                                            </form>
-    
-                                                        </ul>
-                                                        </p>
-                                                        {{--  --}}
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
-
-										    
-
-										    <div class="card">
-										        <div class="card-header" id="heading-4">
-										            <h2 class="card-title">
-										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-										                    PayPal <small class="float-right paypal-link">Conversion charges may apply</small>
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
-										            <div class="card-body">
-										                {{--  --}}
-                                                        <form id="ShowPaypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                                                            <input type="hidden" name="cmd" value="_cart">
-                                                            <input type="hidden" name="upload" value="1">
-                                                            <?php $SiteSettings = DB::table('sitesettings')->get(); ?>
-                                                            @foreach($SiteSettings as $Sett)
-                                                            <input type="hidden" name="business" value="{{$Sett->paypal}}">
-                                                            @endforeach
-                                                            <!-- Collect Data -->
-                                                            <?php $Count = 1; ?>
-                                                            @foreach($CartItems as $CartItem)
-                                                            <?php 
-                                                                $Products = DB::table('product')->where('id',$CartItem->id)->get();
-                                                            ?>
-                                                            @foreach($Products as $Product)
-                                                            <?php 
-                                                                  $RawPrice = $Product->price;
-                                                                  $dollarPrice = dollar($Product->price);
-                                                                  $PaypalCont = 0.029;
-                                                                  $paypalCut = $PaypalCont*$dollarPrice;
-                                                                  $PaypalToatal = $paypalCut+$dollarPrice;
-                                                                  
-                                                             ?>
-                                                            <input type="hidden" name="item_name_{{$Count}}" value="{{$Product->name}}">
-                                                            <input type="hidden" name="amount_{{$Count}}" value="<?php echo $PaypalToatal; ?>"><?php $PaypalToatal; ?>
-                                                            <input type="hidden" name="quantity_{{$Count}}" value="{{$CartItem->qty}}">
-                                                            <input type="hidden" name="shipping_{{$Count}}" value="<?php echo dollar($Shipping) ?>">
-                                                            @endforeach
-                                                            <?php $Count = $Count+1;  ?>
-                                                            @endforeach
-      
-                                                            
-                                                            
-                                                            <input type="hidden" name="cancel_return" id="cancel_return" value="{{url('/')}}/shopping-cart/checkout/payment" />
-                                                            <button  style="cursor:pointer" type="submit"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/cc-badges-ppcmcvdam.png" alt="Pay with PayPal Credit or any major credit card" /></button>
-                                                          </form>
-                                                        {{--  --}}
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
-
-                                            @if($location == 'Nairobi')
-                                            <div class="card">
-										        <div class="card-header" id="heading-3">
-										            <h2 class="card-title">
-										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-										                    Cash on delivery
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
-										            <div class="card-body">
-                                                        <form method="POST" action="{{url('/shopping-cart/checkout/placeOrder')}}" id="verify">
-                                                            {{ csrf_field() }}
-                                                            <input type="hidden" name="invoice" value="{{$InvoiceNumber}}">
-                                                                  <?php
-                                                                      if(Session::has('campaign')){
-                                                                          $cost = Cart::total();
-                                                                          $percentage = 10;
-                                                                          $PrepeTotalCart = str_replace( ',', '', $cost );
-                                                                          $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                          $discount = ($percentage / 100) * $FormatTotalCart;
-                                                                          $TotalCart = ($FormatTotalCart - $discount);
-                                                                      }else{
-                                                                          $cost = Cart::total();
-                                                                          $percentage = 10;
-                                                                          $PrepeTotalCart = str_replace( ',', '', $cost );
-                                                                          $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                          $TotalCart = $FormatTotalCart;
-                                                                      }
-          
-                                                                      $PrepeTotalCart = str_replace( ',', '', $TotalCart );
-                                                                      $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                      $ShippingFee = $Shipping;
-                                                                      $TotalCost = $FormatTotalCart+$ShippingFee;
-                                                                      
-                                                                  
-                                                                  ?>
-                                                            <input type="hidden" name="amount" value="{{$TotalCost}}">
-                                                            <div class="col-md-12">
-                                                                {{-- <div class="form-group">
-                                                                    <textarea class="form-control" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery" spellcheck="false"></textarea>
-                                                                </div> --}}
-                                                            {{--  --}}
-                                                            <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
-                                                                <span class="btn-text">Place Order Now</span>
-                                                                <span class="btn-hover-text">Proceed to Chekout</span>
-                                                            </button>
-                                                            {{--  --}}
-                                                            </div>
-                                                        </form>
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
-                                            @endif
-
+                                </div>
+                                
+                                <!-- My Account Button -->
+                                <a href="{{url('/')}}/dashboard" class="modern-btn-secondary" style="margin-top: 1.5rem;">
+                                    <i class="icon-user"></i> My Account
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>

@@ -96,6 +96,7 @@ Route::post('checkout/login', [CheckoutController::class, 'login'])->name('check
 Route::post('checkout/create-user', [CheckoutController::class, 'create'])->name('checkout.create');
 Route::get('checkout/placeOrder', [CheckoutController::class, 'placeOrderGet'])->name('checkout.order.get');
 Route::post('checkout/placeOrder', [CheckoutController::class, 'placeOrder'])->name('checkout.order');
+Route::post('/checkout/submit-order', [CheckoutController::class, 'submitOrder'])->name('checkout.submit.order');
 Route::post('/checkout/process-coupon', [CheckoutController::class, 'process_coupon'])->name('process_coupon');
 Route::get('/checkout/remove-coupon/{code}', [CheckoutController::class, 'remove_coupon'])->name('remove-coupon');
 });
