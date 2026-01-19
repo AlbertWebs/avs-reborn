@@ -529,104 +529,93 @@
                                 </div>
                             </div>
 
-		                				<div class="accordion-summary" id="accordion-payment">
-										    <div class="card">
-										        <div class="card-header" id="heading-1">
-										            <h2 class="card-title">
-										                <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
-										                    M-PESA PayBill
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-1" class="collapse" aria-labelledby="heading-1" data-parent="#accordion-payment">
-										            <div class="card-body">
-										                {{--  --}}
-                                                        <p>
-                                                        <ul style="color:#333333"> 
-                                                            <li style="border-bottom:1px solid #666666">Go to your MPESA menu</li>
-                                                            <li style="border-bottom:1px solid #666666">Select Lipa Na MPESA</li>
-                                                            <li style="border-bottom:1px solid #666666">Select PayBill</li>
-                                                            <?php $SettingsTill = DB::table('sitesettings')->get(); ?>
-                                                            @foreach($SettingsTill as $set)
-                                                            <li style="border-bottom:1px solid #666666">Enter the Business Number <strong>{{$set->till}}</strong> </li>
-                                                            @endforeach
-                                                            <!-- Invoice Number -->
-                                                            <li style="border-bottom:1px solid #666666">Enter Account Number <strong>{{$InvoiceNumber}}</strong></li>
-                                                            <!-- Invoice Number -->
-                                                            <li style="border-bottom:1px solid #666666">Enter Amount KSH 
-                                                              <strong>
-                                                              <?php
-                                                                if(Session::has('campaign')){
-                                                                    $cost = Cart::total();
-                                                                    $percentage = 10;
-                                                                    $PrepeTotalCart = str_replace( ',', '', $cost );
-                                                                    $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                    $discount = ($percentage / 100) * $FormatTotalCart;
-                                                                    $TotalCart = ($FormatTotalCart - $discount);
-                                                                }else{
-                                                                    $cost = Cart::total();
-                                                                    $percentage = 10;
-                                                                    $WithCoupon = Session::get('coupon-total');
-                                                                    $PrepeTotalCart = str_replace( ',', '', $WithCoupon );
-                                                                    $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                    $TotalCart = $FormatTotalCart;
-                                                                }
-    
-                                                                  $PrepeTotalCart = str_replace( ',', '', $TotalCart );
-                                                                  $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                  $ShippingFee = $Shipping;
-                                                                  $TotalCost = $FormatTotalCart+$ShippingFee;
-                                                                  echo $TotalCost;
-                                                                
-                                                              ?>
-                                                              </strong>
-                                                            </li>
-                                                            <li style="border-bottom:1px solid #666666">Then press ok to confirm</li>
-                                                            <li style="border-bottom:1px solid #666666">Enter the transaction code below</li>
-                                                            <li style="border-bottom:1px solid #666666">Click verify to verify payment</li>
-                                                            <form method="POST" action="#" id="verify">
-                                                              {{ csrf_field() }}
-                                                              <input type="hidden" name="invoice" value="{{$InvoiceNumber}}">
-                                                                    <?php
-                                                                        if(Session::has('campaign')){
-                                                                            $cost = Cart::total();
-                                                                            $percentage = 10;
-                                                                            $PrepeTotalCart = str_replace( ',', '', $cost );
-                                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                            $discount = ($percentage / 100) * $FormatTotalCart;
-                                                                            $TotalCart = ($FormatTotalCart - $discount);
-                                                                        }else{
-                                                                            $cost = Cart::total();
-                                                                            $percentage = 10;
-                                                                            $WithCoupon = Session::get('coupon-total');
-                                                                            $PrepeTotalCart = str_replace( ',', '', $WithCoupon );
-                                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                            $TotalCart = $FormatTotalCart;
-                                                                        }
-            
-                                                                        $PrepeTotalCart = str_replace( ',', '', $TotalCart );
-                                                                        $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                        $ShippingFee = $Shipping;
-                                                                        $TotalCost = $FormatTotalCart+$ShippingFee;
-                                                                        
-                                                                    
-                                                                    ?>
-                                                              <input type="hidden" name="amount" value="{{$TotalCost}}">
-                                                              <div class="col-md-12">
-                                                                  <div class="form-group">
-                                                                      <p for="email">Enter Your MPESA Transaction Code <span>*</span></p>
-                                                                      <input type="text" name="TransactionID" class="form-control" required placeholder="NJL4E9WJ96" id="email" autocomplete="off">
-                                                                  </div>
-                                                                <div class="pull-left"><button id="veryfyID" class="btn btn-outline-primary-2 btn-order btn-block" type="submit"> Veryfy Payment &nbsp;<i class="fa fa-arrow-right"></i> </button></div>
-                                                              </div>
-                                                            </form>
-    
-                                                        </ul>
-                                                        </p>
-                                                        {{--  --}}
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
+                            <!-- Modern Payment Methods -->
+                            <div class="modern-payment-methods">
+                                <div class="accordion-summary" id="accordion-payment">
+                                    <!-- M-PESA PayBill -->
+                                    <div class="modern-payment-card card">
+                                        <div class="card-header" id="heading-1" data-toggle="collapse" data-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                                            <h2 class="card-title">
+                                                <a role="button" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                                                    <span><span class="payment-icon">📱</span> M-PESA PayBill</span>
+                                                </a>
+                                            </h2>
+                                        </div>
+                                        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+                                            <div class="card-body">
+                                                <ul class="modern-payment-steps">
+                                                    <li>Go to your <strong>MPESA</strong> menu</li>
+                                                    <li>Select <strong>Lipa Na MPESA</strong></li>
+                                                    <li>Select <strong>PayBill</strong></li>
+                                                    <?php $SettingsTill = DB::table('sitesettings')->get(); ?>
+                                                    @foreach($SettingsTill as $set)
+                                                    <li>Enter the Business Number <strong>{{$set->till}}</strong></li>
+                                                    @endforeach
+                                                    <li>Enter Account Number <strong>{{$InvoiceNumber}}</strong></li>
+                                                    <li>Enter Amount KSH <strong>
+                                                        <?php
+                                                            if(Session::has('campaign')){
+                                                                $cost = Cart::total();
+                                                                $percentage = 10;
+                                                                $PrepeTotalCart = str_replace( ',', '', $cost );
+                                                                $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                                $discount = ($percentage / 100) * $FormatTotalCart;
+                                                                $TotalCart = ($FormatTotalCart - $discount);
+                                                            }else{
+                                                                $cost = Cart::total();
+                                                                $percentage = 10;
+                                                                $WithCoupon = Session::get('coupon-total');
+                                                                $PrepeTotalCart = str_replace( ',', '', $WithCoupon );
+                                                                $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                                $TotalCart = $FormatTotalCart;
+                                                            }
+                                                            $PrepeTotalCart = str_replace( ',', '', $TotalCart );
+                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                            $ShippingFee = $Shipping;
+                                                            $TotalCost = $FormatTotalCart+$ShippingFee;
+                                                            echo number_format($TotalCost, 0);
+                                                        ?>
+                                                    </strong></li>
+                                                    <li>Then press <strong>OK</strong> to confirm</li>
+                                                    <li>Enter the transaction code below</li>
+                                                </ul>
+                                                
+                                                <form method="POST" action="#" id="verify">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="invoice" value="{{$InvoiceNumber}}">
+                                                    <?php
+                                                        if(Session::has('campaign')){
+                                                            $cost = Cart::total();
+                                                            $percentage = 10;
+                                                            $PrepeTotalCart = str_replace( ',', '', $cost );
+                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                            $discount = ($percentage / 100) * $FormatTotalCart;
+                                                            $TotalCart = ($FormatTotalCart - $discount);
+                                                        }else{
+                                                            $cost = Cart::total();
+                                                            $percentage = 10;
+                                                            $WithCoupon = Session::get('coupon-total');
+                                                            $PrepeTotalCart = str_replace( ',', '', $WithCoupon );
+                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                            $TotalCart = $FormatTotalCart;
+                                                        }
+                                                        $PrepeTotalCart = str_replace( ',', '', $TotalCart );
+                                                        $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                        $ShippingFee = $Shipping;
+                                                        $TotalCost = $FormatTotalCart+$ShippingFee;
+                                                    ?>
+                                                    <input type="hidden" name="amount" value="{{$TotalCost}}">
+                                                    <div class="modern-form-group">
+                                                        <label for="transaction-code">Enter Your MPESA Transaction Code <span style="color: #f5576c;">*</span></label>
+                                                        <input type="text" name="TransactionID" id="transaction-code" required placeholder="e.g. NJL4E9WJ96" autocomplete="off">
+                                                    </div>
+                                                    <button id="veryfyID" class="modern-btn-primary" type="submit">
+                                                        <i class="icon-check"></i> Verify Payment
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
 
 										    {{-- <div class="card">
 										        <div class="card-header" id="heading-2">
@@ -689,124 +678,251 @@
 										        </div>
 										    </div> --}}
 
-                                            @if($location == 'Nairobi')
-										    <div class="card">
-										        <div class="card-header" id="heading-3">
-										            <h2 class="card-title">
-										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-										                    Cash on delivery
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
-										            <div class="card-body">
-                                                        <form method="POST" action="{{url('/shopping-cart/checkout/placeOrder')}}" id="verify">
-                                                            {{ csrf_field() }}
-                                                            <input type="hidden" name="invoice" value="{{$InvoiceNumber}}">
-                                                                  <?php
-                                                                      if(Session::has('campaign')){
-                                                                          $cost = Cart::total();
-                                                                          $percentage = 10;
-                                                                          $PrepeTotalCart = str_replace( ',', '', $cost );
-                                                                          $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                          $discount = ($percentage / 100) * $FormatTotalCart;
-                                                                          $TotalCart = ($FormatTotalCart - $discount);
-                                                                      }else{
-                                                                          $cost = Cart::total();
-                                                                          $percentage = 10;
-                                                                          $WithCoupon = Session::get('coupon-total');
-                                                                          $PrepeTotalCart = str_replace( ',', '', $WithCoupon );
-                                                                          $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                          $TotalCart = $FormatTotalCart;
-                                                                      }
-          
-                                                                      $PrepeTotalCart = str_replace( ',', '', $TotalCart );
-                                                                      $FormatTotalCart = round($PrepeTotalCart, 0);
-                                                                      $ShippingFee = $Shipping;
-                                                                      $TotalCost = $FormatTotalCart+$ShippingFee;
-                                                                      
-                                                                  
-                                                                  ?>
-                                                            <input type="hidden" name="amount" value="{{$TotalCost}}">
-                                                            <div class="col-md-12">
-                                                                {{-- <div class="form-group">
-                                                                    <textarea class="form-control" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery" spellcheck="false"></textarea>
-                                                                </div> --}}
-                                                            {{--  --}}
-                                                            <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
-                                                                <span class="btn-text">Place Order Now</span>
-                                                                <span class="btn-hover-text">Proceed to Chekout</span>
-                                                            </button>
-                                                            {{--  --}}
-                                                            </div>
-                                                        </form>
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
-                                            @endif
+                                    <!-- Cash on Delivery (Nairobi Only) -->
+                                    @if($location == 'Nairobi')
+                                    <div class="modern-payment-card card">
+                                        <div class="card-header" id="heading-3" data-toggle="collapse" data-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                            <h2 class="card-title">
+                                                <a class="collapsed" role="button" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                                    <span><span class="payment-icon">💰</span> Cash on Delivery</span>
+                                                </a>
+                                            </h2>
+                                        </div>
+                                        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                            <div class="card-body">
+                                                <p style="color: #666; margin-bottom: 1.5rem;">Pay when you receive your order. Available for Nairobi deliveries only.</p>
+                                                <form method="POST" action="{{url('/shopping-cart/checkout/placeOrder')}}" id="verify">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="invoice" value="{{$InvoiceNumber}}">
+                                                    <?php
+                                                        if(Session::has('campaign')){
+                                                            $cost = Cart::total();
+                                                            $percentage = 10;
+                                                            $PrepeTotalCart = str_replace( ',', '', $cost );
+                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                            $discount = ($percentage / 100) * $FormatTotalCart;
+                                                            $TotalCart = ($FormatTotalCart - $discount);
+                                                        }else{
+                                                            $cost = Cart::total();
+                                                            $percentage = 10;
+                                                            $WithCoupon = Session::get('coupon-total');
+                                                            $PrepeTotalCart = str_replace( ',', '', $WithCoupon );
+                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                            $TotalCart = $FormatTotalCart;
+                                                        }
+                                                        $PrepeTotalCart = str_replace( ',', '', $TotalCart );
+                                                        $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                        $ShippingFee = $Shipping;
+                                                        $TotalCost = $FormatTotalCart+$ShippingFee;
+                                                    ?>
+                                                    <input type="hidden" name="amount" value="{{$TotalCost}}">
+                                                    <button type="submit" class="modern-btn-primary">
+                                                        <i class="icon-check"></i> Place Order Now
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
 
-										    <div class="card">
-										        <div class="card-header" id="heading-4">
-										            <h2 class="card-title">
-										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-										                    PayPal <small class="float-right paypal-link">Conversion charges may apply</small>
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
-										            <div class="card-body">
-										                {{--  --}}
-                                                        <form id="ShowPaypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                                                            <input type="hidden" name="cmd" value="_cart">
-                                                            <input type="hidden" name="upload" value="1">
-                                                            <?php $SiteSettings = DB::table('sitesettings')->get(); ?>
-                                                            @foreach($SiteSettings as $Sett)
-                                                            <input type="hidden" name="business" value="{{$Sett->paypal}}">
-                                                            @endforeach
-                                                            <!-- Collect Data -->
-                                                            <?php $Count = 1; ?>
-                                                            @foreach($CartItems as $CartItem)
-                                                            <?php 
-                                                                $Products = DB::table('product')->where('id',$CartItem->id)->get();
-                                                            ?>
-                                                            @foreach($Products as $Product)
-                                                            <?php 
-                                                                  $RawPrice = $Product->price;
-                                                                  $dollarPrice = dollar($Product->price);
-                                                                  $PaypalCont = 0.029;
-                                                                  $paypalCut = $PaypalCont*$dollarPrice;
-                                                                  $PaypalToatal = $paypalCut+$dollarPrice;
-                                                                  
-                                                             ?>
-                                                            <input type="hidden" name="item_name_{{$Count}}" value="{{$Product->name}}">
-                                                            <input type="hidden" name="amount_{{$Count}}" value="<?php echo $PaypalToatal; ?>"><?php $PaypalToatal; ?>
-                                                            <input type="hidden" name="quantity_{{$Count}}" value="{{$CartItem->qty}}">
-                                                            <input type="hidden" name="shipping_{{$Count}}" value="<?php echo dollar($Shipping) ?>">
-                                                            @endforeach
-                                                            <?php $Count = $Count+1;  ?>
-                                                            @endforeach
-      
-                                                            
-                                                            
-                                                            <input type="hidden" name="cancel_return" id="cancel_return" value="{{url('/')}}/shopping-cart/checkout/payment" />
-                                                            <button  style="cursor:pointer" type="submit"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/cc-badges-ppcmcvdam.png" alt="Pay with PayPal Credit or any major credit card" /></button>
-                                                          </form>
-                                                        {{--  --}}
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
-
-										    
-										</div><!-- End .accordion -->
-
-		                				<a href="{{url('/')}}/dashboard" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
-		                					<span class="btn-text"><i class="icon-user"></i> My Account</span>
-		                					<span class="btn-hover-text">Proceed to My Account</span>
-                                        </a>
-		                			</div><!-- End .summary -->
-		                		</aside><!-- End .col-lg-3 -->
-                                @else
-		                		<aside class="col-lg-6" style="margin:0px auto !important">
+                                    <!-- PayPal -->
+                                    <div class="modern-payment-card card">
+                                        <div class="card-header" id="heading-4" data-toggle="collapse" data-target="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+                                            <h2 class="card-title">
+                                                <a class="collapsed" role="button" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+                                                    <span><span class="payment-icon">💳</span> PayPal <small style="font-size: 0.85rem; color: #666; font-weight: 400;">(Conversion charges may apply)</small></span>
+                                                </a>
+                                            </h2>
+                                        </div>
+                                        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+                                            <div class="card-body">
+                                                <form id="ShowPaypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                                                    <input type="hidden" name="cmd" value="_cart">
+                                                    <input type="hidden" name="upload" value="1">
+                                                    <?php $SiteSettings = DB::table('sitesettings')->get(); ?>
+                                                    @foreach($SiteSettings as $Sett)
+                                                    <input type="hidden" name="business" value="{{$Sett->paypal}}">
+                                                    @endforeach
+                                                    <?php $Count = 1; ?>
+                                                    @foreach($CartItems as $CartItem)
+                                                    <?php 
+                                                        $Products = DB::table('product')->where('id',$CartItem->id)->get();
+                                                    ?>
+                                                    @foreach($Products as $Product)
+                                                    <?php 
+                                                        $RawPrice = $Product->price;
+                                                        $dollarPrice = dollar($Product->price);
+                                                        $PaypalCont = 0.029;
+                                                        $paypalCut = $PaypalCont*$dollarPrice;
+                                                        $PaypalToatal = $paypalCut+$dollarPrice;
+                                                    ?>
+                                                    <input type="hidden" name="item_name_{{$Count}}" value="{{$Product->name}}">
+                                                    <input type="hidden" name="amount_{{$Count}}" value="<?php echo $PaypalToatal; ?>">
+                                                    <input type="hidden" name="quantity_{{$Count}}" value="{{$CartItem->qty}}">
+                                                    <input type="hidden" name="shipping_{{$Count}}" value="<?php echo dollar($Shipping) ?>">
+                                                    @endforeach
+                                                    <?php $Count = $Count+1;  ?>
+                                                    @endforeach
+                                                    <input type="hidden" name="cancel_return" id="cancel_return" value="{{url('/')}}/shopping-cart/checkout/payment" />
+                                                    <button style="cursor:pointer; border: none; background: transparent; padding: 0;" type="submit">
+                                                        <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/cc-badges-ppcmcvdam.png" alt="Pay with PayPal Credit or any major credit card" style="max-width: 100%; height: auto;" />
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- My Account Button -->
+                                <a href="{{url('/')}}/dashboard" class="modern-btn-secondary" style="margin-top: 1.5rem;">
+                                    <i class="icon-user"></i> My Account
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+                <!-- Order Summary Without Coupon -->
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-xl-7">
+                        <div class="modern-order-summary">
+                            <h3>Your Order #{{$OrderNumberNumber}}</h3>
+                            
+                            <table class="modern-order-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th style="text-align: right;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($CartItems as $CartItem)
+                                    <?php 
+                                        $Products = DB::table('product')->where('id',$CartItem->id)->get();
+                                    ?>
+                                    @foreach($Products as $Product)
+                                    <tr>
+                                        <td>
+                                            <a href="{{url('/')}}/product/{{$Product->slung}}" class="product-link">
+                                                {{$Product->name}} <strong>x {{$CartItem->qty}}</strong>
+                                            </a>
+                                        </td>
+                                        <td style="text-align: right; font-weight: 600;">KES {{number_format($CartItem->price, 0)}}</td>
+                                    </tr>
+                                    @endforeach
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            
+                            <div class="modern-order-totals">
+                                <div class="total-row subtotal">
+                                    <span>Subtotal:</span>
+                                    <span style="font-weight: 600;">{{Cart::subtotal()}}</span>
+                                </div>
+                                <div class="total-row">
+                                    <span>Shipping:</span>
+                                    <span style="font-weight: 600;">KES {{number_format($Shipping, 0)}}</span>
+                                </div>
+                                <div class="total-row final-total">
+                                    <span>Total:</span>
+                                    <span>KES 
+                                        <?php 
+                                            $Subtotal = Cart::subtotal();
+                                            $PrepSubtotal = str_replace(',', '', $Subtotal);
+                                            $WholeSubtotal = ceil($PrepSubtotal);
+                                            $TheTotal = $WholeSubtotal + $Shipping;
+                                            echo number_format($TheTotal, 0);
+                                        ?>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Methods -->
+                            <div class="modern-payment-methods">
+                                <div class="accordion-summary" id="accordion-payment">
+                                    <!-- M-PESA PayBill -->
+                                    <div class="modern-payment-card card">
+                                        <div class="card-header" id="heading-1" data-toggle="collapse" data-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                                            <h2 class="card-title">
+                                                <a role="button" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                                                    <span><span class="payment-icon">📱</span> M-PESA PayBill</span>
+                                                </a>
+                                            </h2>
+                                        </div>
+                                        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+                                            <div class="card-body">
+                                                <ul class="modern-payment-steps">
+                                                    <li>Go to your <strong>MPESA</strong> menu</li>
+                                                    <li>Select <strong>Lipa Na MPESA</strong></li>
+                                                    <li>Select <strong>PayBill</strong></li>
+                                                    <?php $SettingsTill = DB::table('sitesettings')->get(); ?>
+                                                    @foreach($SettingsTill as $set)
+                                                    <li>Enter the Business Number <strong>{{$set->till}}</strong></li>
+                                                    @endforeach
+                                                    <li>Enter Account Number <strong>{{$InvoiceNumber}}</strong></li>
+                                                    <li>Enter Amount KSH <strong>
+                                                        <?php
+                                                            if(Session::has('campaign')){
+                                                                $cost = Cart::total();
+                                                                $percentage = 10;
+                                                                $PrepeTotalCart = str_replace( ',', '', $cost );
+                                                                $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                                $discount = ($percentage / 100) * $FormatTotalCart;
+                                                                $TotalCart = ($FormatTotalCart - $discount);
+                                                            }else{
+                                                                $cost = Cart::total();
+                                                                $percentage = 10;
+                                                                $PrepeTotalCart = str_replace( ',', '', $cost );
+                                                                $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                                $TotalCart = $FormatTotalCart;
+                                                            }
+                                                            $PrepeTotalCart = str_replace( ',', '', $TotalCart );
+                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                            $ShippingFee = $Shipping;
+                                                            $TotalCost = $FormatTotalCart+$ShippingFee;
+                                                            echo number_format($TotalCost, 0);
+                                                        ?>
+                                                    </strong></li>
+                                                    <li>Then press <strong>OK</strong> to confirm</li>
+                                                    <li>Enter the transaction code below</li>
+                                                </ul>
+                                                
+                                                <form method="POST" action="#" id="verify">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="invoice" value="{{$InvoiceNumber}}">
+                                                    <?php
+                                                        if(Session::has('campaign')){
+                                                            $cost = Cart::total();
+                                                            $percentage = 10;
+                                                            $PrepeTotalCart = str_replace( ',', '', $cost );
+                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                            $discount = ($percentage / 100) * $FormatTotalCart;
+                                                            $TotalCart = ($FormatTotalCart - $discount);
+                                                        }else{
+                                                            $cost = Cart::total();
+                                                            $percentage = 10;
+                                                            $PrepeTotalCart = str_replace( ',', '', $cost );
+                                                            $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                            $TotalCart = $FormatTotalCart;
+                                                        }
+                                                        $PrepeTotalCart = str_replace( ',', '', $TotalCart );
+                                                        $FormatTotalCart = round($PrepeTotalCart, 0);
+                                                        $ShippingFee = $Shipping;
+                                                        $TotalCost = $FormatTotalCart+$ShippingFee;
+                                                    ?>
+                                                    <input type="hidden" name="amount" value="{{$TotalCost}}">
+                                                    <div class="modern-form-group">
+                                                        <label for="transaction-code-2">Enter Your MPESA Transaction Code <span style="color: #f5576c;">*</span></label>
+                                                        <input type="text" name="TransactionID" id="transaction-code-2" required placeholder="e.g. NJL4E9WJ96" autocomplete="off">
+                                                    </div>
+                                                    <button id="veryfyID" class="modern-btn-primary" type="submit">
+                                                        <i class="icon-check"></i> Verify Payment
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
 		                			<div class="summary" style="margin:0px !important">
 		                				<h3 class="summary-title">Your Order #{{$OrderNumberNumber}}</h3><!-- End .summary-title -->
 
@@ -1055,4 +1171,15 @@
                                                             </button>
                                                             {{--  --}}
                                                             </div>
-                                  
+                                                        </form>
+										            </div><!-- End .card-body -->
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+                                            @endif
+
+            </div>
+        </div>
+    </div>
+</main>
+
+@endsection
