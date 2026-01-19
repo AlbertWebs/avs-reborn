@@ -17,8 +17,8 @@ class AdminSeeder extends Seeder
         $admins = [
             [
                 'name' => 'Super Admin',
-                'email' => 'admin@amanivehiclesounds.co.ke',
-                'password' => Hash::make('admin123'),
+                'email' => 'admin@amanivehiclesounds.com',
+                'password' => Hash::make('68252624@AVS!'),
                 'position' => 'Super Administrator',
             ],
             [

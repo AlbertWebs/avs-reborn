@@ -590,8 +590,12 @@ class AdminsController extends Controller
     }
 
     public function editAdmin($id){
-        $newID = Auth::user()->id;
-        $Admin = Admin::find($newID);
+        $Admin = Admin::find($id);
+        if (!$Admin) {
+            Session::flash('message', 'Admin not found');
+            Session::flash('messageError', 'The admin you are trying to edit does not exist.');
+            return redirect()->route('admin.admins');
+        }
         $page_title = 'formfiletext';//For Style Inheritance
         $page_name = 'Edit Site Administrator';
        

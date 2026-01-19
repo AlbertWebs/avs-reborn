@@ -28,13 +28,13 @@
             <button type="button" onclick="window.open('{{url('/admin/Products_offer')}}','_self')" 
                     style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border: none; color: white; padding: 12px 15px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 10px;">
                 <i class="icon-gift"></i>
-                <span style="font-weight: 600;">Special Offers</span>
+                <span style="font-weight: 600;"> Offers</span>
             </button>
 
             <button type="button" onclick="window.open('{{url('/admin/searches')}}','_self')" 
                     style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border: none; color: white; padding: 12px 15px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 10px;">
                 <i class="icon-search"></i>
-                <span style="font-weight: 600;">Searched Keywords</span>
+                <span style="font-weight: 600;">Searched</span>
             </button>
 
        

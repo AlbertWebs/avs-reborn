@@ -103,12 +103,12 @@
             <div class="header-bottom sticky-header">
                 <div class="container">
                     <div class="header-left">
-                        <div class="dropdown category-dropdown show is-on" data-visible="false">
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-display="static" title="Browse Categories">
+                        <div class="dropdown category-dropdown" data-visible="false">
+                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Browse Categories">
                                 Browse Categories
                             </a>
 
-                            <div class="dropdown-menu show">
+                            <div class="dropdown-menu">
                                 <nav class="side-nav">
                                     <ul class="menu-vertical sf-arrows">
                                         <?php $Category = DB::table('category')->orderBy('order', 'asc')->limit(11)->get(); ?>
@@ -341,6 +341,302 @@
     @include('front.newsletter')
     @include('front.sign')
     @include('front.schema')
+    
+    <style>
+    /* Header Responsive Styles */
+    @media (max-width: 991px) {
+        /* Header Middle Section */
+        .header-middle {
+            padding: 1rem 0 !important;
+        }
+        
+        .header-middle .container {
+            padding-left: 15px;
+            padding-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo img {
+            max-width: 180px;
+            height: auto;
+        }
+        
+        /* Header Right - Shopping Cart */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header-dropdown-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header-dropdown-link a,
+        .header-dropdown-link .dropdown-toggle {
+            font-size: 1.2rem;
+            padding: 0.5rem;
+        }
+        
+        .cart-txt,
+        .wishlist-txt,
+        .compare-txt {
+            display: none;
+        }
+        
+        .cart-count,
+        .wishlist-count {
+            font-size: 0.75rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        /* Header Top - Already has some styles in top.blade.php, enhance them */
+        .header-top {
+            padding: 0.6rem 0 !important;
+        }
+        
+        .header-top .container {
+            padding-left: 15px;
+            padding-right: 15px;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .header-top .header-left,
+        .header-top .header-right {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        /* Header Middle */
+        .header-middle {
+            padding: 0.75rem 0 !important;
+        }
+        
+        .header-middle .container {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        
+        .logo img {
+            max-width: 150px;
+        }
+        
+        .mobile-menu-toggler {
+            padding: 0.5rem;
+            font-size: 1.5rem;
+        }
+        
+        /* Header Right */
+        .header-right {
+            gap: 0.25rem;
+        }
+        
+        .header-dropdown-link a,
+        .header-dropdown-link .dropdown-toggle {
+            font-size: 1.1rem;
+            padding: 0.4rem;
+        }
+        
+        /* Header Bottom */
+        .header-bottom {
+            padding: 0.75rem 0 !important;
+        }
+        
+        .header-bottom .container {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        
+        .category-dropdown .dropdown-toggle {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+        
+        .main-nav {
+            display: none;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .header-top {
+            padding: 0.5rem 0 !important;
+        }
+        
+        .header-top .header-left a,
+        .header-top .header-right a {
+            font-size: 1rem;
+        }
+        
+        .header-middle {
+            padding: 0.5rem 0 !important;
+        }
+        
+        .logo img {
+            max-width: 120px;
+        }
+        
+        .header-right {
+            gap: 0.2rem;
+        }
+        
+        .header-dropdown-link a,
+        .header-dropdown-link .dropdown-toggle {
+            font-size: 1rem;
+            padding: 0.3rem;
+        }
+        
+        .header-bottom {
+            padding: 0.5rem 0 !important;
+        }
+        
+        .category-dropdown .dropdown-toggle {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .logo img {
+            max-width: 100px;
+        }
+        
+        .header-dropdown-link a,
+        .header-dropdown-link .dropdown-toggle {
+            font-size: 0.9rem;
+        }
+        
+        .category-dropdown .dropdown-toggle {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.7rem;
+        }
+    }
+    
+    /* Footer Responsive Styles - Minimal and Non-Breaking */
+    @media (max-width: 768px) {
+        /* Hide Footer on Mobile */
+        footer,
+        .footer,
+        .footer-middle,
+        .footer-bottom {
+            display: none !important;
+        }
+        
+        /* Footer Middle Section - Only adjust padding and spacing */
+        .footer-middle {
+            padding: 2rem 0 !important;
+        }
+        
+        .footer-middle .container {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        
+        /* Footer logo responsive */
+        .footer-logo {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Footer payments image responsive */
+        .footer-payments img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Footer Bottom Section - Keep existing structure */
+        .footer-bottom {
+            padding: 1.5rem 0 !important;
+        }
+        
+        .footer-bottom .container {
+            padding-left: 15px;
+            padding-right: 15px;
+            max-width: 100%;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .footer-bottom .container > * {
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        /* Copyright text responsive */
+        .footer-copyright {
+            font-size: 0.85rem !important;
+            line-height: 1.6 !important;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            padding: 0 10px;
+            margin: 0 auto;
+            text-align: center;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .footer-copyright a {
+            word-break: break-word;
+            overflow-wrap: break-word;
+            display: inline;
+        }
+        
+        /* Social icons responsive */
+        .social-icons {
+            margin-top: 1rem;
+            text-align: center;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .footer-middle {
+            padding: 1.5rem 0 !important;
+        }
+        
+        .footer-bottom {
+            padding: 1rem 0 !important;
+        }
+        
+        .footer-copyright {
+            font-size: 0.75rem !important;
+            line-height: 1.5 !important;
+            padding: 0 15px;
+        }
+        
+        .footer-bottom .container {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .footer-copyright {
+            font-size: 0.7rem !important;
+            padding: 0 10px;
+            line-height: 1.4 !important;
+        }
+        
+        .footer-bottom .container {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+    }
+    </style>
 </body>
 @endforeach
 

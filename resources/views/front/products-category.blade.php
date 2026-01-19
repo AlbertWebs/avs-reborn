@@ -24,11 +24,11 @@
             <div class="products">
                 <div class="row">
                     @foreach($Products as $item)
-                    <div class="col-6 col-md-4 col-lg-4 col-xl-3">
-                        <div class="product">
-                            <figure class="product-media">
+                    <div class="col-6 col-md-4 col-lg-4 col-xl-3" style="margin-bottom: 1.5rem;">
+                        <div class="product" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
+                            <figure class="product-media" style="position: relative; overflow: hidden;">
                                 @if($item->stock == "Out of Stock")
-                                <span class="product-label label-out">Out of Stock</span>
+                                <span class="product-label label-out" style="position: absolute; top: 10px; left: 10px; z-index: 2; background: #f5576c; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Out of Stock</span>
                                 @endif
                                 @if($item->offer == 1)
                                     <?php
@@ -42,18 +42,16 @@
 
                                         $Difference = 100-$Change;
                                     ?>
-                                    <span class="product-label label-out"><strong>{{$Difference}}% Off</strong></span>
+                                    <span class="product-label label-out" style="position: absolute; top: 10px; right: 10px; z-index: 2; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.5rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);"><strong>{{$Difference}}% Off</strong></span>
                                 @endif
-                                {{-- <span class="product-label label-new">New</span> --}}
                                 @if($item->offer == 1)
                                 <a href="{{url('/')}}/product/{{$item->slung}}">
-                                    <img style="max-width:217px !important;" src="{{url('/')}}/uploads/product/{{$item->offer_banner}}" alt="{{$item->name}}" class="product-image">
+                                    <img loading="lazy" style="width: 100%; height: 220px; object-fit: cover;" src="{{url('/')}}/uploads/product/{{$item->offer_banner}}" alt="{{$item->name}}" class="product-image">
                                 </a>
                                 @else
                                 <a href="{{url('/')}}/product/{{$item->slung}}">
-                                    <img style="max-width:217px !important;" src="{{url('/')}}/uploads/product/{{$item->thumbnail}}" alt="{{$item->name}}" class="product-image">
+                                    <img loading="lazy" style="width: 100%; height: 220px; object-fit: cover;" src="{{url('/')}}/uploads/product/{{$item->thumbnail}}" alt="{{$item->name}}" class="product-image">
                                 </a>
-
                                 @endif
 
                                 <div class="product-action-vertical">
@@ -84,20 +82,32 @@
                                 <div class="product-price">
                                     KES{{$item->price}}
                                 </div><!-- End .product-price -->
+                                <?php
+                                    $Reviews = DB::table('reviews')->where('product_id',$item->id)->get();
+                                    $CountReviews = count($Reviews);
+                                    $Ratings = DB::table('reviews')->where('product_id',$item->id)->avg('rating');
+                                    $avg = ceil($Ratings);
+                                ?>
+                                @if($Reviews->isEmpty())
 
-                                {{-- <div class="ratings-container">
+                                @else
+                                <div class="ratings-container">
                                     <div class="ratings">
-                                        <div class="ratings-val" style="width: 90%;"></div><!-- End .ratings-val -->
+                                        <?php
+                                             //Average Rating
+                                        ?>
+                                        <div class="ratings-val" style="width: {{$avg}}%;"></div><!-- End .ratings-val -->
                                     </div>
-                                    <span class="ratings-text">( 12 Reviews )</span>
-                                </div> --}}
+                                    <span class="ratings-text">( {{$CountReviews}} Reviews )</span>
+                                </div>
+                                @endif
                                 <!-- End .rating-container -->
-                                {{--  --}}
-                                {{-- <div class="product-cat">
+                                
+                                <div class="product-cat meta">
                                     <a href="{{url('/product')}}/{{$item->slung}}"> {{$item->meta}} </a>
-                                </div> --}}
+                                </div>
                                 <!-- End .product-cat -->
-                                {{--  --}}
+                                
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
                     </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
@@ -115,4 +125,36 @@
         </div><!-- End .container -->
     </div><!-- End .page-content -->
 </main><!-- End .main -->
+
+<style>
+/* Product Cards Spacing on Category Page */
+.products .row {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+}
+
+.products .row > [class*="col-"] {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .products .row > [class*="col-"] {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .products .row {
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+    }
+    
+    .products .row > [class*="col-"] {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        margin-bottom: 1rem;
+    }
+}
+</style>
 @endsection

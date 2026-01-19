@@ -49,7 +49,7 @@
     <div class="mb-5"></div>
 
     <!-- Modern Categories Section -->
-    <div class="container py-4">
+    <div class="container py-4 popular-categories-section">
         <div class="section-header text-center mb-4">
             <h2 class="section-title" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">Explore Popular Categories</h2>
             <p class="section-subtitle" style="color: #666; font-size: 1rem;">Discover our wide range of premium car audio products</p>
@@ -157,7 +157,7 @@
     <div class="container py-4">
         <div class="modern-banners-grid">
             <div class="row g-3">
-                @foreach($Full as $full)
+            @foreach($Full as $full)
                 <div class="col-12 col-sm-6 col-lg-4">
                     <a href="{{url('/')}}/product/{{$full->slung}}" class="modern-banner-card">
                         <div class="banner-image-wrapper">
@@ -166,7 +166,7 @@
                         </div>
                     </a>
                 </div>
-                @endforeach
+            @endforeach
             </div>
         </div>
     </div>
@@ -228,7 +228,7 @@
     <!-- Modern Hot Deals Section -->
     <div class="modern-deals-section" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 3rem 0;">
         <div class="container">
-            <div class="section-header-modern d-flex justify-content-between align-items-center mb-4 flex-wrap">
+            <!-- <div class="section-header-modern d-flex justify-content-between align-items-center mb-4 flex-wrap">
                 <div>
                     <h2 class="section-title-modern" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">🔥 Hot Deals</h2>
                     <p class="section-subtitle-modern" style="color: #666; font-size: 0.95rem; margin: 0;">Limited time offers on premium products</p>
@@ -238,7 +238,7 @@
                         View All <i class="icon-long-arrow-right"></i>
                     </a>
                 </div>
-            </div>
+            </div> -->
 
     <style>
     .btn-modern-view-all:hover {
@@ -421,18 +421,19 @@
 
     <?php $Category = DB::table('category')->limit('15')->get(); $counter = 1; ?>
     @foreach ($Category as $category)
-    <div class="container py-5" style="background: #f8f9fa; border-radius: 24px; margin: 2rem auto; padding: 2.5rem !important;">
-        <div class="section-header-modern d-flex justify-content-between align-items-center mb-4 flex-wrap">
-            <div>
-                <h2 class="section-title-modern" style="font-size: 1.75rem; font-weight: 700; color: #333; margin-bottom: 0.25rem;">{{$category->cat}}</h2>
-                <p class="section-subtitle-modern" style="color: #666; font-size: 0.9rem; margin: 0;">Premium quality products</p>
+        <?php 
+            // Check if category has any products (in stock or out of stock)
+            $CategoryProducts = DB::table('product')->where('cat',$category->id)->get();
+            $CategoryProductCount = count($CategoryProducts);
+        ?>
+        @if($CategoryProductCount > 0)
+        <div class="container py-5 category-section-container" style="background: #f8f9fa; border-radius: 24px; margin: 2rem auto; padding: 2.5rem;">
+            <div class="section-header-modern d-flex justify-content-between align-items-center mb-4 flex-wrap">
+                <div class="section-header-content">
+                    <h2 class="section-title-modern" style="font-size: 1.75rem; font-weight: 700; color: #333; margin-bottom: 0.25rem;">{{$category->cat}}</h2>
+                    <p class="section-subtitle-modern" style="color: #666; font-size: 0.9rem; margin: 0;">Premium quality products</p>
+                </div>
             </div>
-            <div class="mt-3 mt-md-0">
-                <a href="{{url('/')}}/products/{{$category->slung}}" class="btn-modern-view-all" style="padding: 0.75rem 1.5rem; background: #667eea; color: white; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block;">
-                    View All <i class="icon-long-arrow-right"></i>
-                </a>
-            </div>
-        </div>
 
         <div class="tab-content tab-content-carousel">
             <div class="products">
@@ -533,7 +534,287 @@
                 </div><!-- End .owl-carousel -->
             </div><!-- .End .tab-pane -->
         </div><!-- End .tab-content -->
+        
+        <!-- View All Button -->
+        <div class="text-center mt-4">
+            <a href="{{url('/')}}/products/{{$category->slung}}" class="btn-modern-view-all" style="padding: 0.75rem 1.5rem; background: #667eea; color: white; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block;">
+                View All <i class="icon-long-arrow-right"></i>
+            </a>
+        </div>
     </div><!-- End .container -->
+
+    <style>
+    /* Hide Popular Categories Section on Mobile */
+    @media (max-width: 768px) {
+        .popular-categories-section {
+            display: none !important;
+        }
+        
+        /* Hide Newsletter Section on Mobile */
+        .modern-newsletter-section {
+            display: none !important;
+        }
+        
+        /* Hide Blog Section on Mobile */
+        .modern-blog-section {
+            display: none !important;
+        }
+    }
+    
+    /* Mobile Responsive Styles for Category Sections */
+    /* Force override inline styles on mobile */
+    @media (max-width: 768px) {
+        /* Override container inline padding and margin */
+        div.category-section-container[style*="padding: 2.5rem"],
+        div.category-section-container[style*="padding:2.5rem"] {
+            padding: 1.25rem !important;
+        }
+        
+        div.category-section-container[style*="margin: 2rem auto"],
+        div.category-section-container[style*="margin:2rem auto"] {
+            margin: 1rem 0.75rem !important;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        /* Popular Categories Section */
+        .popular-categories-section {
+            padding: 1rem 0 !important;
+        }
+        
+        .popular-categories-section .section-title {
+            font-size: 1.5rem !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        .popular-categories-section .section-subtitle {
+            font-size: 0.9rem !important;
+            padding: 0 0.5rem;
+        }
+        
+        /* Category Product Sections */
+        .category-section-container {
+            padding: 1.25rem !important;
+            margin: 1rem 0.75rem !important;
+            border-radius: 16px !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        .category-section-container.container {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+        
+        .section-header-modern {
+            flex-direction: column;
+            align-items: flex-start !important;
+            text-align: left;
+        }
+        
+        .section-header-content {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header-action {
+            width: 100%;
+            margin-top: 0 !important;
+        }
+        
+        .section-title-modern,
+        .category-section-container .section-title-modern,
+        .category-section-container h2.section-title-modern {
+            font-size: 1.35rem !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        .section-subtitle-modern,
+        .category-section-container .section-subtitle-modern,
+        .category-section-container p.section-subtitle-modern {
+            font-size: 0.85rem !important;
+        }
+        
+        .btn-modern-view-all {
+            padding: 0.625rem 1.25rem !important;
+            font-size: 0.9rem !important;
+            width: 100%;
+            text-align: center;
+            display: block !important;
+        }
+        
+        .category-section-container .row {
+            margin-left: -0.5rem;
+            margin-right: -0.5rem;
+            width: calc(100% + 1rem);
+            max-width: 100%;
+        }
+        
+        .category-section-container .col-6,
+        .category-section-container .col-md-4,
+        .category-section-container .col-lg-4,
+        .category-section-container .col-xl-3 {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Override inline styles for product images - use high specificity */
+        .category-section-container figure.product-media img.product-image,
+        .category-section-container .product-media .product-image,
+        .category-section-container .product-image {
+            height: 180px !important;
+            max-height: 180px !important;
+        }
+        
+        /* Product cards responsive */
+        .category-section-container .product {
+            margin-bottom: 0;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .category-section-container .product-body {
+            padding: 1rem !important;
+        }
+        
+        .category-section-container .product-title {
+            font-size: 0.9rem !important;
+            line-height: 1.3 !important;
+        }
+        
+        .category-section-container .product-title a {
+            font-size: 0.9rem !important;
+        }
+        
+        .category-section-container .product-price {
+            font-size: 1rem !important;
+        }
+        
+        .category-section-container .product-cat {
+            font-size: 0.8rem !important;
+        }
+        
+        .category-section-container .product-cat.meta {
+            font-size: 0.75rem !important;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        /* Popular Categories Section */
+        .popular-categories-section {
+            padding: 0.75rem 0 !important;
+        }
+        
+        .popular-categories-section .section-title {
+            font-size: 1.25rem !important;
+            margin-bottom: 0.375rem !important;
+        }
+        
+        .popular-categories-section .section-subtitle {
+            font-size: 0.85rem !important;
+            padding: 0 0.75rem;
+        }
+        
+        /* Category Product Sections */
+        .category-section-container {
+            padding: 1rem !important;
+            margin: 0.75rem 0.5rem !important;
+            border-radius: 12px !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        .category-section-container.container {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+        
+        .section-title-modern {
+            font-size: 1.2rem !important;
+        }
+        
+        .section-subtitle-modern {
+            font-size: 0.8rem !important;
+        }
+        
+        .btn-modern-view-all {
+            padding: 0.5rem 1rem !important;
+            font-size: 0.85rem !important;
+        }
+        
+        /* Override inline styles for product images on small screens */
+        .category-section-container figure.product-media img.product-image,
+        .category-section-container .product-media .product-image,
+        .category-section-container .product-image {
+            height: 160px !important;
+            max-height: 160px !important;
+        }
+        
+        .category-section-container .product-body {
+            padding: 0.75rem !important;
+        }
+        
+        .category-section-container .product-title,
+        .category-section-container .product-title a {
+            font-size: 0.85rem !important;
+            line-height: 1.2 !important;
+        }
+        
+        .category-section-container .product-price {
+            font-size: 0.9rem !important;
+        }
+        
+        .category-section-container .product-cat {
+            font-size: 0.75rem !important;
+        }
+        
+        .category-section-container .product-cat.meta {
+            font-size: 0.7rem !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .category-section-container {
+            padding: 0.75rem !important;
+            margin: 0.5rem 0.25rem !important;
+        }
+        
+        .category-section-container.container {
+            padding-left: 0.25rem !important;
+            padding-right: 0.25rem !important;
+        }
+        
+        .section-title-modern {
+            font-size: 1.1rem !important;
+        }
+        
+        .popular-categories-section .section-title {
+            font-size: 1.1rem !important;
+        }
+        
+        /* Override inline styles for product images on extra small screens */
+        .category-section-container figure.product-media img.product-image,
+        .category-section-container .product-media .product-image,
+        .category-section-container .product-image {
+            height: 140px !important;
+            max-height: 140px !important;
+        }
+        
+        .category-section-container .product-body {
+            padding: 0.5rem !important;
+        }
+        
+        .category-section-container .product-title,
+        .category-section-container .product-title a {
+            font-size: 0.8rem !important;
+        }
+        
+        .category-section-container .product-price {
+            font-size: 0.85rem !important;
+        }
+    }
+    </style>
 
     <?php $OfferBanners = DB::table('offers')->where('category_id',$category->id)->get(); ?>
 
@@ -600,6 +881,7 @@
 
     @endif
     <?php $counter = $counter+1; ?>
+        @endif
     @endforeach
     <div class="mb-1"></div><!-- End .mb-1 -->
 
@@ -714,11 +996,20 @@
         align-items: center;
         justify-content: center;
         height: 80px;
+        width: 100%;
+        position: relative;
+        text-align: center;
     }
+    .brand-image-wrapper img,
     .brand-image {
         max-width: 100%;
         max-height: 100%;
+        width: auto;
+        height: auto;
         object-fit: contain;
+        object-position: center center;
+        margin: 0 auto;
+        display: block;
         filter: grayscale(100%);
         opacity: 0.7;
         transition: all 0.3s ease;
@@ -845,6 +1136,14 @@ img[loading="lazy"] {
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+img[loading="lazy"].loaded {
+    background: none;
+    animation: none;
+    opacity: 1;
 }
 
 @keyframes loading {
@@ -912,4 +1211,60 @@ img {
     to { opacity: 1; }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle lazy-loaded images
+    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+    
+    // Function to remove loading animation
+    function removeLoadingAnimation(img) {
+        if (img.complete && img.naturalHeight !== 0) {
+            // Image is already loaded
+            img.classList.add('loaded');
+        } else {
+            // Wait for image to load
+            img.addEventListener('load', function() {
+                this.classList.add('loaded');
+            }, { once: true });
+            
+            // Handle error case
+            img.addEventListener('error', function() {
+                this.classList.add('loaded'); // Remove animation even on error
+            }, { once: true });
+        }
+    }
+    
+    // Process all lazy images
+    lazyImages.forEach(function(img) {
+        removeLoadingAnimation(img);
+    });
+    
+    // Use Intersection Observer for better performance with lazy loading
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    removeLoadingAnimation(img);
+                    observer.unobserve(img);
+                }
+            });
+        });
+        
+        lazyImages.forEach(function(img) {
+            imageObserver.observe(img);
+        });
+    }
+    
+    // Fallback: Check all images after a short delay
+    setTimeout(function() {
+        lazyImages.forEach(function(img) {
+            if (img.complete && img.naturalHeight !== 0) {
+                img.classList.add('loaded');
+            }
+        });
+    }, 100);
+});
+</script>
 @endsection
