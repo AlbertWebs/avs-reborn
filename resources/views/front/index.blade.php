@@ -427,7 +427,7 @@
             $CategoryProductCount = count($CategoryProducts);
         ?>
         @if($CategoryProductCount > 0)
-        <div class="container py-5 category-section-container" style="background: #f8f9fa; border-radius: 24px; margin: 2rem auto; padding: 2.5rem;">
+        <div class="container py-5 category-section-container" style="background: #f8f9fa; border-radius: 24px; margin: 2rem auto; padding: 2.5rem !important;">
             <div class="section-header-modern d-flex justify-content-between align-items-center mb-4 flex-wrap">
                 <div class="section-header-content">
                     <h2 class="section-title-modern" style="font-size: 1.75rem; font-weight: 700; color: #333; margin-bottom: 0.25rem;">{{$category->cat}}</h2>
@@ -544,77 +544,74 @@
     </div><!-- End .container -->
 
     <style>
-    /* Hide Popular Categories Section on Mobile */
+    /* ============================================
+       MOBILE RESPONSIVE STYLES - COMPREHENSIVE FIX
+       ============================================ */
+    
+    /* Prevent horizontal scrolling */
+    body {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+    
+    /* Ensure all containers respect viewport */
+    @media (max-width: 991px) {
+        .container {
+            max-width: 100% !important;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    }
+    
+    /* Hide sections on mobile */
     @media (max-width: 768px) {
         .popular-categories-section {
             display: none !important;
         }
         
-        /* Hide Newsletter Section on Mobile */
         .modern-newsletter-section {
             display: none !important;
         }
         
-        /* Hide Blog Section on Mobile */
         .modern-blog-section {
             display: none !important;
         }
     }
     
-    /* Mobile Responsive Styles for Category Sections */
-    /* Force override inline styles on mobile */
+    /* Category Product Sections - Mobile Fixes */
     @media (max-width: 768px) {
-        /* Override container inline padding and margin */
-        div.category-section-container[style*="padding: 2.5rem"],
-        div.category-section-container[style*="padding:2.5rem"] {
-            padding: 1.25rem !important;
-        }
-        
-        div.category-section-container[style*="margin: 2rem auto"],
-        div.category-section-container[style*="margin:2rem auto"] {
-            margin: 1rem 0.75rem !important;
-        }
-    }
-    
-    @media (max-width: 768px) {
-        /* Popular Categories Section */
-        .popular-categories-section {
-            padding: 1rem 0 !important;
-        }
-        
-        .popular-categories-section .section-title {
-            font-size: 1.5rem !important;
-            margin-bottom: 0.5rem !important;
-        }
-        
-        .popular-categories-section .section-subtitle {
-            font-size: 0.9rem !important;
-            padding: 0 0.5rem;
-        }
-        
-        /* Category Product Sections */
-        .category-section-container {
+        /* Override all inline styles for category containers - use attribute selector for higher specificity */
+        div.category-section-container[style*="padding"],
+        .category-section-container,
+        .category-section-container.py-5 {
             padding: 1.25rem !important;
             margin: 1rem 0.75rem !important;
             border-radius: 16px !important;
-            max-width: 100% !important;
+            max-width: calc(100% - 1.5rem) !important;
             box-sizing: border-box !important;
+            width: calc(100% - 1.5rem) !important;
         }
         
-        .category-section-container.container {
+        .category-section-container.container,
+        div.container.category-section-container {
             padding-left: 0.75rem !important;
             padding-right: 0.75rem !important;
+            max-width: calc(100% - 1.5rem) !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
         }
         
+        /* Section header responsive */
         .section-header-modern {
-            flex-direction: column;
+            flex-direction: column !important;
             align-items: flex-start !important;
             text-align: left;
+            gap: 1rem;
         }
         
         .section-header-content {
             width: 100%;
-            margin-bottom: 1rem;
+            margin-bottom: 0;
         }
         
         .section-header-action {
@@ -622,69 +619,73 @@
             margin-top: 0 !important;
         }
         
-        .section-title-modern,
-        .category-section-container .section-title-modern,
-        .category-section-container h2.section-title-modern {
+        .section-title-modern {
             font-size: 1.35rem !important;
             margin-bottom: 0.5rem !important;
+            line-height: 1.3 !important;
         }
         
-        .section-subtitle-modern,
-        .category-section-container .section-subtitle-modern,
-        .category-section-container p.section-subtitle-modern {
+        .section-subtitle-modern {
             font-size: 0.85rem !important;
+            margin: 0 !important;
         }
         
+        /* View All Button */
         .btn-modern-view-all {
             padding: 0.625rem 1.25rem !important;
             font-size: 0.9rem !important;
-            width: 100%;
-            text-align: center;
+            width: 100% !important;
+            text-align: center !important;
             display: block !important;
+            margin-top: 1rem;
         }
         
+        /* Product grid responsive */
         .category-section-container .row {
-            margin-left: -0.5rem;
-            margin-right: -0.5rem;
-            width: calc(100% + 1rem);
-            max-width: 100%;
+            margin-left: -0.5rem !important;
+            margin-right: -0.5rem !important;
+            width: calc(100% + 1rem) !important;
+            max-width: 100% !important;
         }
         
         .category-section-container .col-6,
         .category-section-container .col-md-4,
         .category-section-container .col-lg-4,
         .category-section-container .col-xl-3 {
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
-            margin-bottom: 1rem;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+            margin-bottom: 1rem !important;
+            width: 100%;
+            max-width: 100%;
         }
         
-        /* Override inline styles for product images - use high specificity */
+        /* Product cards */
+        .category-section-container .product {
+            margin-bottom: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box;
+        }
+        
+        /* Product images */
         .category-section-container figure.product-media img.product-image,
         .category-section-container .product-media .product-image,
         .category-section-container .product-image {
             height: 180px !important;
             max-height: 180px !important;
+            width: 100% !important;
+            object-fit: cover !important;
         }
         
-        /* Product cards responsive */
-        .category-section-container .product {
-            margin-bottom: 0;
-            width: 100%;
-            max-width: 100%;
-        }
-        
+        /* Product body */
         .category-section-container .product-body {
             padding: 1rem !important;
         }
         
-        .category-section-container .product-title {
-            font-size: 0.9rem !important;
-            line-height: 1.3 !important;
-        }
-        
+        .category-section-container .product-title,
         .category-section-container .product-title a {
             font-size: 0.9rem !important;
+            line-height: 1.3 !important;
         }
         
         .category-section-container .product-price {
@@ -697,6 +698,63 @@
         
         .category-section-container .product-cat.meta {
             font-size: 0.75rem !important;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        /* Category Product Sections - Small Mobile */
+        .category-section-container {
+            padding: 1rem !important;
+            margin: 0.75rem 0.5rem !important;
+            border-radius: 12px !important;
+        }
+        
+        .category-section-container.container {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+        
+        .section-title-modern {
+            font-size: 1.2rem !important;
+        }
+        
+        .section-subtitle-modern {
+            font-size: 0.8rem !important;
+        }
+        
+        .btn-modern-view-all {
+            padding: 0.5rem 1rem !important;
+            font-size: 0.85rem !important;
+        }
+        
+        /* Product images smaller on small screens */
+        .category-section-container figure.product-media img.product-image,
+        .category-section-container .product-media .product-image,
+        .category-section-container .product-image {
+            height: 160px !important;
+            max-height: 160px !important;
+        }
+        
+        .category-section-container .product-body {
+            padding: 0.75rem !important;
+        }
+        
+        .category-section-container .product-title,
+        .category-section-container .product-title a {
+            font-size: 0.85rem !important;
+            line-height: 1.2 !important;
+        }
+        
+        .category-section-container .product-price {
+            font-size: 0.9rem !important;
+        }
+        
+        .category-section-container .product-cat {
+            font-size: 0.75rem !important;
+        }
+        
+        .category-section-container .product-cat.meta {
+            font-size: 0.7rem !important;
         }
     }
     
