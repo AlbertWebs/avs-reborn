@@ -8,5 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Privacy extends Model
 {
     use HasFactory;
-    public $table = "privacy";
+    
+    protected $table = "privacy";
+    
+    protected $fillable = [
+        'title',
+        'content'
+    ];
 }

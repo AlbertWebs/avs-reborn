@@ -546,29 +546,46 @@ class HomeController extends Controller
 
 
         $Products = DB::table('product')->where('code', 'like', '%' . $request->keyword . '%')->orWhere('name', 'like', '%' . $request->keyword . '%')->paginate(200);
-        $page_name = $request->search;
-        $page_title = $request->search;
+        $page_name = $request->keyword ?? $request->search ?? 'Search Results';
+        $page_title = $request->keyword ?? $request->search ?? 'Search Results';
         $search_results = $search;
         $search_results_category = 'All Categories';
         $SEOSettings = DB::table('seosettings')->get();
+        
+        // Get a default category for the master layout (use first category or create a dummy one)
+        $Category = DB::table('category')->first();
+        if (!$Category) {
+            // Create a dummy category object if no categories exist
+            $Category = (object)[
+                'id' => 0,
+                'cat' => 'All Products',
+                'slung' => 'all-products',
+                'keywords' => 'all products',
+                'image' => ''
+            ];
+        } else {
+            // Convert to collection for the foreach loop in master-category
+            $Category = collect([$Category]);
+        }
+        
         foreach ($SEOSettings as $Settings) {
-            SEOMeta::setTitle('Our Products | ' . $Settings->sitename .'');
-            SEOMeta::setDescription('Pioneer Car Speakers, Sony Car Speakers, Kenwood Car speakers, Kenwood speakers, Sony Speakers' . $Settings->welcome . '');
+            SEOMeta::setTitle('Search Results - ' . $page_name . ' | ' . $Settings->sitename .'');
+            SEOMeta::setDescription('Search results for ' . $page_name . ' - ' . $Settings->welcome . '');
             SEOMeta::setCanonical('' . $Settings->url . '/search-results/');
-            OpenGraph::setDescription('' . $Settings->welcome . '');
-            OpenGraph::setTitle('' . $Settings->sitename . ' - ' . $Settings->welcome . '');
+            OpenGraph::setDescription('Search results for ' . $page_name . ' - ' . $Settings->welcome . '');
+            OpenGraph::setTitle('Search Results - ' . $page_name . ' | ' . $Settings->sitename . '');
             OpenGraph::setUrl('' . $Settings->url . '/search-results/');
             OpenGraph::addProperty('type', 'website');
-            Twitter::setTitle('' . $Settings->sitename. '');
+            Twitter::setTitle('Search Results - ' . $page_name . ' | ' . $Settings->sitename. '');
             Twitter::setSite('@amanisounds');
-            $ProductsCategory = DB::table('category')->where('keywords', 'like', '%' . $request->search . '%')->limit(4)->get();
-            $ProductsTag = DB::table('tags')->where('title', 'like', '%' . $request->search . '%')->limit(1)->get();
-            $ProductsBrand = DB::table('brands')->where('name', 'like', '%' . $request->search . '%')->limit(1)->get();
+            $ProductsCategory = DB::table('category')->where('keywords', 'like', '%' . ($request->search ?? $request->keyword ?? '') . '%')->limit(4)->get();
+            $ProductsTag = DB::table('tags')->where('title', 'like', '%' . ($request->search ?? $request->keyword ?? '') . '%')->limit(1)->get();
+            $ProductsBrand = DB::table('brands')->where('name', 'like', '%' . ($request->search ?? $request->keyword ?? '') . '%')->limit(1)->get();
 
             // Call Route
             // return redirect()->route('search-results', ['ProductsTag'=>$ProductsTag,'ProductsBrand'=>$ProductsBrand,'ProductsCategory'=>$ProductsCategory]);
 
-            return view('front.search-results', compact('ProductsCategory','ProductsTag','ProductsBrand','page_title','keywords', 'Products', 'page_name', 'search_results', 'search_results_category','search'));
+            return view('front.search-results', compact('Category','ProductsCategory','ProductsTag','ProductsBrand','page_title','keywords', 'Products', 'page_name', 'search_results', 'search_results_category','search'));
 
 
         }

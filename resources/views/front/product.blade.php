@@ -47,40 +47,54 @@
             <div class="product-details-top">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="product-gallery product-gallery-vertical">
+                        <div class="product-gallery product-gallery-vertical" style="position: relative;">
                             <div class="row">
-                                <figure class="product-main-image">
-                                    <img id="product-zoom" src="{{url('/')}}/uploads/product/{{$Product->image_one}}" data-zoom-image="{{url('/')}}/uploads/product/{{$Product->image_one}}" alt="{{$Product->name}}">
-
-                                    <a href="#" id="btn-product-gallery" class="btn-product-gallery">
-                                        <i class="icon-arrows"></i>
+                                <!-- Main Image Display -->
+                                <figure class="product-main-image" style="position: relative; margin-bottom: 1.5rem; background: #f8f9fa; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                                    <div style="position: relative; padding-top: 100%; background: #fff;">
+                                        <img id="product-zoom" 
+                                             src="{{url('/')}}/uploads/product/{{$Product->image_one}}" 
+                                             data-zoom-image="{{url('/')}}/uploads/product/{{$Product->image_one}}" 
+                                             alt="{{$Product->name}}"
+                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s ease; cursor: zoom-in;">
+                                    </div>
+                                    <a href="#" id="btn-product-gallery" class="btn-product-gallery" style="position: absolute; top: 15px; right: 15px; width: 44px; height: 44px; background: rgba(255,255,255,0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.15); transition: all 0.3s ease; z-index: 10;">
+                                        <i class="icon-arrows" style="font-size: 1.6rem; color: #333;"></i>
                                     </a>
+                                    <div id="image-counter" style="position: absolute; bottom: 15px; left: 15px; background: rgba(0,0,0,0.7); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">
+                                        <span id="current-image">1</span> / <span id="total-images">1</span>
+                                    </div>
                                 </figure><!-- End .product-main-image -->
 
-                                <div id="product-zoom-gallery" class="product-image-gallery">
-                                    <a class="product-gallery-item active" href="#" data-image="{{url('/')}}/uploads/product/{{$Product->image_one}}" data-zoom-image="{{url('/')}}/uploads/product/{{$Product->image_one}}">
-                                        <img src="{{url('/')}}/uploads/product/{{$Product->image_one}}" alt="{{$Product->name}}">
+                                <!-- Thumbnail Gallery -->
+                                <div id="product-zoom-gallery" class="product-image-gallery" style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
+                                    <?php 
+                                        $images = [];
+                                        $images[] = ['url' => $Product->image_one, 'name' => 'Main Image'];
+                                        if($Product->fb_pixels && $Product->fb_pixels != '0') {
+                                            $images[] = ['url' => $Product->fb_pixels, 'name' => 'Image 2'];
+                                        }
+                                        if($Product->image_two && $Product->image_two != '0' && $Product->image_two != null) {
+                                            $images[] = ['url' => $Product->image_two, 'name' => 'Image 3'];
+                                        }
+                                        if($Product->image_three && $Product->image_three != '0' && $Product->image_three != null) {
+                                            $images[] = ['url' => $Product->image_three, 'name' => 'Image 4'];
+                                        }
+                                        $imageCount = count($images);
+                                    ?>
+                                    @foreach($images as $index => $img)
+                                    <a class="product-gallery-item {{$index == 0 ? 'active' : ''}}" 
+                                       href="#" 
+                                       data-image="{{url('/')}}/uploads/product/{{$img['url']}}" 
+                                       data-zoom-image="{{url('/')}}/uploads/product/{{$img['url']}}"
+                                       data-index="{{$index + 1}}"
+                                       style="position: relative; display: block; width: 90px; height: 90px; border-radius: 8px; overflow: hidden; border: 3px solid transparent; transition: all 0.3s ease; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer;">
+                                        <img src="{{url('/')}}/uploads/product/{{$img['url']}}" 
+                                             alt="{{$Product->name}} - {{$img['name']}}"
+                                             style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                                        <div class="gallery-item-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.05); opacity: 0; transition: opacity 0.3s ease;"></div>
                                     </a>
-
-                                    <a class="product-gallery-item" href="#" data-image="{{url('/')}}/uploads/product/{{$Product->fb_pixels}}" data-zoom-image="{{url('/')}}/uploads/product/{{$Product->fb_pixels}}">
-                                        <img src="{{url('/')}}/uploads/product/{{$Product->fb_pixels}}" alt="{{$Product->name}}">
-                                    </a>
-
-                                    @if($Product->image_three == '0' or $Product->image_three == null)
-
-                                    @else
-                                    <a class="product-gallery-item" href="#" data-image="{{url('/')}}/uploads/product/{{$Product->image_three}}" data-zoom-image="{{url('/')}}/uploads/product/{{$Product->image_three}}">
-                                        <img src="{{url('/')}}/uploads/product/{{$Product->image_three}}" alt="{{$Product->name}}">
-                                    </a>
-                                    @endif
-
-                                    @if($Product->image_two == '0' or $Product->image_two == null)
-
-                                    @else
-                                    <a class="product-gallery-item" href="#" data-image="{{url('/')}}/uploads/product/{{$Product->image_two}}" data-zoom-image="{{url('/')}}/uploads/product/{{$Product->image_two}}">
-                                        <img src="{{url('/')}}/uploads/product/{{$Product->image_two}}" alt="{{$Product->name}}">
-                                    </a>
-                                    @endif
+                                    @endforeach
                                 </div><!-- End .product-image-gallery -->
                             </div><!-- End .row -->
                         </div><!-- End .product-gallery -->
@@ -133,37 +147,19 @@
                             </div><!-- End .details-filter-row -->
 
                             <div class="product-details-action">
-                                <a href="{{url('/')}}/shopping-cart/add-to-cart/{{$Product->id}}" class="btn-product btn-cart"><span>add to cart</span></a>
+                                <a href="{{url('/')}}/shopping-cart/add-to-cart/{{$Product->id}}" class="btn-product btn-cart" style="margin-right: 10px;"><span>Add to Cart</span></a>
 
-                                <a href="{{url('/')}}/wishlist/add-to-wishlist/{{$Product->id}}" class="btn-product btn-cart" title="Wishlist"><span>Add to Wishlist</span></a>
-                                <a href="{{url('/')}}/compare/add-to-compare/{{$Product->id}}" class="btn-product btn-cart" title="Compare"><span>Add to Compare</span></a>
-
-                                <div class="details-action-wrapper" style="visibility: hidden;">
-                                    <a href="#" class="btn-product btn-cart" title="Wishlist"><span>Add to Wishlist</span></a>
-                                    <a href="#" class="btn-product btn-cart" title="Compare"><span>Add to Compare</span></a>
-                                </div><!-- End .details-action-wrapper -->
-                                
                                 <?php
-                                            //prepare data to send
-                                            $dataObj = new stdClass();
-                                            $dataObj->ek_access_token = base64_encode("AVS.F7ETM1BK1619708873ZB19PSN");
-                                            $dataObj->ek_access_type = "api_access";
-                                            $dataObj->ek_redirect_url = "https://amanivehiclesounds.co.ke/api/escrow-callback";
-                                            $dataObj->ek_item_unique_identifier = $Product->id;
-                                            $dataObj->ek_item_title = $Product->name;
-                                            $dataObj->ek_seller_email = $Settings->email;
-                                            $dataObj->ek_seller_phone = $Settings->mobile;
-                                            $dataObj->ek_item_cost = $Product->price;
-                                            $dataObj->ek_item_currency = "KES";
-                                        
-                                            $encodedData = urlencode(json_encode($dataObj));
-                                            
-                                        ?>
-
-                                        <form style="margin-top:10px;" class="cart-quantity"  action="https://escrowkenya.com/api/v1/orders/start_view" method="POST">
-                                            <input type="hidden" name="payload" value="<?php echo $encodedData; ?>">
-                                            <button class="btn-product btn-cart" type="submit" class="escrow">Buy with Escrow</button>
-                                        </form>
+                                    $whatsappNumber = str_replace([' ', '-', '(', ')'], '', $Settings->mobile_one ?? $Settings->mobile ?? '254794301190');
+                                    $whatsappMessage = urlencode("Hello, I am interested in {$Product->name}, Price: KES {$Product->price} from your website");
+                                    $whatsappUrl = "https://wa.me/{$whatsappNumber}?text={$whatsappMessage}";
+                                ?>
+                                <a href="{{$whatsappUrl}}" target="_blank" class="btn-product btn-cart" style="background-color: #25D366; color: white; display: inline-flex; align-items: center;">
+                                    <svg style="width: 18px; height: 18px; margin-right: 8px;" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                    </svg>
+                                    <span>Buy Now</span>
+                                </a>
                             </div><!-- End .product-details-action -->
 
                             <div class="product-details-footer">
@@ -349,6 +345,203 @@
         </div><!-- End .container -->
     </div><!-- End .page-content -->
 </main><!-- End .main -->
+
+<style>
+    /* Enhanced Product Gallery Styles */
+    .product-gallery-item.active {
+        border-color: #cc9966 !important;
+        box-shadow: 0 4px 12px rgba(204, 153, 102, 0.3) !important;
+        transform: scale(1.05);
+    }
+    
+    .product-gallery-item:hover {
+        border-color: #cc9966 !important;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 6px 16px rgba(204, 153, 102, 0.25) !important;
+    }
+    
+    .product-gallery-item:hover img {
+        transform: scale(1.1);
+    }
+    
+    .product-gallery-item:hover .gallery-item-overlay {
+        opacity: 1 !important;
+    }
+    
+    .product-gallery-item.active .gallery-item-overlay {
+        opacity: 0.3 !important;
+    }
+    
+    #btn-product-gallery:hover {
+        background: #cc9966 !important;
+        transform: rotate(90deg) scale(1.1);
+    }
+    
+    #btn-product-gallery:hover i {
+        color: white !important;
+    }
+    
+    #product-zoom:hover {
+        transform: scale(1.05);
+    }
+    
+    /* Image counter animation */
+    #image-counter {
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .product-image-gallery {
+            gap: 0.5rem !important;
+        }
+        
+        .product-gallery-item {
+            width: 70px !important;
+            height: 70px !important;
+        }
+        
+        #btn-product-gallery {
+            width: 38px !important;
+            height: 38px !important;
+            top: 10px !important;
+            right: 10px !important;
+        }
+        
+        #image-counter {
+            bottom: 10px !important;
+            left: 10px !important;
+            font-size: 0.75rem !important;
+            padding: 4px 10px !important;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Quantity and WhatsApp link update
+        const qtyInput = document.getElementById('qty');
+        const whatsappLink = document.querySelector('a[href*="wa.me"]');
+        
+        if (qtyInput && whatsappLink) {
+            const originalWhatsappUrl = whatsappLink.href;
+            
+            qtyInput.addEventListener('change', updateWhatsappLink);
+            qtyInput.addEventListener('input', updateWhatsappLink);
+
+            function updateWhatsappLink() {
+                const quantity = qtyInput.value;
+                const productName = "{{ $Product->name }}";
+                const productPrice = "{{ $Product->price }}";
+                const whatsappNumber = "{{ str_replace([' ', '-', '(', ')'], '', $Settings->mobile_one ?? $Settings->mobile ?? '254794301190') }}";
+
+                const newWhatsappMessage = encodeURIComponent(`Hello, I am interested in ${quantity} unit(s) of ${productName}, Price: KES ${productPrice} each, from your website`);
+                whatsappLink.href = `https://wa.me/${whatsappNumber}?text=${newWhatsappMessage}`;
+            }
+        }
+        
+        // Enhanced Image Gallery Functionality
+        const mainImage = document.getElementById('product-zoom');
+        const galleryItems = document.querySelectorAll('.product-gallery-item');
+        const currentImageSpan = document.getElementById('current-image');
+        const totalImagesSpan = document.getElementById('total-images');
+        
+        // Set total images count
+        if (totalImagesSpan && galleryItems.length > 0) {
+            totalImagesSpan.textContent = galleryItems.length;
+        }
+        
+        // Handle thumbnail clicks
+        galleryItems.forEach((item, index) => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all items
+                galleryItems.forEach(thumb => thumb.classList.remove('active'));
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Update main image
+                const newImageSrc = this.getAttribute('data-image');
+                const newZoomSrc = this.getAttribute('data-zoom-image');
+                
+                if (mainImage) {
+                    // Smooth fade transition
+                    mainImage.style.opacity = '0';
+                    mainImage.style.transition = 'opacity 0.3s ease';
+                    setTimeout(() => {
+                        mainImage.src = newImageSrc;
+                        mainImage.setAttribute('data-zoom-image', newZoomSrc);
+                        mainImage.style.opacity = '1';
+                    }, 150);
+                }
+                
+                // Update image counter
+                if (currentImageSpan) {
+                    currentImageSpan.textContent = index + 1;
+                }
+                
+                // Reinitialize zoom if available
+                if (typeof $.fn.elevateZoom !== 'undefined') {
+                    $('#product-zoom').elevateZoom({
+                        zoomType: "inner",
+                        cursor: "crosshair",
+                        zoomWindowFadeIn: 500,
+                        zoomWindowFadeOut: 500
+                    });
+                }
+            });
+        });
+        
+        // Keyboard navigation for images
+        let currentIndex = 0;
+        document.addEventListener('keydown', function(e) {
+            if (galleryItems.length === 0) return;
+            
+            if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                currentIndex--;
+                galleryItems[currentIndex].click();
+            } else if (e.key === 'ArrowRight' && currentIndex < galleryItems.length - 1) {
+                currentIndex++;
+                galleryItems[currentIndex].click();
+            }
+        });
+        
+        // Update current index when clicking thumbnails
+        galleryItems.forEach((item, index) => {
+            item.addEventListener('click', function() {
+                currentIndex = index;
+            });
+        });
+        
+        // Fullscreen gallery button
+        const fullscreenBtn = document.getElementById('btn-product-gallery');
+        if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Open fullscreen view or lightbox
+                const currentActive = document.querySelector('.product-gallery-item.active');
+                if (currentActive) {
+                    const imageSrc = currentActive.getAttribute('data-image');
+                    window.open(imageSrc, '_blank');
+                }
+            });
+        }
+    });
+</script>
+
 @endforeach
 @endforeach
 @endsection

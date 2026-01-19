@@ -77,7 +77,7 @@
                         <label for="pass1" class="control-label col-lg-4">Tagline</label>
 
                         <div class="col-lg-8">
-                            <input class="form-control" value="{{$value->tagline}}" name="tagline" type="text" placeholder="e.g Espirit De Cops" >
+                            <input class="form-control" value="{{$value->tagline ?? ''}}" name="tagline" type="text" placeholder="e.g Espirit De Cops" >
                               
                         </div>
                     </div>
@@ -95,7 +95,7 @@
                         <label for="pass1" class="control-label col-lg-4">Location</label>
 
                         <div class="col-lg-8">
-                            <input class="form-control" value="{{$value->location}}" name="location" type="text" placeholder="e.g Pricely House, Moi Avenue Opposite MKU Towers" >
+                            <input class="form-control" value="{{$value->location ?? ''}}" name="location" type="text" placeholder="e.g Pricely House, Moi Avenue Opposite MKU Towers" >
                               
                         </div>
                     </div>
@@ -104,7 +104,7 @@
                         <label for="pass1" class="control-label col-lg-4">Address</label>
 
                         <div class="col-lg-8">
-                            <input class="form-control" value="{{$value->address}}" name="address" type="text" placeholder="e.g P.O Box 0100 100" >
+                            <input class="form-control" value="{{$value->address ?? ''}}" name="address" type="text" placeholder="e.g P.O Box 0100 100" >
                               
                         </div>
                     </div>
@@ -113,7 +113,7 @@
                         <label for="pass1" class="control-label col-lg-4">Facebook Link</label>
 
                         <div class="col-lg-8">
-                            <input class="form-control" value="{{$value->facebook}}" name="facebook" type="url" placeholder="e.g https://www.facebook.com/designekta" >
+                            <input class="form-control" value="{{$value->facebook ?? ''}}" name="facebook" type="url" placeholder="e.g https://www.facebook.com/designekta" >
                               
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                         <label for="pass1" class="control-label col-lg-4">Twitter</label>
 
                         <div class="col-lg-8">
-                            <input class="form-control" value="{{$value->twitter}}" name="twitter" type="url" placeholder="e.g https://www.twitter.com/designekta" >
+                            <input class="form-control" value="{{$value->twitter ?? ''}}" name="twitter" type="url" placeholder="e.g https://www.twitter.com/designekta" >
                               
                         </div>
                     </div>
@@ -132,7 +132,16 @@
                         <label for="pass1" class="control-label col-lg-4">Linkedin</label>
 
                         <div class="col-lg-8">
-                            <input class="form-control" value="{{$value->linkedin}}" name="linkedin" type="url" placeholder="e.g https://www.linkedin.com/designekt" >
+                            <input class="form-control" value="{{$value->linkedin ?? ''}}" name="linkedin" type="url" placeholder="e.g https://www.linkedin.com/designekt" >
+                              
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pass1" class="control-label col-lg-4">Instagram</label>
+
+                        <div class="col-lg-8">
+                            <input class="form-control" value="{{$value->instagram ?? ''}}" name="instagram" type="url" placeholder="e.g https://www.instagram.com/designekt" >
                               
                         </div>
                     </div>
@@ -142,7 +151,7 @@
                         <label for="pass1" class="control-label col-lg-4">Youtube</label>
 
                         <div class="col-lg-8">
-                            <input class="form-control" value="{{$value->youtube}}" name="youtube" type="url" placeholder="e.g https://www.youtube.com/designekt" >
+                            <input class="form-control" value="{{$value->youtube ?? ''}}" name="youtube" type="url" placeholder="e.g https://www.youtube.com/designekt" >
                               
                         </div>
                     </div>
@@ -151,7 +160,7 @@
                         <label for="pass1" class="control-label col-lg-4">Google</label>
 
                         <div class="col-lg-8">
-                            <input class="form-control" value="{{$value->google}}" name="google" type="url" placeholder="e.g https://www.googleplus.com/designekt" >
+                            <input class="form-control" value="{{$value->google ?? ''}}" name="google" type="url" placeholder="e.g https://www.googleplus.com/designekt" >
                               
                         </div>
                     </div>

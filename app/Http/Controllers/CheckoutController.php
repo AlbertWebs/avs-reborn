@@ -161,12 +161,17 @@ class CheckoutController extends Controller
             // $ip = \Request::ip();
             $ip = '154.76.108.131';
 
-            $data = \Location::get($ip);
-            // Get The Delivery Charge
-            $AreaCode =  $data->areaCode;
-            if($AreaCode == '30'){
-                $Shipping = 300;
-            }else{
+            try {
+                $data = Location::get($ip);
+                // Get The Delivery Charge
+                $AreaCode = $data ? ($data->areaCode ?? null) : null;
+                if($AreaCode == '30'){
+                    $Shipping = 300;
+                }else{
+                    $Shipping = 400;
+                }
+            } catch (\Exception $e) {
+                // Default shipping if location service fails
                 $Shipping = 400;
             }
 
@@ -251,10 +256,12 @@ class CheckoutController extends Controller
                      // Record Invoice
                      $Invoice = new Invoice;
                      $Invoice->number = $InvoiceNumber;
+                     $Invoice->invoice_number = $InvoiceNumber; // Also set invoice_number for consistency
                      $Invoice->shipping = $Shipping;
-                     $Invoice->products = serialize(Cart::Content());
+                     $Invoice->products = serialize(Cart::content());
                      $Invoice->user_id = Auth::user()->id;
                      $Invoice->amount = $TotalCost;
+                     $Invoice->status = 0;
                      $Invoice->save();
                      // Mail Invoice
                      $email = Auth::user()->email;
@@ -303,13 +310,19 @@ class CheckoutController extends Controller
             // $ip = '154.76.108.131';
          
 
-            $data = \Location::get($ip);
-            // Get The Delivery Charge
-            $AreaCode =  $data->areaCode;
-            if($AreaCode == '30'){
-                $Shipping = 300;
-                $location = "Nairobi";
-            }else{
+            try {
+                $data = Location::get($ip);
+                // Get The Delivery Charge
+                $AreaCode = $data ? ($data->areaCode ?? null) : null;
+                if($AreaCode == '30'){
+                    $Shipping = 300;
+                    $location = "Nairobi";
+                }else{
+                    $Shipping = 400;
+                    $location = "Mombasa";
+                }
+            } catch (\Exception $e) {
+                // Default shipping if location service fails
                 $Shipping = 400;
                 $location = "Mombasa";
             }
@@ -399,10 +412,12 @@ class CheckoutController extends Controller
                      // Record Invoice
                      $Invoice = new Invoice;
                      $Invoice->number = $InvoiceNumber;
+                     $Invoice->invoice_number = $InvoiceNumber; // Also set invoice_number for consistency
                      $Invoice->shipping = $Shipping;
-                     $Invoice->products = serialize(Cart::Content());
+                     $Invoice->products = serialize(Cart::content());
                      $Invoice->user_id = Auth::user()->id;
                      $Invoice->amount = $TotalCost;
+                     $Invoice->status = 0;
                      $Invoice->save();
                      // Mail Invoice
                      $email = Auth::user()->email;
@@ -894,7 +909,7 @@ class CheckoutController extends Controller
           $Timestamp = date('YmdHis'); 
           $PartyA = '254723014032';
           $PhoneNumber = '254723014032';
-          $CallbackURL = 'https://amanivehiclesounds.co.ke/payments/callback_url.php';
+          $CallbackURL = 'https://amanivehiclesounds.com/payments/callback_url.php';
           $AccountReference = 'Designekta Studios';
           $TransactionDesc = 'Designekta Studios';
           $LipaNaMpesaPasskey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919';

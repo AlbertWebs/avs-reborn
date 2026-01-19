@@ -246,6 +246,15 @@ class AdminsController extends Controller
         }else{
             $till_image = $request->till_image_cheat;
         }
+
+        if(isset($request->footer_logo)){
+            $footer_logo_file = $request->file('footer_logo');
+            $filename = $footer_logo_file->getClientOriginalName();
+            $footer_logo_file->move($path, $filename);
+            $footer_logo = $filename;
+        }else{
+            $footer_logo = $request->footer_logo_cheat ?? null;
+        }
         
 
         
@@ -253,11 +262,14 @@ class AdminsController extends Controller
             'sitename'=>$request->sitename,
             'logo'=>$logo,
             'till_image'=>$till_image,
+            'footer_logo'=>$footer_logo,
             'email'=>$request->email,
             'email_one'=>$request->email_one,
             'mobile'=>$request->mobile,
             'mobile_one'=>$request->mobile_one,
+            'mobile_one_display'=>$request->mobile_one_display ?? $request->mobile_one,
             'mobile_two'=>$request->mobile_two,
+            'mobile_two_display'=>$request->mobile_two_display ?? $request->mobile_two,
             'tagline'=>$request->tagline,
             'till'=>$request->till,
             'url'=>$request->url,
@@ -1136,10 +1148,25 @@ class AdminsController extends Controller
 
         
 public function categories(){
-    $Category = Category::all();
+    $Category = Category::orderBy('order', 'asc')->get();
     $page_title = 'list';
     $page_name = 'Categories';
     return view('admin.categories',compact('page_title','Category','page_name'));
+}
+
+public function updateCategoryOrder(Request $request){
+    $orders = $request->orders;
+    foreach ($orders as $index => $categoryId) {
+        DB::table('category')->where('id', $categoryId)->update(['order' => $index + 1]);
+    }
+    return response()->json(['success' => true, 'message' => 'Category order updated successfully']);
+}
+
+public function toggleCategoryHome(Request $request){
+    $id = $request->id;
+    $home = $request->home;
+    DB::table('category')->where('id', $id)->update(['home' => $home]);
+    return response()->json(['success' => true, 'message' => 'Category home status updated']);
 }
 
 public function addCategory(){
@@ -1150,8 +1177,13 @@ public function addCategory(){
 
 public function add_Category(Request $request){
     
+    // Get the highest order value and add 1
+    $maxOrder = DB::table('category')->max('order') ?? 0;
+    
     $Category = new Category;
     $Category->cat = $request->name;
+    $Category->order = $maxOrder + 1;
+    $Category->home = $request->home ?? 0;
     
     $Category->save();
     Session::flash('message', "Category Has Been Added");
@@ -1261,7 +1293,9 @@ public function add_Product(Request $request){
                 /** Renaming Edits */
                 $extension = $file->getClientOriginalExtension();
                 $image_main_temp = $request->name.'-fb_pixels.'.$extension;
-                $fb_pixels = str_replace(' ', '-',$image_main_temp);
+                // Sanitize filename: remove quotes and other special characters
+                $fb_pixels = preg_replace('/[^a-zA-Z0-9\-_\.]/', '-', $image_main_temp);
+                $fb_pixels = preg_replace('/-+/', '-', $fb_pixels); // Replace multiple dashes with single dash
                 $file->move($path, $fb_pixels);
                 /* Renaming Edits Ends*/ 
             }
@@ -1281,7 +1315,9 @@ public function add_Product(Request $request){
                 /** Renaming Edits */
                 $extension = $file->getClientOriginalExtension();
                 $image_main_temp = $request->name.'-thumbnail.'.$extension;
-                $thumbnail = str_replace(' ', '-',$image_main_temp);
+                // Sanitize filename: remove quotes and other special characters
+                $thumbnail = preg_replace('/[^a-zA-Z0-9\-_\.]/', '-', $image_main_temp);
+                $thumbnail = preg_replace('/-+/', '-', $thumbnail); // Replace multiple dashes with single dash
                 $file->move($path, $thumbnail);
                 /* Renaming Edits Ends*/ 
             }
@@ -1303,7 +1339,9 @@ public function add_Product(Request $request){
                 /** Renaming Edits */
                 $extension = $file->getClientOriginalExtension();
                 $image_main_temp = $request->name.'-001.'.$extension;
-                $image_one = str_replace(' ', '-',$image_main_temp);
+                // Sanitize filename: remove quotes and other special characters
+                $image_one = preg_replace('/[^a-zA-Z0-9\-_\.]/', '-', $image_main_temp);
+                $image_one = preg_replace('/-+/', '-', $image_one); // Replace multiple dashes with single dash
                 $file->move($path, $image_one);
                 /* Renaming Edits Ends*/ 
             }
@@ -1323,7 +1361,9 @@ public function add_Product(Request $request){
              /** Renaming Edits */
              $extension = $file->getClientOriginalExtension();
              $image_main_temp = $request->name.'-002.'.$extension;
-             $image_two = str_replace(' ', '-',$image_main_temp);
+             // Sanitize filename: remove quotes and other special characters
+             $image_two = preg_replace('/[^a-zA-Z0-9\-_\.]/', '-', $image_main_temp);
+             $image_two = preg_replace('/-+/', '-', $image_two); // Replace multiple dashes with single dash
              $file->move($path, $image_two);
              /* Renaming Edits Ends*/ 
          }
@@ -1344,7 +1384,9 @@ public function add_Product(Request $request){
              /** Renaming Edits */
              $extension = $file->getClientOriginalExtension();
              $image_main_temp = $request->name.'-003.'.$extension;
-             $image_three = str_replace(' ', '-',$image_main_temp);
+             // Sanitize filename: remove quotes and other special characters
+             $image_three = preg_replace('/[^a-zA-Z0-9\-_\.]/', '-', $image_main_temp);
+             $image_three = preg_replace('/-+/', '-', $image_three); // Replace multiple dashes with single dash
              $file->move($path, $image_three);
              /* Renaming Edits Ends*/ 
         }
@@ -1471,7 +1513,9 @@ public function edit_Product(Request $request, $id){
                 /** Renaming Edits */
                 $extension = $file->getClientOriginalExtension();
                 $image_main_temp = $request->name.'-thumbnail.'.$extension;
-                $thumbnail = str_replace(' ', '-',$image_main_temp);
+                // Sanitize filename: remove quotes and other special characters
+                $thumbnail = preg_replace('/[^a-zA-Z0-9\-_\.]/', '-', $image_main_temp);
+                $thumbnail = preg_replace('/-+/', '-', $thumbnail); // Replace multiple dashes with single dash
                 $file->move($path, $thumbnail);
                 /* Renaming Edits Ends*/ 
             }
@@ -1491,7 +1535,9 @@ public function edit_Product(Request $request, $id){
                 /** Renaming Edits */
                 $extension = $file->getClientOriginalExtension();
                 $image_main_temp = $request->name.'-001.'.$extension;
-                $image_one = str_replace(' ', '-',$image_main_temp);
+                // Sanitize filename: remove quotes and other special characters
+                $image_one = preg_replace('/[^a-zA-Z0-9\-_\.]/', '-', $image_main_temp);
+                $image_one = preg_replace('/-+/', '-', $image_one); // Replace multiple dashes with single dash
                 $file->move($path, $image_one);
                 /* Renaming Edits Ends*/ 
                 
@@ -1513,8 +1559,9 @@ public function edit_Product(Request $request, $id){
             /** Renaming Edits */
             $extension = $file->getClientOriginalExtension();
             $image_main_temp = $request->name.'-002.'.$extension;
-            $image_twoRaw = str_replace(' ', '-',$image_main_temp);
-            $image_two = str_replace('&', 'and',$image_twoRaw);
+            // Sanitize filename: remove quotes and other special characters
+            $image_two = preg_replace('/[^a-zA-Z0-9\-_\.]/', '-', $image_main_temp);
+            $image_two = preg_replace('/-+/', '-', $image_two); // Replace multiple dashes with single dash
             $file->move($path, $image_two);
             /* Renaming Edits Ends*/ 
           
@@ -1537,7 +1584,9 @@ public function edit_Product(Request $request, $id){
             /** Renaming Edits */
             $extension = $file->getClientOriginalExtension();
             $image_main_temp = $request->name.'-003.'.$extension;
-            $image_three = str_replace(' ', '-',$image_main_temp);
+            // Sanitize filename: remove quotes and other special characters
+            $image_three = preg_replace('/[^a-zA-Z0-9\-_\.]/', '-', $image_main_temp);
+            $image_three = preg_replace('/-+/', '-', $image_three); // Replace multiple dashes with single dash
             $file->move($path, $image_three);
             /* Renaming Edits Ends*/ 
           
@@ -1555,16 +1604,10 @@ public function edit_Product(Request $request, $id){
    $slung = Str::slug($request->name);
 
 
-   $replaced = $request->replaced;
-  
-
-
-
    
     $updateDetails = array(
         'name' => $request->name,
         'slung' => $slung,
-        'replaced' => $request->replaced,
         'meta' => $request->meta,
         'google_product_category'=>$request->google_product_category,
         'iframe' => $request->iframe,
@@ -1580,8 +1623,9 @@ public function edit_Product(Request $request, $id){
         'price_raw' =>$request->price_raw,
         'code' =>$request->code,
         'cat' =>$request->cat,
-        'tag' =>$request->tag,
         'sub_cat' =>$request->sub_cat,
+        'replaced' => $request->replaced ?? 0,
+        'tag' => $request->tag ?? null,
     );
     
     DB::table('product')->where('id',$id)->update($updateDetails);
@@ -3111,6 +3155,12 @@ public function editFile($id){
 public function add_Brand(Request $request){
 
     $path = 'uploads/brands';
+    
+    // Ensure directory exists
+    if (!file_exists($path)) {
+        mkdir($path, 0755, true);
+    }
+    
     if(isset($request->image_one)){
         $fileSize = $request->file('image_one')->getSize();
             if($fileSize>=1800000){
@@ -3122,9 +3172,12 @@ public function add_Brand(Request $request){
             $file = $request->file('image_one');
             $filename = str_replace(' ', '', $file->getClientOriginalName());
             $timestamp = new Datetime();
-            $new_timestamp = $timestamp->format('Y-m-d H:i:s');
+            // Replace colons and spaces with hyphens for Windows compatibility
+            $new_timestamp = str_replace([':', ' '], '-', $timestamp->format('Y-m-d H:i:s'));
             $image_main_temp = $new_timestamp.'image'.$filename;
             $image_one = str_replace(' ', '',$image_main_temp);
+            // Sanitize filename - remove any remaining invalid characters
+            $image_one = preg_replace('/[^a-zA-Z0-9._-]/', '', $image_one);
             $file->move($path, $image_one);
             }
     }else{
@@ -3161,6 +3214,12 @@ public function editBrand($id){
 
 public function edit_Brand(Request $request, $id){
     $path = 'uploads/brands';
+    
+    // Ensure directory exists
+    if (!file_exists($path)) {
+        mkdir($path, 0755, true);
+    }
+    
     if(isset($request->image_one)){
         $fileSize = $request->file('image_one')->getSize();
             if($fileSize>=1800000){
@@ -3172,9 +3231,12 @@ public function edit_Brand(Request $request, $id){
             $file = $request->file('image_one');
             $filename = str_replace(' ', '', $file->getClientOriginalName());
             $timestamp = new Datetime();
-            $new_timestamp = $timestamp->format('Y-m-d H:i:s');
+            // Replace colons and spaces with hyphens for Windows compatibility
+            $new_timestamp = str_replace([':', ' '], '-', $timestamp->format('Y-m-d H:i:s'));
             $image_main_temp = $new_timestamp.'image'.$filename;
             $image_one = str_replace(' ', '',$image_main_temp);
+            // Sanitize filename - remove any remaining invalid characters
+            $image_one = preg_replace('/[^a-zA-Z0-9._-]/', '', $image_one);
             $file->move($path, $image_one);
             }
     }else{
@@ -3379,6 +3441,12 @@ public function Products_offer(){
 public function swap_offer(Request $request, $id)
 {
          $path = 'uploads/product';
+         
+         // Ensure directory exists
+         if (!file_exists($path)) {
+             mkdir($path, 0755, true);
+         }
+         
         if(isset($request->file)){
             $fileSize = $request->file('file')->getSize();
                 if($fileSize>=1800000){
@@ -3390,9 +3458,12 @@ public function swap_offer(Request $request, $id)
                 $file = $request->file('file');
                 $filename = str_replace(' ', '', $file->getClientOriginalName());
                 $timestamp = new Datetime();
-                $new_timestamp = $timestamp->format('Y-m-d H:i:s');
+                // Replace colons and spaces with hyphens for Windows compatibility
+                $new_timestamp = str_replace([':', ' '], '-', $timestamp->format('Y-m-d H:i:s'));
                 $image_main_temp = $new_timestamp.'image'.$filename;
                 $image_one = str_replace(' ', '',$image_main_temp);
+                // Sanitize filename - remove any remaining invalid characters
+                $image_one = preg_replace('/[^a-zA-Z0-9._-]/', '', $image_one);
                 $file->move($path, $image_one);
                 }
         }else{
@@ -3758,8 +3829,8 @@ public function addProductToFacebookPixel(){
     // die();
     foreach($Products as $ProAdd){
       
-            $ProductUrl = "https://amanivehiclesounds.co.ke/product/$ProAdd->slung";
-            $ImageURL = "https://amanivehiclesounds.co.ke/uploads/product/$ProAdd->fb_pixels";
+            $ProductUrl = "https://amanivehiclesounds.com/product/$ProAdd->slung";
+            $ImageURL = "https://amanivehiclesounds.com/uploads/product/$ProAdd->fb_pixels";
             $ProExcel  = new ProExcel;
             $ProExcel->code = $ProAdd->code;
             $ProExcel->google_product_category = $ProAdd->google_product_category;

@@ -8,5 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 class Offer extends Model
 {
     use HasFactory;
-    //
+    
+    protected $table = 'offers';
+    
+    protected $fillable = [
+        'product_id',
+        'category_id',
+        'title',
+        'content',
+        'format',
+        'link',
+        'status',
+        'banner'
+    ];
+    
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+    
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

@@ -289,6 +289,27 @@
                         </div>
                     </div>
 
+                    <div class="form-group col-lg-12">
+                        <label class="control-label">Footer Logo</label>
+                        <div class="">
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+                                    @if($value->footer_logo)
+                                        <img src="{{url('/')}}/uploads/logo/{{$value->footer_logo}}" alt="Footer Logo" />
+                                    @else
+                                        <img src="{{url('/')}}/uploads/logo/{{$value->logo}}" alt="Footer Logo (using main logo)" style="opacity: 0.5;" />
+                                        <small style="display: block; margin-top: 5px; color: #999;">No footer logo set (showing main logo)</small>
+                                    @endif
+                                </div>
+                                <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+                                <div>
+                                    <span class="btn btn-file btn-primary"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input name="footer_logo" type="file" /></span>
+                                    <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     
                     </center>
                     <br><br>
@@ -299,6 +320,7 @@
                     <input type="hidden" name="favicon_cheat" value="{{$value->favicon}}">
                     <input type="hidden" name="logo_cheat" value="{{$value->logo}}">
                     <input type="hidden" name="till_image_cheat" value="{{$value->till_image}}">
+                    <input type="hidden" name="footer_logo_cheat" value="{{$value->footer_logo ?? ''}}">
                     
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     @endforeach

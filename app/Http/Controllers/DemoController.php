@@ -48,9 +48,9 @@ class DemoController extends Controller
             $priice = $product->price;
             $dollars = $priice / 130;
             $newdollars =  number_format($dollars, 2, '.', '');
-            $product->imagelink = 'https://www.amanivehiclesounds.co.ke/uploads/product/'.$product_image_one;
+            $product->imagelink = 'https://www.amanivehiclesounds.com/uploads/product/'.$product_image_one;
             // product link
-            $product->productlink = 'https://www.amanivehiclesounds.co.ke/product/'.$product->slung;
+            $product->productlink = 'https://www.amanivehiclesounds.com/product/'.$product->slung;
             //update price with .00
             $product->productprice = $newdollars." USD";
 

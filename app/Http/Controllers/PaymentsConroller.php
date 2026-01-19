@@ -79,7 +79,7 @@ class PaymentsConroller extends Controller
 
     public function Balance($AccID)
     {
-        //return Redirect::to('https://amanivehiclesounds.co.ke/mpesa/accoutbalance.php');
+        //return Redirect::to('https://amanivehiclesounds.com/mpesa/accoutbalance.php');
        
         $mpesa = new \Safaricom\Mpesa\Mpesa();
         $CommandID = "AccountBalance";
@@ -88,8 +88,8 @@ class PaymentsConroller extends Controller
         $PartyA = env("MPESA_PARTYA");
         $IdentifierType = "4";
         $Remarks = "Balance";
-        $QueueTimeOutURL = 'https://amanivehiclesounds.co.ke/payments/balanceresponce.php';
-        $ResultURL = 'https://amanivehiclesounds.co.ke/payments/balanceresponce.php';
+        $QueueTimeOutURL = 'https://amanivehiclesounds.com/payments/balanceresponce.php';
+        $ResultURL = 'https://amanivehiclesounds.com/payments/balanceresponce.php';
 
         $balanceInquiry = $mpesa->accountBalance($CommandID, $Initiator, $SecurityCredential, $PartyA, $IdentifierType, $Remarks, $QueueTimeOutURL, $ResultURL);
         $tablename = "accountbalance";
@@ -206,8 +206,8 @@ class PaymentsConroller extends Controller
         $RecieverIdentifierType = "11";
         $Remarks = "Reversal";
         $Occasion = $request->Remark;
-        $ResultURL = 'https://amanivehiclesounds.co.ke/payments/reverseresponce.php';
-        $QueueTimeOutURL = 'https://amanivehiclesounds.co.ke/payments/reverseresponce.php';
+        $ResultURL = 'https://amanivehiclesounds.com/payments/reverseresponce.php';
+        $QueueTimeOutURL = 'https://amanivehiclesounds.com/payments/reverseresponce.php';
     
         
         $reversal = $mpesa->reversal($CommandID, $Initiator, $SecurityCredential, $TransactionID, $Amount, $ReceiverParty, $RecieverIdentifierType, $ResultURL, $QueueTimeOutURL, $Remarks, $Occasion);
@@ -228,8 +228,8 @@ class PaymentsConroller extends Controller
         $IdentifierType = "4";
         $Remarks = $request->Remarks;
         $Occasion = "AVS";
-        $QueueTimeOutURL = 'https://amanivehiclesounds.co.ke/payments/transactionstatus_callback_url.php';
-        $ResultURL = 'https://amanivehiclesounds.co.ke/payments/transactionstatus_callback_url.php';
+        $QueueTimeOutURL = 'https://amanivehiclesounds.com/payments/transactionstatus_callback_url.php';
+        $ResultURL = 'https://amanivehiclesounds.com/payments/transactionstatus_callback_url.php';
         
         $trasactionStatus = $mpesa->transactionStatus($Initiator, $SecurityCredential, $CommandID, $TransactionID, $PartyA, $IdentifierType, $ResultURL, $QueueTimeOutURL, $Remarks, $Occasion);
         $tablename = 'transaction_status';
@@ -253,8 +253,8 @@ class PaymentsConroller extends Controller
         $Remarks = $request->Remarks;
         $Occasion = $request->Occasion;
 
-        $QueueTimeOutURL = 'https://amanivehiclesounds.co.ke/payments/b2c_callback_url.php';
-        $ResultURL = 'https://amanivehiclesounds.co.ke/payments/b2c_callback_url.php';
+        $QueueTimeOutURL = 'https://amanivehiclesounds.com/payments/b2c_callback_url.php';
+        $ResultURL = 'https://amanivehiclesounds.com/payments/b2c_callback_url.php';
 
         $b2cTransaction = $mpesa->b2c($InitiatorName, $SecurityCredential, $CommandID, $Amount, $PartyA, $PartyB, $Remarks, $QueueTimeOutURL, $ResultURL, $Occasion);
         $tablename = 'b2c_api_response';
@@ -281,8 +281,8 @@ class PaymentsConroller extends Controller
         $RecieverIdentifierType = '4';
         $SenderIdentifierType = '4';
 
-        $QueueTimeOutURL = 'https://amanivehiclesounds.co.ke/payments/b2b_callback_url.php';
-        $ResultURL = 'https://amanivehiclesounds.co.ke/payments/b2b_callback_url.php';
+        $QueueTimeOutURL = 'https://amanivehiclesounds.com/payments/b2b_callback_url.php';
+        $ResultURL = 'https://amanivehiclesounds.com/payments/b2b_callback_url.php';
 
         $b2bTransaction = $mpesa->b2b($Initiator, $SecurityCredential, $Amount, $PartyA, $PartyB, $Remarks, $QueueTimeOutURL, $ResultURL, $AccountReference, $commandID, $SenderIdentifierType, $RecieverIdentifierType);
         $tablename = 'b2b_api_response';
@@ -304,7 +304,7 @@ class PaymentsConroller extends Controller
         $BusinessShortCode = $MPESA_LIPA_ONLINE_SHORT_CODE;
         $TransactionType = 'CustomerPayBillOnline';
         $Timestamp = date('YmdHis');
-        $CallBackURL = 'https://amanivehiclesounds.co.ke/payments/callback_url.php';
+        $CallBackURL = 'https://amanivehiclesounds.com/payments/callback_url.php';
         //Party A and Phone Number
         $PartyA = $Mobile;
         $PhoneNumber = $Mobile;

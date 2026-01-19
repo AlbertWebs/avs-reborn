@@ -8,5 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Update extends Model
 {
     use HasFactory;
-    //
+    
+    protected $table = 'updates';
+    
+    protected $fillable = [
+        'title',
+        'content',
+        'instructions',
+        'status'
+    ];
 }

@@ -30,8 +30,8 @@
       "@context": "http://www.schema.org",
       "@type": "ProfessionalService",
       "name": "Amani Vehicle Sounds",
-      "url": "http://amanivehiclesounds.co.ke/",
-      "logo": "https://amanivehiclesounds.co.ke/uploads/logo/amaniCropped.png",
+      "url": "http://amanivehiclesounds.com/",
+      "logo": "https://amanivehiclesounds.com/uploads/logo/amaniCropped.png",
       "sameAs": [
         "https://web.facebook.com/amanivehiclesounds",
         "https://www.instagram.com/amanivehiclesounds",
@@ -40,7 +40,7 @@
         "https://www.youtube.com/channel/UCBBJkj3YILwheHsp5KGtjsA"
       ],
       "priceRange": "$$$$",
-      "image": "https://amanivehiclesounds.co.ke/uploads/logo/amaniCropped.png",
+      "image": "https://amanivehiclesounds.com/uploads/logo/amaniCropped.png",
       "description": "Are you looking to replace or upgrade your car music system?We have what you need. From car stereo, mid range speakers, tweeters, sub woofers, amplifiers and other car accessories",
       "address": {
          "@type": "PostalAddress",

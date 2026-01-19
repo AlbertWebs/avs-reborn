@@ -19,7 +19,7 @@
 
     <title>{{$tProduct->name}} - Amani Vehicle Sounds - <?php $CategoryList = \App\Models\Category::find($tProduct->cat); echo $CategoryList->cat ?> In Nairobi</title>
     <meta name="description" content="{{$tProduct->meta}} Order today">
-    <link rel="canonical" href="https://amanivehiclesounds.co.ke/product/{{$tProduct->slung}}">
+    <link rel="canonical" href="https://amanivehiclesounds.com/product/{{$tProduct->slung}}">
     <meta name="keywords" content="{{$tProduct->name}}, {{$tProduct->brand}} {{$CategoryList->cat}} in Nairobi, Car Stereo Kenya, Double Din Car Radio, Bluetooth Car Radio, Car Radio with Reverse Camera, Amani Vehicle Sounds Kenya">
 
 
@@ -27,8 +27,8 @@
     <meta property="og:title" content="{{$tProduct->name}} - Amani Vehicle Sounds - <?php $CategoryList = \App\Models\Category::find($tProduct->cat); echo $CategoryList->cat ?> In Nairobi" />
     <meta property="og:description" content="{{$tProduct->meta}} Order today" />
     <meta property="og:type" content="product" />
-    <meta property="og:url" content="https://amanivehiclesounds.co.ke/product/{{$tProduct->slung}}" />
-    <meta property="og:image" content="https://amanivehiclesounds.co.ke/uploads/product/{{$tProduct->fb_pixels}}" />
+    <meta property="og:url" content="https://amanivehiclesounds.com/product/{{$tProduct->slung}}" />
+    <meta property="og:image" content="https://amanivehiclesounds.com/uploads/product/{{$tProduct->fb_pixels}}" />
     <meta property="og:site_name" content="Amani Vehicle Sounds">
     <meta property="og:locale" content="en_US">
     <meta property="fb:app_id" content="350937289315471" />
@@ -44,9 +44,9 @@
     <meta name="twitter:title" content="{{$tProduct->name}} - Amani Vehicle Sounds - <?php $CategoryList = \App\Models\Category::find($tProduct->cat); echo $CategoryList->cat ?> In Nairobi" />
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@amanisounds">
-    <meta name="twitter:url" content="https://amanivehiclesounds.co.ke/product/{{$tProduct->slung}}">
+    <meta name="twitter:url" content="https://amanivehiclesounds.com/product/{{$tProduct->slung}}">
     <meta name="twitter:description" content="{{$tProduct->meta}} Order today" />
-    <meta name="twitter:image" content="https://amanivehiclesounds.co.ke/uploads/product/{{$tProduct->fb_pixels}}">
+    <meta name="twitter:image" content="https://amanivehiclesounds.com/uploads/product/{{$tProduct->fb_pixels}}">
     <meta name="twitter:creator" content="@amanisounds">
     <meta name="twitter:image:alt" content="KENWOOD DDX419BTM Car Radio">
     @endforeach
@@ -83,6 +83,17 @@
     <h1 style="display:none">{{$tProduct->name}} in {{$tProduct->brand}} Brand, {{$tProduct->meta}}  Order from Amani Vehicle Sounds Today!</h1>
 <!--Div where the WhatsApp will be rendered-->
 <div style="z-index:100000" id="WAButton"></div>
+<style>
+/* Hide WhatsApp button on mobile devices */
+@media (max-width: 991px) {
+    #WAButton,
+    #WAButton * {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+}
+</style>
 {{--  --}}
     <div class="page-wrapper">
         <header class="header header-10 header-intro-clearance">
@@ -118,7 +129,7 @@
                             <div class="dropdown-menu ">
                                 <nav class="side-nav">
                                     <ul class="menu-vertical sf-arrows">
-                                        <?php $Category = DB::table('category')->limit(11)->get(); ?>
+                                        <?php $Category = DB::table('category')->orderBy('order', 'asc')->limit(11)->get(); ?>
                                         @foreach ($Category as $item)
                                         <li><a href="{{url('/')}}/products/{{$item->slung}}">{{$item->cat}}(<?php echo count($All = DB::table('product')->where('cat',$item->id)->get()); ?>)</a></li>
                                         @endforeach
@@ -218,6 +229,9 @@
         </footer><!-- End .footer -->
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+    
+    <!-- Mobile Bottom Navigation -->
+    @include('front.mobile-bottom-nav')
 
     <!-- Mobile Menu -->
     <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
@@ -244,7 +258,7 @@
                 <div class="tab-pane fade" id="mobile-cats-tab" role="tabpanel" aria-labelledby="mobile-cats-link">
                     <nav class="mobile-cats-nav">
                         <ul class="mobile-cats-menu">
-                            <?php $Category = DB::table('category')->get(); ?>
+                            <?php $Category = DB::table('category')->orderBy('order', 'asc')->get(); ?>
                             @foreach ($Category as $item)
                             <li><a class="mobile-cats-lead" href="{{url('/')}}/products/{{$item->slung}}">{{$item->cat}}</a></li>
                             @endforeach

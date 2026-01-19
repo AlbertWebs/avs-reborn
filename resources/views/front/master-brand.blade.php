@@ -21,15 +21,15 @@
 
     <title>Buy {{$category->name}} Car Stereo in Kenya - Best Car Android Radio | Amani Vehicle Sounds</title>
     <meta name="description" content="Shop high-quality {{$category->name}} car stereos in Kenya from top brands like Kenwood, Pioneer, Sony, and Android Radios. Enjoy premium sound with Bluetooth, touchscreen, and more.">
-    <link rel="canonical" href="https://amanivehiclesounds.co.ke/products/brand/{{$category->slung}}">
+    <link rel="canonical" href="https://amanivehiclesounds.com/products/brand/{{$category->slung}}">
     <meta name="keywords" content="{{$keywords}} Car Radios Kenya, Best Car Audio, Bluetooth Car Stereo ">
 
     <!-- Open Graph Meta Tags (For Social Media) -->
     <meta property="og:title" content="Buy {{$category->name}} Car Stereo in Kenya - Best Car Android Radio | Amani Vehicle Sounds" />
     <meta property="og:description" content="Shop high-quality {{$category->name}} car stereos in Kenya from top brands like Kenwood, Pioneer, Sony, and Android Radios. Enjoy premium sound with Bluetooth, touchscreen, and more." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://amanivehiclesounds.co.ke/products/brand/{{$category->slung}}" />
-    <meta property="og:image" content="https://amanivehiclesounds.co.ke/uploads/categories/{{$category->image}}" />
+    <meta property="og:url" content="https://amanivehiclesounds.com/products/brand/{{$category->slung}}" />
+    <meta property="og:image" content="https://amanivehiclesounds.com/uploads/categories/{{$category->image}}" />
     <meta property="og:image:alt" content="High-quality car radios in Kenya from top brands like Kenwood, Pioneer, Sony, and Android Radios." />
     <meta property="og:site_name" content="Amani Vehicle Sounds">
     <meta property="og:locale" content="en_US">
@@ -39,9 +39,9 @@
     <meta name="twitter:title" content="Buy {{$category->name}} Car Stereo in Kenya - Best Car Android Radio | Amani Vehicle Sounds" />
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@amanisounds">
-    <meta name="twitter:url" content="https://amanivehiclesounds.co.ke/products/brand/{{$category->slung}}">
+    <meta name="twitter:url" content="https://amanivehiclesounds.com/products/brand/{{$category->slung}}">
     <meta name="twitter:description" content="Find the best car radios in Kenya with features like Bluetooth, touchscreen, and Android OS. Available from Kenwood, Pioneer, Sony, and more." />
-    <meta name="twitter:image" content="https://amanivehiclesounds.co.ke/uploads/brands/{{$category->image}}">
+    <meta name="twitter:image" content="https://amanivehiclesounds.com/uploads/brands/{{$category->image}}">
     <meta name="twitter:creator" content="@amanisounds">
     <meta name="twitter:image:alt" content="Shop premium {{$category->name}} in Kenya with Bluetooth, Android OS, and more.">
 
@@ -50,15 +50,15 @@
           "@context": "https://schema.org",
           "@type": "CollectionPage",
           "name": "Buy {{$category->name}} Car Stereo in Kenya - Best Car Android Radio | Amani Vehicle Sounds",
-          "url": "https://amanivehiclesounds.co.ke/products/brand/{{$category->slung}}",
+          "url": "https://amanivehiclesounds.com/products/brand/{{$category->slung}}",
           "description": "Discover the best car radios in Kenya. Shop Kenwood, Pioneer, Sony, and Android Radios with Bluetooth, touchscreen, and premium sound.",
-          "image": "https://amanivehiclesounds.co.ke/uploads/brands/{{$category->image}}",
+          "image": "https://amanivehiclesounds.com/uploads/brands/{{$category->image}}",
           "publisher": {
             "@type": "Organization",
             "name": "Amani Vehicle Sounds",
             "logo": {
               "@type": "ImageObject",
-              "url": "https://amanivehiclesounds.co.ke/uploads/logo/amaniCropped.png"
+              "url": "https://amanivehiclesounds.com/uploads/logo/amaniCropped.png"
             }
           },
           "breadcrumb": {
@@ -68,13 +68,13 @@
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": "https://amanivehiclesounds.co.ke/"
+                "item": "https://amanivehiclesounds.com/"
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Car Radios",
-                "item": "https://amanivehiclesounds.co.ke/products/brand/{{$category->slung}}"
+                "item": "https://amanivehiclesounds.com/products/brand/{{$category->slung}}"
               }
             ]
           }
@@ -116,6 +116,17 @@
     <h1 style="display:none">{{$page_title}}</h1>
 <!--Div where the WhatsApp will be rendered-->
 <div style="z-index:100000" id="WAButton"></div>
+<style>
+/* Hide WhatsApp button on mobile devices */
+@media (max-width: 991px) {
+    #WAButton,
+    #WAButton * {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+}
+</style>
 {{--  --}}
     <div class="page-wrapper">
         <header class="header header-10 header-intro-clearance">
@@ -151,7 +162,7 @@
                             <div class="dropdown-menu ">
                                 <nav class="side-nav">
                                     <ul class="menu-vertical sf-arrows">
-                                        <?php $Category = DB::table('category')->limit(11)->get(); ?>
+                                        <?php $Category = DB::table('category')->orderBy('order', 'asc')->limit(11)->get(); ?>
                                         @foreach ($Category as $item)
                                         <li><a href="{{url('/')}}/products/{{$item->slung}}">{{$item->cat}}(<?php echo count($All = DB::table('product')->where('cat',$item->id)->get()); ?>)</a></li>
                                         @endforeach
@@ -251,6 +262,9 @@
         </footer><!-- End .footer -->
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+    
+    <!-- Mobile Bottom Navigation -->
+    @include('front.mobile-bottom-nav')
 
     <!-- Mobile Menu -->
     <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
@@ -277,7 +291,7 @@
                 <div class="tab-pane fade" id="mobile-cats-tab" role="tabpanel" aria-labelledby="mobile-cats-link">
                     <nav class="mobile-cats-nav">
                         <ul class="mobile-cats-menu">
-                            <?php $Category = DB::table('category')->get(); ?>
+                            <?php $Category = DB::table('category')->orderBy('order', 'asc')->get(); ?>
                             @foreach ($Category as $item)
                             <li><a class="mobile-cats-lead" href="{{url('/')}}/products/{{$item->slung}}">{{$item->cat}}</a></li>
                             @endforeach

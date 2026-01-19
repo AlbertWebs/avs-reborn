@@ -10,7 +10,7 @@
 
         <div class="cat-blocks-container">
             <div class="row">
-                <?php $Categories = DB::table('category')->get(); ?>
+                <?php $Categories = DB::table('category')->orderBy('order', 'asc')->get(); ?>
                 @foreach($Categories as $Cat)
                 <div class="col-6 col-sm-4 col-lg-2">
                     <a href="{{url('/')}}/products/{{$Cat->slung}}" class="cat-block">

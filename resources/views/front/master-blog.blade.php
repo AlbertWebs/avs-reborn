@@ -51,7 +51,18 @@
 <body>
     <h1 style="display:none">{{$page_title}}</h1>
 <!--Div where the WhatsApp will be rendered-->  
-<div style="z-index:100000" id="WAButton"></div> 
+<div style="z-index:100000" id="WAButton"></div>
+<style>
+/* Hide WhatsApp button on mobile devices */
+@media (max-width: 991px) {
+    #WAButton,
+    #WAButton * {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+}
+</style> 
 {{--  --}}
     <div class="page-wrapper">
         <header class="header header-10 header-intro-clearance">
@@ -86,7 +97,7 @@
                             <div class="dropdown-menu ">
                                 <nav class="side-nav">
                                     <ul class="menu-vertical sf-arrows">
-                                        <?php $Category = DB::table('category')->limit(11)->get(); ?>
+                                        <?php $Category = DB::table('category')->orderBy('order', 'asc')->limit(11)->get(); ?>
                                         @foreach ($Category as $item)
                                         <li><a href="{{url('/')}}/products/{{$item->slung}}">{{$item->cat}}(<?php echo count($All = DB::table('product')->where('cat',$item->id)->get()); ?>)</a></li> 
                                         @endforeach
@@ -186,6 +197,9 @@
         </footer><!-- End .footer -->
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+    
+    <!-- Mobile Bottom Navigation -->
+    @include('front.mobile-bottom-nav')
 
     <!-- Mobile Menu -->
     <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
@@ -212,7 +226,7 @@
                 <div class="tab-pane fade" id="mobile-cats-tab" role="tabpanel" aria-labelledby="mobile-cats-link">
                     <nav class="mobile-cats-nav">
                         <ul class="mobile-cats-menu">
-                            <?php $Category = DB::table('category')->get(); ?> 
+                            <?php $Category = DB::table('category')->orderBy('order', 'asc')->get(); ?> 
                             @foreach ($Category as $item)
                             <li><a class="mobile-cats-lead" href="{{url('/')}}/products/{{$item->slung}}">{{$item->cat}}</a></li>
                             @endforeach                           

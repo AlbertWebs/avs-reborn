@@ -20,122 +20,157 @@
         <div id="content">
              
             <div class="inner" style="min-height: 700px;">
-                <div class="row">
-                    <div class="col-lg-12">
-                        
-                        <center><h2> Add Product </h2></center>
-                    </div>
-                </div>
-                  <hr />
-                 <!--BLOCK SECTION -->
+                <!--BLOCK SECTION -->
                  <div class="row">
                     <div class="col-lg-12">
                         @include('admin.panel')
-
                     </div>
-
                 </div>
                   <!--END BLOCK SECTION -->
-                <hr />
                   
-               
-                  <!-- Inner Content Here -->
-                 
-            <div class="inner">
-                
+                <!-- Improved Header -->
+                <div class="row" style="margin-bottom: 30px;">
+                    <div class="col-lg-12">
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h2 style="margin: 0; color: white; font-weight: 600; display: flex; align-items: center; gap: 12px;">
+                                        <i class="icon-plus" style="font-size: 28px;"></i>
+                                        Add New Product
+                                    </h2>
+                                    <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.9); font-size: 14px;">Create a new product for your store</p>
+                                </div>
+                                <a href="{{url('/admin/products')}}" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 6px; transition: all 0.3s;">
+                                    <i class="icon-arrow-left"></i> Back to Products
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-              <div class="row">
-               <center>
-                 @if(Session::has('message'))
-							   <div class="alert alert-success">{{ Session::get('message') }}</div>
-				@endif
+                <!-- Alerts -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        @if(Session::has('message'))
+                            <div class="alert alert-success" style="border-radius: 8px; border-left: 4px solid #28a745; box-shadow: 0 2px 8px rgba(40,167,69,0.2);">
+                                <i class="icon-ok"></i> {{ Session::get('message') }}
+                            </div>
+                        @endif
 
-                @if(Session::has('messageError'))
-							   <div class="alert alert-danger">{{ Session::get('messageError') }}</div>
-				@endif
-                 </center>
-                 
+                        @if(Session::has('messageError'))
+                            <div class="alert alert-danger" style="border-radius: 8px; border-left: 4px solid #dc3545; box-shadow: 0 2px 8px rgba(220,53,69,0.2);">
+                                <i class="icon-remove"></i> {{ Session::get('messageError') }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
 
-                 <form class="form-horizontal" method="post"  action="{{url('/admin/add_Product')}}" enctype="multipart/form-data">
+                <!-- Form Card -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 30px; margin-bottom: 20px;">
+                            <form class="form-horizontal" method="post" action="{{url('/admin/add_Product')}}" enctype="multipart/form-data">
                     
-                 <div class="form-group">
-                        <label for="text1" class="control-label col-lg-4">Product Name</label>
+                                <!-- Basic Information Section -->
+                                <div style="border-bottom: 2px solid #f0f0f0; padding-bottom: 25px; margin-bottom: 30px;">
+                                    <h3 style="color: #667eea; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                        <i class="icon-info-sign"></i> Basic Information
+                                    </h3>
+                                    
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label for="text1" class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            Product Name <span style="color: #dc3545;">*</span>
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <input id="limiter-text" type="text" id="text1" name="name" value="" placeholder="e.g Sony XS-162ES 6.5\" 2-Way Car Speakers" class="form-control" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px; transition: all 0.3s;" />
+                                        </div>
+                                    </div>
 
-                        <div class="col-lg-8">
-                            <input id="limiter-text" type="text" id="text1" name="name" value="" placeholder="e.g Studios Website " class="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="text1" class="control-label col-lg-4">Product Price</label>
-
-                        <div class="col-lg-8">
-                            <input type="number" id="text1" name="price" value="" placeholder="e.g 12500" class="form-control" />
-                        </div>
-                    </div>
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label for="text1" class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            Product Price (KES) <span style="color: #dc3545;">*</span>
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <div class="input-group" style="display: flex;">
+                                                <span class="input-group-addon" style="background: #f8f9fa; border: 1px solid #ddd; border-right: none; border-radius: 6px 0 0 6px; padding: 10px 15px;">KES</span>
+                                                <input type="number" id="text1" name="price" value="" placeholder="e.g 12500" class="form-control" style="border-radius: 0 6px 6px 0; border-left: none; padding: 10px 15px;" />
+                                            </div>
+                                        </div>
+                                    </div>
 
                   
                     
 
-                    <div class="form-group">
-                        <label for="text1" class="control-label col-lg-4">Product Web Code</label>
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label for="text1" class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            Product Code
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <input type="text" id="text1" name="code" value="" placeholder="e.g AASAA" class="form-control" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;" />
+                                            <small class="help-block" style="color: #666; margin-top: 5px;">Unique product identifier</small>
+                                        </div>
+                                    </div>
 
-                        <div class="col-lg-8">
-                            <input type="text" id="text1" name="code" value="" placeholder="e.g REALES2019 " class="form-control" />
-                        </div>
-                    </div>
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label for="limiter" class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            Meta Description
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <textarea id="limiter" name="meta" class="form-control" rows="3" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px; resize: vertical;"></textarea>
+                                            <small class="help-block" style="color: #666; margin-top: 5px;"><i class="icon-info-sign"></i> Brief description for SEO (150-160 characters recommended)</small>
+                                        </div>
+                                    </div>
 
-                    <div class="form-group">
-                        <label for="limiter" class="control-label col-lg-4">Meta Data</label>
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label for="limiter" class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            YouTube Video ID
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <div class="input-group">
+                                                <span class="input-group-addon" style="background: #f8f9fa; border: 1px solid #ddd; border-right: none; border-radius: 6px 0 0 6px; padding: 10px 15px;">youtube.com/watch?v=</span>
+                                                <input type="text" id="liamiter" name="iframe" class="form-control" placeholder="bnfse4NXo0k" style="border-radius: 0 6px 6px 0; border-left: none; padding: 10px 15px;" />
+                                            </div>
+                                            <small class="help-block" style="color: #666; margin-top: 5px;">Enter only the video ID (e.g., bnfse4NXo0k)</small>
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <div class="col-lg-8">
-                            <textarea id="limiter" name="meta" class="form-control"></textarea>
-                            <p class="help-block">Brief Description of the product for SEO</p>
-                        </div>
-                    </div>
+                                <!-- Category & Brand Section -->
+                                <div style="border-bottom: 2px solid #f0f0f0; padding-bottom: 25px; margin-bottom: 30px;">
+                                    <h3 style="color: #667eea; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                        <i class="icon-tags"></i> Category & Brand
+                                    </h3>
 
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            Category <span style="color: #dc3545;">*</span>
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <select name="cat" data-placeholder="Choose Category" class="form-control chzn-select" tabindex="2" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;">
+                                                <option value="">-- Select Category --</option>
+                                                <?php $TheCategoryList = DB::table('category')->get(); ?>
+                                                @foreach($TheCategoryList as $value)
+                                                    <option value="{{$value->id}}">{{$value->cat}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
 
-                    <div class="form-group">
-                        <label for="limiter" class="control-label col-lg-4">Youtube iFrame</label>
-
-                        <div class="col-lg-8">
-                            <textarea id="liamiter" name="iframe" class="form-control"></textarea>
-                            <p class="help-block">bnfse4NXo0k</p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-lg-4">Google Product Category</label>
-    
-                        <div class="col-lg-8">
-                            <select name="google_product_category" data-placeholder="Choose Category" class="form-control chzn-select" tabindex="2">
-                              
-                               <?php $TheCategoryList = DB::table('g_p_c_s')->get(); ?>
-                               @foreach($TheCategoryList as $value)
-                                  <option value="{{$value->code}}">{{$value->category}} - {{$value->code}}</option>
-                               @endforeach
-    
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                    <label class="control-label col-lg-4">Category</label>
-
-                    
-                        
-
-                    <div class="col-lg-8">
-                        <select name="cat" data-placeholder="Choose Category" class="form-control chzn-select" tabindex="2">
-                          
-                           <?php $TheCategoryList = DB::table('category')->get(); ?>
-                           @foreach($TheCategoryList as $value)
-                              <option value="{{$value->id}}">{{$value->cat}}</option>
-                           @endforeach
-
-                        </select>
-                    </div>
-                    </div>
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            Google Product Category
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <select name="google_product_category" data-placeholder="Choose Google Category" class="form-control chzn-select" tabindex="2" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;">
+                                                <option value="">-- Select Google Category --</option>
+                                                <?php $TheCategoryList = DB::table('g_p_c_s')->get(); ?>
+                                                @foreach($TheCategoryList as $value)
+                                                    <option value="{{$value->code}}">{{$value->category}} - {{$value->code}}</option>
+                                                @endforeach
+                                            </select>
+                                            <small class="help-block" style="color: #666; margin-top: 5px;">For Google Shopping integration</small>
+                                        </div>
+                                    </div>
 
                     <!-- <div class="form-group">
                     <label class="control-label col-lg-4">Sub Category</label>
@@ -156,27 +191,27 @@
                     </div> -->
 
 
-                    <!-- Brands -->
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            Brand
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <select name="brand" data-placeholder="Choose Brand" class="form-control chzn-select" tabindex="2" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;">
+                                                <option value="">-- Select Brand --</option>
+                                                <?php $ThebrandList = DB::table('brands')->get(); ?>
+                                                @foreach($ThebrandList as $brandvalue)
+                                                    <option value="{{$brandvalue->name}}">{{$brandvalue->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <div class="form-group">
-                    <label class="control-label col-lg-4">Brand</label>
-
-                    
-                  
-
-                    <div class="col-lg-8">
-                        <select name="brand" data-placeholder="Choose Sub Category" class="form-control chzn-select" tabindex="2">
-                          
-                           
-                           <?php $ThebrandList = DB::table('brands')->get(); ?>
-                           @foreach($ThebrandList as $brandvalue)
-                              <option value="{{$brandvalue->name}}">{{$brandvalue->name}}</option>
-                           @endforeach
-
-                        </select>
-                    </div>
-                    </div>
-                    <!-- Brands -->
+                                <!-- Product Description Section -->
+                                <div style="border-bottom: 2px solid #f0f0f0; padding-bottom: 25px; margin-bottom: 30px;">
+                                    <h3 style="color: #667eea; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                        <i class="icon-file-text"></i> Product Description
+                                    </h3>
           
                         {{-- <div class="col-lg-12">
                             <div class="box">
@@ -207,111 +242,219 @@
                             </div>
                         </div> --}}
 
-                        <textarea name="content" id="article_ckeditor" rows="10" cols="80"></textarea>
-                           
-                        <script src="{{asset('/')}}vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
-                        <script>
-                            CKEDITOR.replace( 'article_ckeditor' );
-                        </script>
-                   
-                    <center>
-                    <div class="form-group col-lg-12">
-                    <div class="form-group col-lg-12">
-                        <label class="control-label">Thumb</label>
-                        <div class="">
-                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;"><img src="" alt="" /></div>
-                                <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
-                                <div>
-                                    <span class="btn btn-file btn-primary"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input name="thumbnail" type="file" /></span>
-                                    <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            Description <span style="color: #dc3545;">*</span>
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <textarea name="content" id="article_ckeditor" rows="10" cols="80" class="form-control" style="border-radius: 6px;"></textarea>
+                                            <small class="help-block" style="color: #666; margin-top: 5px;">Detailed product description and specifications</small>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="form-group col-lg-12">
-                        <label class="control-label">Facebook Pixels</label>
-                        <div class="">
-                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;"><img src="" alt="" /></div>
-                                <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
-                                <div>
-                                    <span class="btn btn-file btn-primary"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input name="fb_pixels" type="file" /></span>
-                                    <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                <!-- Product Images Section -->
+                                <div style="border-bottom: 2px solid #f0f0f0; padding-bottom: 25px; margin-bottom: 30px;">
+                                    <h3 style="color: #667eea; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                        <i class="icon-picture"></i> Product Images
+                                    </h3>
+                                    <div class="row">
+                                        <!-- Thumbnail -->
+                                        <div class="col-lg-4" style="margin-bottom: 25px;">
+                                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px dashed #ddd; text-align: center;">
+                                                <label class="control-label" style="font-weight: 600; color: #333; display: block; margin-bottom: 15px;">
+                                                    <i class="icon-picture"></i> Thumbnail <span style="color: #dc3545;">*</span>
+                                                </label>
+                                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                    <div class="fileupload-new thumbnail" style="width: 100%; height: 180px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd;">
+                                                        <i class="icon-picture" style="font-size: 48px; color: #ccc;"></i>
+                                                    </div>
+                                                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 100%; max-height: 180px; border-radius: 6px; overflow: hidden;"></div>
+                                                    <div style="margin-top: 15px;">
+                                                        <span class="btn btn-file btn-primary" style="border-radius: 6px; padding: 8px 20px;">
+                                                            <span class="fileupload-new"><i class="icon-upload"></i> Select Image</span>
+                                                            <span class="fileupload-exists"><i class="icon-edit"></i> Change</span>
+                                                            <input name="thumbnail" type="file" />
+                                                        </span>
+                                                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload" style="border-radius: 6px; padding: 8px 15px; margin-left: 5px;">
+                                                            <i class="icon-trash"></i> Remove
+                                                        </a>
+                                                    </div>
+                                                    <small style="display: block; margin-top: 10px; color: #666;">Recommended: 300x300px</small>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                    
-                        
-                    {{--  --}}
-                    <div class="form-group col-lg-4">
-                        <label class="control-label">Image One(Main)</label>
-                        <div class="">
-                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;"><img src="" alt="" /></div>
-                                <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
-                                <div>
-                                    <span class="btn btn-file btn-primary"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input name="image_one" type="file" /></span>
-                                    <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group col-lg-4">
-                        <label class="control-label">Image Two(W-384 H-660)</label>
-                        <div class="">
-                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;"><img src="" alt="" /></div>
-                                <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
-                                <div>
-                                    <span class="btn btn-file btn-primary"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input name="image_two" type="file" /></span>
-                                    <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                   
-                    <div class="form-group col-lg-4">
-                        <label class="control-label">Image Three(w = 570 h=200)</label>
-                        <div class="">
-                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;"><img src="" alt="" /></div>
-                                <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
-                                <div>
-                                    <span class="btn btn-file btn-primary"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input name="image_three" type="file" /></span>
-                                    <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                        <!-- Main Image -->
+                                        <div class="col-lg-4" style="margin-bottom: 25px;">
+                                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px dashed #ddd; text-align: center;">
+                                                <label class="control-label" style="font-weight: 600; color: #333; display: block; margin-bottom: 15px;">
+                                                    <i class="icon-picture"></i> Main Image <span style="color: #dc3545;">*</span>
+                                                </label>
+                                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                    <div class="fileupload-new thumbnail" style="width: 100%; height: 180px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd;">
+                                                        <i class="icon-picture" style="font-size: 48px; color: #ccc;"></i>
+                                                    </div>
+                                                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 100%; max-height: 180px; border-radius: 6px; overflow: hidden;"></div>
+                                                    <div style="margin-top: 15px;">
+                                                        <span class="btn btn-file btn-primary" style="border-radius: 6px; padding: 8px 20px;">
+                                                            <span class="fileupload-new"><i class="icon-upload"></i> Select Image</span>
+                                                            <span class="fileupload-exists"><i class="icon-edit"></i> Change</span>
+                                                            <input name="image_one" type="file" />
+                                                        </span>
+                                                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload" style="border-radius: 6px; padding: 8px 15px; margin-left: 5px;">
+                                                            <i class="icon-trash"></i> Remove
+                                                        </a>
+                                                    </div>
+                                                    <small style="display: block; margin-top: 10px; color: #666;">Recommended: 300x300px</small>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                   
+                                        <!-- Facebook Pixels -->
+                                        <div class="col-lg-4" style="margin-bottom: 25px;">
+                                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px dashed #ddd; text-align: center;">
+                                                <label class="control-label" style="font-weight: 600; color: #333; display: block; margin-bottom: 15px;">
+                                                    <i class="icon-picture"></i> Facebook Pixel
+                                                </label>
+                                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                    <div class="fileupload-new thumbnail" style="width: 100%; height: 180px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd;">
+                                                        <i class="icon-picture" style="font-size: 48px; color: #ccc;"></i>
+                                                    </div>
+                                                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 100%; max-height: 180px; border-radius: 6px; overflow: hidden;"></div>
+                                                    <div style="margin-top: 15px;">
+                                                        <span class="btn btn-file btn-primary" style="border-radius: 6px; padding: 8px 20px;">
+                                                            <span class="fileupload-new"><i class="icon-upload"></i> Select Image</span>
+                                                            <span class="fileupload-exists"><i class="icon-edit"></i> Change</span>
+                                                            <input name="fb_pixels" type="file" />
+                                                        </span>
+                                                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload" style="border-radius: 6px; padding: 8px 15px; margin-left: 5px;">
+                                                            <i class="icon-trash"></i> Remove
+                                                        </a>
+                                                    </div>
+                                                    <small style="display: block; margin-top: 10px; color: #666;">Recommended: 300x300px</small>
+                                                </div>
+                                            </div>
+                                        </div>
 
+                                        <!-- Image Two -->
+                                        <div class="col-lg-4" style="margin-bottom: 25px;">
+                                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px dashed #ddd; text-align: center;">
+                                                <label class="control-label" style="font-weight: 600; color: #333; display: block; margin-bottom: 15px;">
+                                                    <i class="icon-picture"></i> Image Two
+                                                </label>
+                                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                    <div class="fileupload-new thumbnail" style="width: 100%; height: 180px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd;">
+                                                        <i class="icon-picture" style="font-size: 48px; color: #ccc;"></i>
+                                                    </div>
+                                                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 100%; max-height: 180px; border-radius: 6px; overflow: hidden;"></div>
+                                                    <div style="margin-top: 15px;">
+                                                        <span class="btn btn-file btn-primary" style="border-radius: 6px; padding: 8px 20px;">
+                                                            <span class="fileupload-new"><i class="icon-upload"></i> Select Image</span>
+                                                            <span class="fileupload-exists"><i class="icon-edit"></i> Change</span>
+                                                            <input name="image_two" type="file" />
+                                                        </span>
+                                                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload" style="border-radius: 6px; padding: 8px 15px; margin-left: 5px;">
+                                                            <i class="icon-trash"></i> Remove
+                                                        </a>
+                                                    </div>
+                                                    <small style="display: block; margin-top: 10px; color: #666;">Recommended: 300x300px</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Image Three -->
+                                        <div class="col-lg-4" style="margin-bottom: 25px;">
+                                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px dashed #ddd; text-align: center;">
+                                                <label class="control-label" style="font-weight: 600; color: #333; display: block; margin-bottom: 15px;">
+                                                    <i class="icon-picture"></i> Image Three
+                                                </label>
+                                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                    <div class="fileupload-new thumbnail" style="width: 100%; height: 180px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd;">
+                                                        <i class="icon-picture" style="font-size: 48px; color: #ccc;"></i>
+                                                    </div>
+                                                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 100%; max-height: 180px; border-radius: 6px; overflow: hidden;"></div>
+                                                    <div style="margin-top: 15px;">
+                                                        <span class="btn btn-file btn-primary" style="border-radius: 6px; padding: 8px 20px;">
+                                                            <span class="fileupload-new"><i class="icon-upload"></i> Select Image</span>
+                                                            <span class="fileupload-exists"><i class="icon-edit"></i> Change</span>
+                                                            <input name="image_three" type="file" />
+                                                        </span>
+                                                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload" style="border-radius: 6px; padding: 8px 15px; margin-left: 5px;">
+                                                            <i class="icon-trash"></i> Remove
+                                                        </a>
+                                                    </div>
+                                                    <small style="display: block; margin-top: 10px; color: #666;">Recommended: 300x300px</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Form Actions -->
+                                <div class="row">
+                                    <div class="col-lg-12" style="text-align: center; padding-top: 20px; border-top: 2px solid #f0f0f0;">
+                                        <button type="submit" class="btn btn-success" style="padding: 12px 40px; font-size: 16px; font-weight: 600; border-radius: 6px; box-shadow: 0 4px 12px rgba(40,167,69,0.3); transition: all 0.3s;">
+                                            <i class="icon-plus icon-white"></i> Add Product
+                                        </button>
+                                        <a href="{{url('/admin/products')}}" class="btn btn-default" style="padding: 12px 40px; font-size: 16px; font-weight: 600; border-radius: 6px; margin-left: 10px;">
+                                            <i class="icon-remove"></i> Cancel
+                                        </a>
+                                    </div>
+                                </div>
                     
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            </form>
+                        </div>
                     </div>
-                    </center>
-                    <br><br>
-                    <div class="col-lg-12 text-center">
-                      <button type="submit" class="btn btn-success"><i class="icon-plus icon-white"></i> Add Product</button>
-                    </div>
-                    
-                    
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    
-                <form>
-              </div>
+                </div>
+
+                <!-- Scripts and Styles Section -->
+                <div>
+                    <script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script>
+                    <script>
+                        // Initialize CKEditor using jQuery document ready
+                        $(document).ready(function() {
+                            if (typeof CKEDITOR !== 'undefined') {
+                                // Check if textarea exists and CKEditor hasn't been initialized
+                                if ($('#article_ckeditor').length > 0 && !CKEDITOR.instances.article_ckeditor) {
+                                    CKEDITOR.replace('article_ckeditor', {
+                                        height: 300,
+                                        filebrowserUploadUrl: "{{ url('/admin/ckeditor/upload') }}?_token={{ csrf_token() }}",
+                                        filebrowserUploadMethod: 'form'
+                                    });
+                                }
+                            }
+                        });
+                    </script>
+
+                    <style>
+                        .form-control:focus {
+                            border-color: #667eea;
+                            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+                        }
+                        .btn-primary {
+                            background: #667eea;
+                            border-color: #667eea;
+                        }
+                        .btn-primary:hover {
+                            background: #5568d3;
+                            border-color: #5568d3;
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+                        }
+                        .btn-success:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 6px 16px rgba(40,167,69,0.4) !important;
+                        }
+                        .fileupload .thumbnail img {
+                            border-radius: 6px;
+                        }
+                    </style>
+                </div>
 
             </div>
                   <!-- Inner Content Ends Here -->
-
-
-
-                
-            </div>
 
         </div>
         <!--END PAGE CONTENT -->

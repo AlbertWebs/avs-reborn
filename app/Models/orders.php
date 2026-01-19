@@ -11,11 +11,25 @@ use App\Models\Product;
 class orders extends Model
 {
     use HasFactory;
-    protected $fillable=['total', 'status'];
+    
+    protected $table = 'orders';
+    
+    protected $fillable = [
+        'user_id',
+        'title',
+        'total',
+        'content',
+        'status'
+    ];
+    
     public function orderFields(){
-        
-        return $this->belongsToMany(products::class)->withPivot('qty', 'total');
-        
+        return $this->belongsToMany(Product::class, 'orders_products', 'orders_id', 'products_id')
+                    ->withPivot('qty', 'total', 'tax');
+    }
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public static function createOrder(){ 

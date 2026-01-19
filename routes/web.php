@@ -98,8 +98,6 @@ Route::get('checkout/placeOrder', [CheckoutController::class, 'placeOrderGet'])-
 Route::post('checkout/placeOrder', [CheckoutController::class, 'placeOrder'])->name('checkout.order');
 Route::post('/checkout/process-coupon', [CheckoutController::class, 'process_coupon'])->name('process_coupon');
 Route::get('/checkout/remove-coupon/{code}', [CheckoutController::class, 'remove_coupon'])->name('remove-coupon');
-Route::get('/wishlist', [WishListController::class, 'index'])->name('wishlist');
-
 });
 // WishList
 Route::group(['prefix'=>'wishlist'], function(){
@@ -126,10 +124,6 @@ Route::get('mpesa/register',[PaymentsConroller::class, 'register']);           /
 Route::get('export', [DemoController::class, 'export'])->name('exporting');
 Route::get('importExportView', [DemoController::class, 'importExportView']);
 Route::get('import', [DemoController::class, 'import']);
-
-Route::get('export', [DemoController::class, 'export'])->name('exporting');
-Route::get('importExportView', [DemoController::class, 'importExportView']);
-Route::get('import', [DemoController::class, 'import']);
 Route::get('export-products', [DemoController::class, 'export_products'])->name('exporting-products');
 Route::get('change-links', [DemoController::class, 'create_image_link'])->name('create_image_link');
 
@@ -139,10 +133,6 @@ Route::post('/secure-login', [App\Http\Controllers\HomeController::class, 'handl
 Route::get('/sub',[App\Http\Controllers\HomeController::class, 'sub'])->name('sub');
 
 Route::post('/checkemail',[App\Http\Controllers\HomeController::class, 'checkEmail'])->name('checkEmail');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Auth::routes();
 
@@ -367,7 +357,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
 
     //Priducts
-    Route::get('/products', [AdminsController::class, 'products']);
+    Route::get('/products', [AdminsController::class, 'Products']);
     Route::get('/Products-lte', [AdminsController::class, 'productslte']);
 
     Route::get('/editProduct/{id}', [AdminsController::class, 'editProduct']);
@@ -419,6 +409,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('/edit_Category/{id}',  [AdminsController::class, 'edit_Category']);
     Route::get('/addCategory',  [AdminsController::class, 'addCategory']);
     Route::post('/add_Category',  [AdminsController::class, 'add_Category']);
+    Route::post('/updateCategoryOrder',  [AdminsController::class, 'updateCategoryOrder']);
+    Route::post('/toggleCategoryHome',  [AdminsController::class, 'toggleCategoryHome']);
 
     Route::get('/categoriesBanners', [AdminsController::class, 'categoriesBanners']);
     Route::get('/editCategoriesBanners/{id}', [AdminsController::class, 'editCategoriesBanners']);
@@ -609,7 +601,7 @@ Route::get('sitemap', function() {
 
         // add every category to the sitemap
 		foreach ($post as $post) {
-			$sitemap->add("https://www.amanivehiclesounds.co.ke/products/$post->slung",'2012-08-25T20:10:00+02:00', '0.9', 'daily');
+			$sitemap->add("https://www.amanivehiclesounds.com/products/$post->slung",'2012-08-25T20:10:00+02:00', '0.9', 'daily');
 		}
 
         // get all posts from db
@@ -617,7 +609,7 @@ Route::get('sitemap', function() {
 
         // add every category to the sitemap
 		foreach ($post as $post) {
-			$sitemap->add("https://www.amanivehiclesounds.co.ke/products/brand/$post->name",'2012-08-25T20:10:00+02:00', '0.9', 'daily');
+			$sitemap->add("https://www.amanivehiclesounds.com/products/brand/$post->name",'2012-08-25T20:10:00+02:00', '0.9', 'daily');
 		}
 
 
@@ -626,7 +618,7 @@ Route::get('sitemap', function() {
 
 		  // add every category to the sitemap
 		  foreach ($post as $post) {
-			  $sitemap->add("https://www.amanivehiclesounds.co.ke/product-tags/$post->slung",'2012-08-25T20:10:00+02:00', '0.9', 'daily');
+			  $sitemap->add("https://www.amanivehiclesounds.com/product-tags/$post->slung",'2012-08-25T20:10:00+02:00', '0.9', 'daily');
 		  }
 
 
@@ -634,7 +626,7 @@ Route::get('sitemap', function() {
         $posts = DB::table('product')->orderBy('created_at', 'desc')->get();
 		// add every product to the sitemap
 		foreach ($posts as $post) {
-			$sitemap->add("https://www.amanivehiclesounds.co.ke/product/$post->slung",'2012-08-25T20:10:00+02:00', '0.8', 'daily');
+			$sitemap->add("https://www.amanivehiclesounds.com/product/$post->slung",'2012-08-25T20:10:00+02:00', '0.8', 'daily');
 		}
 	}
 

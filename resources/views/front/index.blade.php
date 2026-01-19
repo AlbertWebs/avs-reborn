@@ -46,76 +46,232 @@
     </div><!-- End .intro-slider-container -->
     @endif
 
-    <div class="mb-4"></div><!-- End .mb-2 -->
+    <div class="mb-5"></div>
 
-    <div class="container">
-        <h2 class="title text-center mb-2">Explore Popular Categories</h2><!-- End .title -->
+    <!-- Modern Categories Section -->
+    <div class="container py-4">
+        <div class="section-header text-center mb-4">
+            <h2 class="section-title" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">Explore Popular Categories</h2>
+            <p class="section-subtitle" style="color: #666; font-size: 1rem;">Discover our wide range of premium car audio products</p>
+        </div>
 
-        <div class="cat-blocks-container">
-            <div class="row">
-                <?php $Categories = DB::table('category')->limit('6')->where('home','1')->get(); ?>
+        <div class="modern-categories-grid">
+            <div class="row g-3">
+                <?php $Categories = DB::table('category')->where('home','1')->orderBy('order', 'asc')->limit('6')->get(); ?>
                 @foreach($Categories as $Cat)
                 <div class="col-6 col-sm-4 col-lg-2">
-                    <a href="{{url('/')}}/products/{{$Cat->slung}}" class="cat-block">
-                        <figure>
-                            <span>
-                                <img style="max-width:131px;" src="{{url('/')}}/uploads/categories/{{$Cat->image}}" alt="{{$Cat->cat}}">
-                            </span>
-                        </figure>
-
-                        <h3 class="cat-block-title">{{$Cat->cat}}</h3><!-- End .cat-block-title -->
+                    <a href="{{url('/')}}/products/{{$Cat->slung}}" class="modern-cat-card">
+                        <div class="cat-card-image">
+                            <img loading="lazy" src="{{url('/')}}/uploads/categories/{{$Cat->image}}" alt="{{$Cat->cat}}" class="img-fluid">
+                        </div>
+                        <h3 class="cat-card-title">{{$Cat->cat}}</h3>
                     </a>
-                </div><!-- End .col-sm-4 col-lg-2 -->
+                </div>
                 @endforeach
-            </div><!-- End .row -->
-        </div><!-- End .cat-blocks-container -->
-    </div><!-- End .container -->
+            </div>
+        </div>
+    </div>
 
-    <div class="mb-2"></div><!-- End .mb-2 -->
+    <style>
+    .modern-cat-card {
+        display: block;
+        text-decoration: none;
+        background: #fff;
+        border-radius: 16px;
+        padding: 1.5rem 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #f0f0f0;
+        text-align: center;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+    .modern-cat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+    .modern-cat-card:hover::before {
+        transform: scaleX(1);
+    }
+    .modern-cat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(102, 126, 234, 0.15);
+        border-color: #667eea;
+    }
+    .cat-card-image {
+        width: 100%;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+    .cat-card-image img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+    .modern-cat-card:hover .cat-card-image img {
+        transform: scale(1.1);
+    }
+    .cat-card-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+        line-height: 1.4;
+        transition: color 0.3s ease;
+    }
+    .modern-cat-card:hover .cat-card-title {
+        color: #667eea;
+    }
+    @media (max-width: 576px) {
+        .modern-cat-card {
+            padding: 1rem 0.75rem;
+        }
+        .cat-card-image {
+            height: 80px;
+        }
+        .cat-card-title {
+            font-size: 0.8rem;
+        }
+    }
+    </style>
+
     <h1 style="font-size:2px; margin:0 auto; color:#fff">Car Audio Shop in Nairobi</h1>
+    
+    <!-- Modern Offer Banners Section -->
     <?php $Full = DB::table('product')->where('stock','In Stock')->where('offer','11')->limit('10')->inRandomOrder()->get();  ?>
     @if($Full->isEmpty())
-
     @else
-    <div class="container">
-        <div class="row">
-            @foreach($Full as $full)
-            <div class="col-sm-6 col-lg-4 ">
-                <div class="banner banner-overlay">
-                    <a href="{{url('/')}}/product/{{$full->slung}}">
-                        <img src="{{url('/')}}/uploads/product/{{$full->offer_banner}}" alt="{{$full->name}}">
+    <div class="container py-4">
+        <div class="modern-banners-grid">
+            <div class="row g-3">
+                @foreach($Full as $full)
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <a href="{{url('/')}}/product/{{$full->slung}}" class="modern-banner-card">
+                        <div class="banner-image-wrapper">
+                            <img loading="lazy" src="{{url('/')}}/uploads/product/{{$full->offer_banner}}" alt="{{$full->name}}" class="banner-image">
+                            <div class="banner-overlay"></div>
+                        </div>
                     </a>
-
-                    <div class="banner-content">
-                        {{-- <h4 class="banner-subtitle text-white"><a href="#">Weekend Sale</a></h4> --}}
-                        {{-- <h3 class="banner-title text-white"><a href="#">Lighting <br>& Accessories <br><span>25% off</span></a></h3> --}}
-                        {{-- <a href="#" class="banner-link">Shop Now <i class="icon-long-arrow-right"></i></a> --}}
-                    </div><!-- End .banner-content -->
-                </div><!-- End .banner -->
-            </div><!-- End .col-lg-3 -->
-            @endforeach
-
-        </div><!-- End .row -->
-    </div><!-- End .container -->
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
     @endif
 
-    <div class="mb-3"></div><!-- End .mb-3 -->
+    <style>
+    .modern-banner-card {
+        display: block;
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        min-height: 200px;
+    }
+    .modern-banner-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+    .banner-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 200px;
+        overflow: hidden;
+    }
+    .banner-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .modern-banner-card:hover .banner-image {
+        transform: scale(1.05);
+    }
+    .banner-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .modern-banner-card:hover .banner-overlay {
+        opacity: 1;
+    }
+    @media (max-width: 576px) {
+        .modern-banner-card {
+            min-height: 180px;
+        }
+    }
+    </style>
 
-    <div class="bg-light pt-3 pb-5">
-        <div class="container mt-2" >
-            <div class="heading heading-flex heading-border mb-3">
-                <div class="heading-left">
-                    <h2 class="title">Hot Deals Products</h2><!-- End .title -->
-                </div><!-- End .heading-left -->
+    <div class="mb-4"></div>
 
-               <div class="heading-right">
-                    <ul class="nav nav-pills nav-border-anim justify-content-center" role="tablist">
-                        <li class="nav-item">
-                            <a href="{{url('/')}}/products" class="nav-link active" id="hot-all-link"   role="tab" >All Products</a>
-                        </li>
-                    </ul>
-               </div><!-- End .heading-right -->
-            </div><!-- End .heading -->
+    <!-- Modern Hot Deals Section -->
+    <div class="modern-deals-section" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 3rem 0;">
+        <div class="container">
+            <div class="section-header-modern d-flex justify-content-between align-items-center mb-4 flex-wrap">
+                <div>
+                    <h2 class="section-title-modern" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">🔥 Hot Deals</h2>
+                    <p class="section-subtitle-modern" style="color: #666; font-size: 0.95rem; margin: 0;">Limited time offers on premium products</p>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <a href="{{url('/')}}/products" class="btn-modern-view-all" style="padding: 0.75rem 1.5rem; background: #667eea; color: white; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block;">
+                        View All <i class="icon-long-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+    <style>
+    .btn-modern-view-all:hover {
+        background: #5568d3 !important;
+        transform: translateX(5px);
+    }
+    .modern-deals-section .product {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    .modern-deals-section .product:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(102, 126, 234, 0.2);
+    }
+    .modern-deals-section .product-image {
+        transition: transform 0.5s ease;
+    }
+    .modern-deals-section .product:hover .product-image {
+        transform: scale(1.05);
+    }
+    @media (max-width: 768px) {
+        .section-header-modern {
+            text-align: center;
+        }
+        .section-title-modern {
+            font-size: 1.5rem !important;
+        }
+    }
+    </style>
 
             <div class="tab-content tab-content-carousel">
                 <div class="tab-pane p-0 fade show active" id="hot-all-tab" role="tabpanel" aria-labelledby="hot-all-link">
@@ -148,9 +304,9 @@
 
                         @foreach ($Trending as $item)
                         <div class="product">
-                            <figure class="product-media">
+                            <figure class="product-media" style="position: relative; overflow: hidden; border-radius: 16px 16px 0 0;">
                                 @if($item->stock == "Out of Stock")
-                                <span class="product-label label-out">Out of Stock</span>
+                                <span class="product-label label-out" style="position: absolute; top: 10px; left: 10px; z-index: 2; background: #f5576c; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Out of Stock</span>
                                 @endif
                                 @if($item->offer == 1)
                                     <?php
@@ -164,18 +320,16 @@
 
                                         $Difference = 100-$Change;
                                     ?>
-                                    <span class="product-label label-out"><strong>{{$Difference}}% Off</strong></span>
+                                    <span class="product-label label-out" style="position: absolute; top: 10px; right: 10px; z-index: 2; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.5rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);"><strong>{{$Difference}}% Off</strong></span>
                                 @endif
-                                {{-- <span class="product-label label-new">New</span> --}}
                                 @if($item->offer == 1)
                                 <a href="{{url('/')}}/product/{{$item->slung}}">
-                                    <img style="max-width:217px !important;" src="{{url('/')}}/uploads/product/{{$item->offer_banner}}" alt="{{$item->name}}" class="product-image">
+                                    <img loading="lazy" style="width: 100%; height: 250px; object-fit: cover;" src="{{url('/')}}/uploads/product/{{$item->offer_banner}}" alt="{{$item->name}}" class="product-image">
                                 </a>
                                 @else
                                 <a href="{{url('/')}}/product/{{$item->slung}}">
-                                    <img style="max-width:217px !important;" src="{{url('/')}}/uploads/product/{{$item->thumbnail}}" alt="{{$item->name}}" class="product-image">
+                                    <img loading="lazy" style="width: 100%; height: 250px; object-fit: cover;" src="{{url('/')}}/uploads/product/{{$item->thumbnail}}" alt="{{$item->name}}" class="product-image">
                                 </a>
-
                                 @endif
 
                                 <div class="product-action-vertical">
@@ -195,17 +349,19 @@
                                 @endif
                             </figure><!-- End .product-media -->
 
-                            <div class="product-body">
-                                <div class="product-cat">
+                            <div class="product-body" style="padding: 1.25rem; background: white;">
+                                <div class="product-cat" style="margin-bottom: 0.5rem;">
                                     <?php $Category = DB::table('category')->where('id',$item->cat)->get(); ?>
                                     @foreach ($Category as $Cat)
-                                    <a href="{{url('/products')}}/{{$Cat->slung}}"> {{$Cat->cat}} </a>
+                                    <a href="{{url('/products')}}/{{$Cat->slung}}" style="color: #667eea; font-size: 0.85rem; font-weight: 500; text-decoration: none;"> {{$Cat->cat}} </a>
                                     @endforeach
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="{{url('/')}}/product/{{$item->slung}}">{{$item->name}}</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    KES{{$item->price}}
-                                </div><!-- End .product-price -->
+                                </div>
+                                <h3 class="product-title" style="margin-bottom: 0.75rem; line-height: 1.4;">
+                                    <a href="{{url('/')}}/product/{{$item->slung}}" style="color: #333; font-size: 1rem; font-weight: 600; text-decoration: none; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{$item->name}}</a>
+                                </h3>
+                                <div class="product-price" style="font-size: 1.25rem; font-weight: 700; color: #667eea; margin-bottom: 1rem;">
+                                    KES {{number_format($item->price, 0)}}
+                                </div>
                                 <?php
                                 $Reviews = DB::table('reviews')->where('product_id',$item->id)->get();
                                 $CountReviews = count($Reviews);
@@ -225,13 +381,9 @@
                                         <span class="ratings-text">( {{$CountReviews}} Reviews )</span>
                                     </div>
                                     @endif
-                                    <!-- End .rating-container -->
-                                    {{--  --}}
-                                    <div class="product-cat meta">
-                                        <a href="{{url('/product')}}/{{$item->slung}}"> {{$item->meta}} </a>
+                                    <div class="product-cat meta" style="margin-top: 0.5rem;">
+                                        <a href="{{url('/product')}}/{{$item->slung}}" style="color: #666; font-size: 0.85rem; text-decoration: none;"> {{$item->meta}} </a>
                                     </div>
-                            <!-- End .product-cat -->
-                                {{--  --}}
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
                         @endforeach
@@ -239,7 +391,7 @@
                 </div><!-- .End .tab-pane -->
             </div><!-- End .tab-content -->
         </div><!-- End .container -->
-    </div><!-- End .bg-light pt-5 pb-5 -->
+    </div><!-- End .modern-deals-section -->
 
 
 
@@ -269,20 +421,18 @@
 
     <?php $Category = DB::table('category')->limit('15')->get(); $counter = 1; ?>
     @foreach ($Category as $category)
-    <div class="container electronics bg-light">
-        <div class="heading heading-flex heading-border mb-3">
-            <div class="heading-left">
-                <h2 class="title">{{$category->cat}}</h2><!-- End .title -->
-            </div><!-- End .heading-left -->
-
-           <div class="heading-right">
-                <ul class="nav nav-pills nav-border-anim justify-content-center" role="tablist">
-                    <li class="nav-item">
-                        <a href="{{url('/')}}/products/{{$category->slung}}" class="nav-link active" id="elec-new-link" >View All {{$category->cat}}</a>
-                    </li>
-                </ul>
-           </div><!-- End .heading-right -->
-        </div><!-- End .heading -->
+    <div class="container py-5" style="background: #f8f9fa; border-radius: 24px; margin: 2rem auto; padding: 2.5rem !important;">
+        <div class="section-header-modern d-flex justify-content-between align-items-center mb-4 flex-wrap">
+            <div>
+                <h2 class="section-title-modern" style="font-size: 1.75rem; font-weight: 700; color: #333; margin-bottom: 0.25rem;">{{$category->cat}}</h2>
+                <p class="section-subtitle-modern" style="color: #666; font-size: 0.9rem; margin: 0;">Premium quality products</p>
+            </div>
+            <div class="mt-3 mt-md-0">
+                <a href="{{url('/')}}/products/{{$category->slung}}" class="btn-modern-view-all" style="padding: 0.75rem 1.5rem; background: #667eea; color: white; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block;">
+                    View All <i class="icon-long-arrow-right"></i>
+                </a>
+            </div>
+        </div>
 
         <div class="tab-content tab-content-carousel">
             <div class="products">
@@ -290,11 +440,11 @@
                     <?php $Featured = DB::table('product')->where('stock','In Stock')->where('cat',$category->id)->where('featured','1')->limit('4')->get(); $CountFeatured = count($Featured); $balance = 8-$CountFeatured; ?>
 
                     @foreach ($Featured as $item)
-                    <div class="col-6 col-md-4 col-lg-4 col-xl-3" >
-                        <div class="product">
-                            <figure class="product-media">
+                    <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+                        <div class="product" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
+                            <figure class="product-media" style="position: relative; overflow: hidden;">
                                 @if($item->stock == "Out of Stock")
-                                <span class="product-label label-out">Out of Stock</span>
+                                <span class="product-label label-out" style="position: absolute; top: 10px; left: 10px; z-index: 2; background: #f5576c; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Out of Stock</span>
                                 @endif
                                 @if($item->offer == 1)
                                     <?php
@@ -308,18 +458,16 @@
 
                                         $Difference = 100-$Change;
                                     ?>
-                                    <span class="product-label label-out"><strong>{{$Difference}}% Off</strong></span>
+                                    <span class="product-label label-out" style="position: absolute; top: 10px; right: 10px; z-index: 2; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.5rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);"><strong>{{$Difference}}% Off</strong></span>
                                 @endif
-                                {{-- <span class="product-label label-new">New</span> --}}
                                 @if($item->offer == 1)
                                 <a href="{{url('/')}}/product/{{$item->slung}}">
-                                    <img style="max-width:217px !important;" src="{{url('/')}}/uploads/product/{{$item->offer_banner}}" alt="{{$item->name}}" class="product-image">
+                                    <img loading="lazy" style="width: 100%; height: 220px; object-fit: cover;" src="{{url('/')}}/uploads/product/{{$item->offer_banner}}" alt="{{$item->name}}" class="product-image">
                                 </a>
                                 @else
                                 <a href="{{url('/')}}/product/{{$item->slung}}">
-                                    <img style="max-width:217px !important;" src="{{url('/')}}/uploads/product/{{$item->thumbnail}}" alt="{{$item->name}}" class="product-image">
+                                    <img loading="lazy" style="width: 100%; height: 220px; object-fit: cover;" src="{{url('/')}}/uploads/product/{{$item->thumbnail}}" alt="{{$item->name}}" class="product-image">
                                 </a>
-
                                 @endif
 
                                 <div class="product-action-vertical">
@@ -458,9 +606,13 @@
 
 
 
-    <div class="container">
-        <h2 class="title title-border mb-5">Shop by Brands</h2><!-- End .title -->
-        <div class="owl-carousel mb-5 owl-simple" data-toggle="owl"
+    <!-- Modern Brands Section -->
+    <div class="container py-5">
+        <div class="section-header text-center mb-4">
+            <h2 class="section-title" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">Shop by Brands</h2>
+            <p class="section-subtitle" style="color: #666; font-size: 1rem;">Trusted brands for quality car audio</p>
+        </div>
+        <div class="modern-brands-carousel owl-carousel mb-5 owl-simple" data-toggle="owl"
             data-owl-options='{
                 "nav": false,
                 "dots": true,
@@ -491,40 +643,118 @@
             }'>
             <?php $Brand = DB::table('brands')->get() ?>
             @foreach($Brand as $brand)
-            <a href="{{url('/')}}/products/brand/{{$brand->name}}" class="brand">
-                <img src="{{url('/')}}/uploads/brands/{{$brand->image}}" alt="{{$brand->name}}">
+            <a href="{{url('/')}}/products/brand/{{$brand->name}}" class="modern-brand-card">
+                <div class="brand-image-wrapper">
+                    <img loading="lazy" src="{{url('/')}}/uploads/brands/{{$brand->image}}" alt="{{$brand->name}}" class="brand-image">
+                </div>
             </a>
             @endforeach
         </div><!-- End .owl-carousel -->
     </div><!-- End .container -->
 
-    <div class="cta cta-horizontal cta-horizontal-box bg-primary">
+    <!-- Modern Newsletter Section -->
+    <div class="modern-newsletter-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 4rem 0; margin: 3rem 0;">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-2xl-5col">
-                    <h3 class="cta-title text-white">Join Our Newsletter</h3><!-- End .cta-title -->
-                    <p class="cta-desc text-white">Subcribe to get information about products and coupons</p><!-- End .cta-desc -->
-                </div><!-- End .col-lg-5 -->
-
-                <div class="col-3xl-5col">
-                    <form  id="newsletter-ctc">
+                <div class="col-lg-5 mb-4 mb-lg-0 text-center text-lg-left">
+                    <h3 class="newsletter-title" style="font-size: 2rem; font-weight: 700; color: white; margin-bottom: 0.75rem;">📧 Join Our Newsletter</h3>
+                    <p class="newsletter-desc" style="color: rgba(255,255,255,0.9); font-size: 1.05rem; margin: 0;">Subscribe to get exclusive deals, new product updates, and special offers</p>
+                </div>
+                <div class="col-lg-7">
+                    <form id="newsletter-ctc" class="modern-newsletter-form">
                         {{csrf_field()}}
-                        <div class="input-group">
-                            <input name="user_email" type="email" class="form-control form-control-white" placeholder="Enter your Email Address" aria-label="Email Adress" required>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-white-2" type="submit"><span>Subscribe</span><i class="icon-long-arrow-right"></i> <img class="loading-imagers" width="22" src="{{url('/')}}/uploads/preloaders/loading.gif" alt="Amani vehicle Sound Loading"></button>
-                            </div><!-- .End .input-group-append -->
-                        </div><!-- .End .input-group -->
-                        <span class="newsletter-span"></span>
+                        <div class="input-group-modern">
+                            <input name="user_email" type="email" class="form-control-modern" placeholder="Enter your email address" aria-label="Email Address" required style="flex: 1; padding: 1rem 1.5rem; border: none; border-radius: 50px 0 0 50px; font-size: 1rem; outline: none;">
+                            <button class="btn-modern-subscribe" type="submit" style="padding: 1rem 2rem; background: white; color: #667eea; border: none; border-radius: 0 50px 50px 0; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                                <span>Subscribe</span>
+                                <i class="icon-long-arrow-right"></i>
+                                <img class="loading-imagers" width="22" src="{{url('/')}}/uploads/preloaders/loading.gif" alt="Loading" style="display: none; margin-left: 0.5rem;">
+                            </button>
+                        </div>
+                        <span class="newsletter-span" style="display: block; margin-top: 0.75rem; color: white; font-size: 0.9rem;"></span>
                     </form>
-                </div><!-- End .col-lg-7 -->
-            </div><!-- End .row -->
-        </div><!-- End .container -->
-    </div><!-- End .cta -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="blog-posts bg-light pt-4 pb-7">
+    <style>
+    .modern-newsletter-form {
+        display: flex;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .input-group-modern {
+        display: flex;
+        width: 100%;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        border-radius: 50px;
+        overflow: hidden;
+    }
+    .btn-modern-subscribe:hover {
+        background: #f8f9fa !important;
+        transform: scale(1.02);
+    }
+    .modern-brand-card {
+        display: block;
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        text-align: center;
+        height: 100%;
+    }
+    .modern-brand-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(102, 126, 234, 0.2);
+    }
+    .brand-image-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 80px;
+    }
+    .brand-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: grayscale(100%);
+        opacity: 0.7;
+        transition: all 0.3s ease;
+    }
+    .modern-brand-card:hover .brand-image {
+        filter: grayscale(0%);
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    @media (max-width: 768px) {
+        .modern-newsletter-section {
+            padding: 2.5rem 0 !important;
+        }
+        .newsletter-title {
+            font-size: 1.5rem !important;
+        }
+        .input-group-modern {
+            flex-direction: column;
+            border-radius: 16px;
+        }
+        .form-control-modern {
+            border-radius: 16px 16px 0 0 !important;
+        }
+        .btn-modern-subscribe {
+            border-radius: 0 0 16px 16px !important;
+        }
+    }
+    </style>
+
+    <!-- Modern Blog Section -->
+    <div class="modern-blog-section" style="background: #f8f9fa; padding: 4rem 0;">
         <div class="container">
-            <h2 class="title">From Our Blog</h2><!-- End .title-lg text-center -->
+            <div class="section-header text-center mb-5">
+                <h2 class="section-title" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">📰 From Our Blog</h2>
+                <p class="section-subtitle" style="color: #666; font-size: 1rem;">Latest news, tips, and insights</p>
+            </div>
 
             <div class="owl-carousel owl-simple" data-toggle="owl"
                 data-owl-options='{
@@ -552,16 +782,15 @@
                 }'>
                 <?php $Blogs = DB::table('blogs')->orderBy('id','DESC')->limit('5')->get(); ?>
                 @foreach ($Blogs as $item)
-                <article class="entry">
-                    <figure class="entry-media">
+                <article class="entry modern-blog-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
+                    <figure class="entry-media" style="position: relative; overflow: hidden; margin: 0; height: 220px;">
                         <a href="{{$item->link}}">
-                            <img src="{{url('/')}}/uploads/blog/{{$item->image_one}}" alt="{{$item->title}}">
+                            <img loading="lazy" src="{{url('/')}}/uploads/blog/{{$item->image_one}}" alt="{{$item->title}}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
                         </a>
-                    </figure><!-- End .entry-media -->
-
-                    <div class="entry-body">
-                        <div class="entry-meta">
-                            <a href="#">
+                    </figure>
+                    <div class="entry-body" style="padding: 1.5rem;">
+                        <div class="entry-meta" style="margin-bottom: 0.75rem; font-size: 0.85rem; color: #666;">
+                            <a href="#" style="color: #667eea; text-decoration: none;">
                                 <?php
                                     $RawDate = $item->created_at;
                                     $FormatDate = strtotime($RawDate);
@@ -573,21 +802,114 @@
                                 {{$Month}} {{$date}}, {{$Year}}
                             </a> &nbsp; | &nbsp;
                             <?php echo count($Comments = DB::table('comments')->where('blog_id',$item->id)->get()); ?> Comments
-                        </div><!-- End .entry-meta -->
-
-                        <h3 class="entry-title">
-                            <a  target="new" href="{{$item->link}}">{{$item->title}}</a>
-                        </h3><!-- End .entry-title -->
-
+                        </div>
+                        <h3 class="entry-title" style="margin-bottom: 1rem; line-height: 1.4;">
+                            <a target="new" href="{{$item->link}}" style="color: #333; font-size: 1.1rem; font-weight: 600; text-decoration: none; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{$item->title}}</a>
+                        </h3>
                         <div class="entry-content">
-                            {{-- <p>{{$item->meta}}...</p> --}}
-                            <a target="new" href="{{$item->link}}" class="read-more">Read More</a>
-                        </div><!-- End .entry-content -->
-                    </div><!-- End .entry-body -->
-                </article><!-- End .entry -->
+                            <a target="new" href="{{$item->link}}" class="read-more" style="color: #667eea; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                                Read More <i class="icon-long-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
                 @endforeach
-            </div><!-- End .owl-carousel -->
-        </div><!-- End .container -->
-    </div><!-- End .blog-posts -->
+            </div>
+        </div>
+    </div>
+
+    <style>
+    .modern-blog-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(102, 126, 234, 0.15);
+    }
+    .modern-blog-card:hover .entry-media img {
+        transform: scale(1.1);
+    }
+    .modern-blog-card:hover .read-more {
+        transform: translateX(5px);
+    }
+    </style>
 </main><!-- End .main -->
+
+<!-- Performance Optimization Styles -->
+<style>
+/* Global Performance Optimizations */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Lazy Loading Placeholder */
+img[loading="lazy"] {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Optimize Product Cards */
+.product {
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+/* Reduce Layout Shifts */
+.cat-card-image,
+.banner-image-wrapper,
+.brand-image-wrapper {
+    aspect-ratio: 1;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    .modern-cat-card,
+    .modern-banner-card,
+    .modern-brand-card,
+    .modern-blog-card {
+        will-change: auto;
+    }
+    
+    /* Reduce animations on mobile for better performance */
+    * {
+        animation-duration: 0.3s !important;
+        transition-duration: 0.3s !important;
+    }
+}
+
+/* Container Max Width Optimization */
+.container {
+    max-width: 1200px;
+}
+
+/* Image Optimization */
+img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* Prevent FOUC */
+.modern-cat-card,
+.modern-banner-card,
+.modern-brand-card,
+.modern-blog-card,
+.product {
+    opacity: 1;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+</style>
 @endsection

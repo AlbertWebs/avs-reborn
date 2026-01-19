@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('product', function (Blueprint $table) {
+            if (!Schema::hasColumn('product', 'replaced')) {
+                $table->unsignedBigInteger('replaced')->nullable()->after('sub_cat'); // ID of product this replaces
+            }
+            if (!Schema::hasColumn('product', 'tag')) {
+                $table->unsignedBigInteger('tag')->nullable()->after('replaced'); // Tag ID
+            }
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('product', function (Blueprint $table) {
+            $table->dropColumn(['replaced', 'tag']);
+        });
+    }
+};

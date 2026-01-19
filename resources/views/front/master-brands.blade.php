@@ -19,15 +19,15 @@
 
     <title>Shop by Brand - Kenwood, Pioneer, Sony, JVC & Android Radio | Amani Vehicle Sounds</title>
     <meta name="description" content="Shop car audio by brand! Explore Kenwood, Pioneer, Sony, JVC, and our best-selling Android Radios for an upgraded in-car entertainment experience.">
-    <link rel="canonical" href="https://amanivehiclesounds.co.ke/products/shop-by-brand">
+    <link rel="canonical" href="https://amanivehiclesounds.com/products/shop-by-brand">
     <meta name="keywords" content="Kenwood Car Radio, Pioneer Car Stereo, Sony Car Audio, JVC Car Speakers, Android Car Radio Kenya, Best Car Audio Brands, Double Din Android Radio, Touchscreen Car Stereo, Amani Vehicle Sounds">
 
     <!-- Open Graph Meta Tags (For Social Media) -->
     <meta property="og:title" content="Shop by Brand - Kenwood, Pioneer, Sony, JVC & Android Radio | Amani Vehicle Sounds" />
     <meta property="og:description" content="Find the best car audio brands, including Kenwood, Pioneer, Sony, JVC, and Android Radios. Get premium sound systems for your car today!" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://amanivehiclesounds.co.ke/products/shop-by-brand" />
-    <meta property="og:image" content="https://amanivehiclesounds.co.ke/uploads/shop-by-brand-banner.jpg" />
+    <meta property="og:url" content="https://amanivehiclesounds.com/products/shop-by-brand" />
+    <meta property="og:image" content="https://amanivehiclesounds.com/uploads/shop-by-brand-banner.jpg" />
     <meta property="og:site_name" content="Amani Vehicle Sounds">
     <meta property="og:locale" content="en_US">
     <meta property="fb:app_id" content="350937289315471" />
@@ -36,9 +36,9 @@
     <meta name="twitter:title" content="Shop by Brand - Kenwood, Pioneer, Sony, JVC & Android Radio | Amani Vehicle Sounds" />
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@amanisounds">
-    <meta name="twitter:url" content="https://amanivehiclesounds.co.ke/products/shop-by-brand">
+    <meta name="twitter:url" content="https://amanivehiclesounds.com/products/shop-by-brand">
     <meta name="twitter:description" content="Upgrade your car sound system with top brands like Kenwood, Pioneer, Sony, JVC, and the latest Android Radios for an advanced in-car experience." />
-    <meta name="twitter:image" content="https://amanivehiclesounds.co.ke/uploads/shop-by-brand-banner.jpg">
+    <meta name="twitter:image" content="https://amanivehiclesounds.com/uploads/shop-by-brand-banner.jpg">
     <meta name="twitter:creator" content="@amanisounds">
     <meta name="twitter:image:alt" content="Shop by Brand - Kenwood, Pioneer, Sony, JVC & Android Radio">
 
@@ -47,15 +47,15 @@
           "@context": "https://schema.org",
           "@type": "WebPage",
           "name": "Shop by Brand - Kenwood, Pioneer, Sony, JVC & Android Radio | Amani Vehicle Sounds",
-          "url": "https://amanivehiclesounds.co.ke/products/shop-by-brand",
+          "url": "https://amanivehiclesounds.com/products/shop-by-brand",
           "description": "Discover car audio from top brands like Kenwood, Pioneer, Sony, JVC, and the latest Android Radios for an immersive in-car entertainment experience.",
-          "image": "https://amanivehiclesounds.co.ke/uploads/shop-by-brand-banner.jpg",
+          "image": "https://amanivehiclesounds.com/uploads/shop-by-brand-banner.jpg",
           "publisher": {
             "@type": "Organization",
             "name": "Amani Vehicle Sounds",
             "logo": {
               "@type": "ImageObject",
-              "url": "https://amanivehiclesounds.co.ke/uploads/logo.png"
+              "url": "https://amanivehiclesounds.com/uploads/logo.png"
             }
           },
           "breadcrumb": {
@@ -65,13 +65,13 @@
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": "https://amanivehiclesounds.co.ke/"
+                "item": "https://amanivehiclesounds.com/"
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Shop by Brand",
-                "item": "https://amanivehiclesounds.co.ke/products/shop-by-brand"
+                "item": "https://amanivehiclesounds.com/products/shop-by-brand"
               }
             ]
           }
@@ -111,6 +111,17 @@
     <h1 style="display:none">{{$page_title}}</h1>
 <!--Div where the WhatsApp will be rendered-->
 <div style="z-index:100000" id="WAButton"></div>
+<style>
+/* Hide WhatsApp button on mobile devices */
+@media (max-width: 991px) {
+    #WAButton,
+    #WAButton * {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+}
+</style>
 {{--  --}}
     <div class="page-wrapper">
         <header class="header header-10 header-intro-clearance">
@@ -146,7 +157,7 @@
                             <div class="dropdown-menu ">
                                 <nav class="side-nav">
                                     <ul class="menu-vertical sf-arrows">
-                                        <?php $Category = DB::table('category')->limit(11)->get(); ?>
+                                        <?php $Category = DB::table('category')->orderBy('order', 'asc')->limit(11)->get(); ?>
                                         @foreach ($Category as $item)
                                         <li><a href="{{url('/')}}/products/{{$item->slung}}">{{$item->cat}}(<?php echo count($All = DB::table('product')->where('cat',$item->id)->get()); ?>)</a></li>
                                         @endforeach
@@ -246,6 +257,9 @@
         </footer><!-- End .footer -->
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+    
+    <!-- Mobile Bottom Navigation -->
+    @include('front.mobile-bottom-nav')
 
     <!-- Mobile Menu -->
     <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
@@ -272,7 +286,7 @@
                 <div class="tab-pane fade" id="mobile-cats-tab" role="tabpanel" aria-labelledby="mobile-cats-link">
                     <nav class="mobile-cats-nav">
                         <ul class="mobile-cats-menu">
-                            <?php $Category = DB::table('category')->get(); ?>
+                            <?php $Category = DB::table('category')->orderBy('order', 'asc')->get(); ?>
                             @foreach ($Category as $item)
                             <li><a class="mobile-cats-lead" href="{{url('/')}}/products/{{$item->slung}}">{{$item->cat}}</a></li>
                             @endforeach

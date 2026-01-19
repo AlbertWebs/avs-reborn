@@ -305,7 +305,7 @@
 <!-- Ajax Paymant APIS --> 
 <!-- Check Balance -->
 <?php 
-    $accountBallance = "https://amanivehiclesounds.co.ke/mpesa/accoutbalance.php";
+    $accountBallance = "https://amanivehiclesounds.com/mpesa/accoutbalance.php";
 ?>
 <?php $AccountBalanceTable = DB::table('accountbalance')->OrderBy('accountBalID','DESC')->first(); ?>
 
@@ -317,7 +317,7 @@
 
         $.ajax({
             type: 'get',
-            url: '{{url('/')}}/payments/balance/{{$AccountBalanceTable->accountBalID}}',
+            url: '{{url('/')}}/payments/balance/{{$AccountBalanceTable ? $AccountBalanceTable->accountBalID : 0}}',
             data: $('#balance').serialize(),
             success: function (results) {
                 alert(results)
@@ -330,7 +330,8 @@
 </script>
 
 <!-- Balance -->
-<?php $Reverse = DB::table('reverse_transaction')->OrderBy('transactionstatusID','DESC')->first(); ?>
+<?php $Reverse = DB::table('reverse_transaction')->OrderBy('transactionstatusID','DESC')->first(); 
+if(!$Reverse) { $Reverse = (object)['transactionstatusID' => 0]; } ?>
 <!-- reverse -->
 <script>
     $('#Reverse').on('submit', function (e) {
@@ -352,7 +353,8 @@
     });
 </script>
 <!-- Reverese -->
-<?php $B2B = DB::table('b2b_api_response')->OrderBy('b2bTransactionID','DESC')->first(); ?>
+<?php $B2B = DB::table('b2b_api_response')->OrderBy('b2bTransactionID','DESC')->first(); 
+if(!$B2B) { $B2B = (object)['b2bTransactionID' => 0]; } ?>
 <!-- B2B -->
 <script>
     $('#merchant').on('submit', function (e) {
@@ -376,7 +378,8 @@
     });
 </script>
 <!-- B2B -->
-<?php $TransStatus = DB::table('transaction_status')->OrderBy('transactionStatusID','DESC')->first(); ?>
+<?php $TransStatus = DB::table('transaction_status')->OrderBy('transactionStatusID','DESC')->first(); 
+if(!$TransStatus) { $TransStatus = (object)['transactionStatusID' => 0]; } ?>
 <!-- Transaction Stutus -->
 <script>
     $('#status').on('submit', function (e) {
@@ -386,7 +389,7 @@
 
         $.ajax({
             type: 'post',
-            url: '{{url('/')}}/payments/transStatus/{{$TransStatus->transactionStatusID}}',
+            url: '{{url('/')}}/payments/transStatus/{{$TransStatus ? $TransStatus->transactionStatusID : 0}}',
             data: $('#status').serialize(),
             success: function (results) {
                 alert(results)
@@ -399,7 +402,8 @@
     });
 </script>
 <!-- Transaction Stutus -->
-<?php $B2C = DB::table('b2c_api_response')->OrderBy('b2bID','DESC')->first(); ?>
+<?php $B2C = DB::table('b2c_api_response')->OrderBy('b2bID','DESC')->first(); 
+if(!$B2C) { $B2C = (object)['b2bID' => 0]; } ?>
 <!-- b2c -->
 <script>
     $('#b2c').on('submit', function (e) {
