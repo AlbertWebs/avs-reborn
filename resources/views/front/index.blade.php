@@ -1039,76 +1039,7 @@
     }
     </style>
 
-    <!-- Modern Blog Section -->
-    <div class="modern-blog-section" style="background: #f8f9fa; padding: 4rem 0;">
-        <div class="container">
-            <div class="section-header text-center mb-5">
-                <h2 class="section-title" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">📰 From Our Blog</h2>
-                <p class="section-subtitle" style="color: #666; font-size: 1rem;">Latest news, tips, and insights</p>
-            </div>
-
-            <div class="owl-carousel owl-simple" data-toggle="owl"
-                data-owl-options='{
-                    "nav": false,
-                    "dots": true,
-                    "items": 3,
-                    "margin": 20,
-                    "loop": false,
-                    "responsive": {
-                        "0": {
-                            "items":1
-                        },
-                        "600": {
-                            "items":2
-                        },
-                        "992": {
-                            "items":3
-                        },
-                        "1280": {
-                            "items":3,
-                            "nav": true,
-                            "dots": false
-                        }
-                    }
-                }'>
-                <?php $Blogs = DB::table('blogs')->orderBy('id','DESC')->limit('5')->get(); ?>
-                @foreach ($Blogs as $item)
-                <article class="entry modern-blog-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
-                    <figure class="entry-media" style="position: relative; overflow: hidden; margin: 0; height: 220px;">
-                        <a href="{{$item->link}}">
-                            <img loading="lazy" src="{{url('/')}}/uploads/blog/{{$item->image_one}}" alt="{{$item->title}}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
-                        </a>
-                    </figure>
-                    <div class="entry-body" style="padding: 1.5rem;">
-                        <div class="entry-meta" style="margin-bottom: 0.75rem; font-size: 0.85rem; color: #666;">
-                            <a href="#" style="color: #667eea; text-decoration: none;">
-                                <?php
-                                    $RawDate = $item->created_at;
-                                    $FormatDate = strtotime($RawDate);
-                                    $Month = date('M',$FormatDate);
-                                    $Date = date('D',$FormatDate);
-                                    $date = date('d',$FormatDate);
-                                    $Year = date('Y',$FormatDate);
-                                ?>
-                                {{$Month}} {{$date}}, {{$Year}}
-                            </a> &nbsp; | &nbsp;
-                            <?php echo count($Comments = DB::table('comments')->where('blog_id',$item->id)->get()); ?> Comments
-                        </div>
-                        <h3 class="entry-title" style="margin-bottom: 1rem; line-height: 1.4;">
-                            <a target="new" href="{{$item->link}}" style="color: #333; font-size: 1.1rem; font-weight: 600; text-decoration: none; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{$item->title}}</a>
-                        </h3>
-                        <div class="entry-content">
-                            <a target="new" href="{{$item->link}}" class="read-more" style="color: #667eea; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-                                Read More <i class="icon-long-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </article>
-                @endforeach
-            </div>
-        </div>
-    </div>
-
+  
     <style>
     .modern-blog-card:hover {
         transform: translateY(-8px);
