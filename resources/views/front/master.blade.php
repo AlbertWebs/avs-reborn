@@ -220,8 +220,6 @@
 
     <div class="mobile-menu-container mobile-menu-light">
         <div class="mobile-menu-wrapper">
-            <span class="mobile-menu-close"><i class="icon-close"></i></span>
-
             @include('front.mobile-search')
 
             <ul class="nav nav-pills-mobile nav-border-anim" role="tablist">
@@ -255,6 +253,8 @@
                 <a href="{{$Settings->instagram}}" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
                 <a href="{{$Settings->youtube}}" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
             </div><!-- End .social-icons -->
+            
+            <span class="mobile-menu-close"><i class="icon-close"></i></span>
         </div><!-- End .mobile-menu-wrapper -->
     </div><!-- End .mobile-menu-container -->
 
@@ -373,23 +373,27 @@
             position: relative !important;
         }
         
-        /* Close Button - Enhanced - Positioned at top right */
+        /* Close Button - Enhanced - Positioned below social icons */
         .mobile-menu-close {
             width: 44px !important;
             height: 44px !important;
-            top: 1rem !important;
-            right: 1rem !important;
+            margin: 1.5rem auto 0 !important;
             background: rgba(102, 19, 155, 0.1) !important;
             border-radius: 12px !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
             color: rgb(102, 19, 155) !important;
             font-size: 1.8rem !important;
-            z-index: 100 !important;
-            position: absolute !important;
+            position: relative !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             cursor: pointer !important;
+        }
+        
+        /* Ensure mobile-menu-wrapper creates stacking context */
+        .mobile-menu-wrapper {
+            position: relative !important;
+            z-index: 1 !important;
         }
         
         .mobile-menu-close:hover,
@@ -411,7 +415,7 @@
             border: 2px solid rgba(102, 19, 155, 0.1) !important;
             transition: all 0.3s ease !important;
             position: relative !important;
-            z-index: 1 !important;
+            z-index: 0 !important;
         }
         
         .mobile-search:focus-within {
