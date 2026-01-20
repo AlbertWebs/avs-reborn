@@ -1000,32 +1000,6 @@
         </div><!-- End .owl-carousel -->
     </div><!-- End .container -->
 
-    <!-- Modern Newsletter Section -->
-    <div class="modern-newsletter-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 4rem 0; margin: 3rem 0;">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-5 mb-4 mb-lg-0 text-center text-lg-left">
-                    <h3 class="newsletter-title" style="font-size: 2rem; font-weight: 700; color: white; margin-bottom: 0.75rem;">📧 Join Our Newsletter</h3>
-                    <p class="newsletter-desc" style="color: rgba(255,255,255,0.9); font-size: 1.05rem; margin: 0;">Subscribe to get exclusive deals, new product updates, and special offers</p>
-                </div>
-                <div class="col-lg-7">
-                    <form id="newsletter-ctc" class="modern-newsletter-form">
-                        {{csrf_field()}}
-                        <div class="input-group-modern">
-                            <input name="user_email" type="email" class="form-control-modern" placeholder="Enter your email address" aria-label="Email Address" required style="flex: 1; padding: 1rem 1.5rem; border: none; border-radius: 50px 0 0 50px; font-size: 1rem; outline: none;">
-                            <button class="btn-modern-subscribe" type="submit" style="padding: 1rem 2rem; background: white; color: #667eea; border: none; border-radius: 0 50px 50px 0; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                                <span>Subscribe</span>
-                                <i class="icon-long-arrow-right"></i>
-                                <img class="loading-imagers" width="22" src="{{url('/')}}/uploads/preloaders/loading.gif" alt="Loading" style="display: none; margin-left: 0.5rem;">
-                            </button>
-                        </div>
-                        <span class="newsletter-span" style="display: block; margin-top: 0.75rem; color: white; font-size: 0.9rem;"></span>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <style>
     .modern-newsletter-form {
         display: flex;
