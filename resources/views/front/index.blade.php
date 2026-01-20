@@ -3,7 +3,13 @@
 <main class="main bg-light">
     <?php $Slider = DB::table('product')->where('stock','In Stock')->limit(10)->InRandomOrder()->where('slider','1')->get(); $CountSlider = count($Slider); ?>
     @if($CountSlider == 0)
-
+    <div class="container py-5">
+        <div class="empty-state-message" style="text-align: center; padding: 3rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <i class="icon-images" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
+            <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Featured Products Available</h3>
+            <p style="color: #666; font-size: 0.95rem; margin: 0;">Featured products will appear here once they are added to the system.</p>
+        </div>
+    </div>
     @else
     <div class="intro-slider-container">
         <div class="intro-slider owl-carousel owl-simple owl-nav-inside" data-toggle="owl" data-owl-options='{
@@ -58,16 +64,26 @@
         <div class="modern-categories-grid">
             <div class="row g-3">
                 <?php $Categories = DB::table('category')->where('home','1')->orderBy('order', 'asc')->limit('6')->get(); ?>
-                @foreach($Categories as $Cat)
-                <div class="col-6 col-sm-4 col-lg-2">
-                    <a href="{{url('/')}}/products/{{$Cat->slung}}" class="modern-cat-card">
-                        <div class="cat-card-image">
-                            <img loading="lazy" src="{{url('/')}}/uploads/categories/{{$Cat->image}}" alt="{{$Cat->cat}}" class="img-fluid">
+                @if($Categories->isEmpty())
+                    <div class="col-12">
+                        <div class="empty-state-message" style="text-align: center; padding: 3rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <i class="icon-folder-open" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
+                            <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Categories Available</h3>
+                            <p style="color: #666; font-size: 0.95rem; margin: 0;">Categories will appear here once they are added to the system.</p>
                         </div>
-                        <h3 class="cat-card-title">{{$Cat->cat}}</h3>
-                    </a>
-                </div>
-                @endforeach
+                    </div>
+                @else
+                    @foreach($Categories as $Cat)
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <a href="{{url('/')}}/products/{{$Cat->slung}}" class="modern-cat-card">
+                            <div class="cat-card-image">
+                                <img loading="lazy" src="{{url('/')}}/uploads/categories/{{$Cat->image}}" alt="{{$Cat->cat}}" class="img-fluid">
+                            </div>
+                            <h3 class="cat-card-title">{{$Cat->cat}}</h3>
+                        </a>
+                    </div>
+                    @endforeach
+                @endif
             </div>
         </div>
     </div>
@@ -153,6 +169,13 @@
     <!-- Modern Offer Banners Section -->
     <?php $Full = DB::table('product')->where('stock','In Stock')->where('offer','11')->limit('10')->inRandomOrder()->get();  ?>
     @if($Full->isEmpty())
+    <div class="container py-4">
+        <div class="empty-state-message" style="text-align: center; padding: 2rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <i class="icon-tag" style="font-size: 3rem; color: #ccc; margin-bottom: 0.75rem; display: block;"></i>
+            <h3 style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Special Offers Available</h3>
+            <p style="color: #666; font-size: 0.9rem; margin: 0;">Check back soon for exciting offers!</p>
+        </div>
+    </div>
     @else
     <div class="container py-4">
         <div class="modern-banners-grid">
@@ -302,6 +325,15 @@
                         }'>
                         <?php $Trending = DB::table('product')->where('stock','In Stock')->where('trending','1')->limit('10')->get(); ?>
 
+                        @if($Trending->isEmpty())
+                        <div class="col-12">
+                            <div class="empty-state-message" style="text-align: center; padding: 3rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin: 1rem;">
+                                <i class="icon-fire" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
+                                <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Hot Deals Available</h3>
+                                <p style="color: #666; font-size: 0.95rem; margin: 0;">Trending products will appear here once they are added to the system.</p>
+                            </div>
+                        </div>
+                        @else
                         @foreach ($Trending as $item)
                         <div class="product">
                             <figure class="product-media" style="position: relative; overflow: hidden; border-radius: 16px 16px 0 0;">
@@ -386,6 +418,7 @@
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
                         @endforeach
+                        @endif
                     </div><!-- End .owl-carousel -->
                 </div><!-- .End .tab-pane -->
             </div><!-- End .tab-content -->
@@ -439,10 +472,19 @@
             </div>
 
         <div class="tab-content tab-content-carousel">
-            <div class="products">
+                <div class="products">
                 <div class="row">
                     <?php $Featured = DB::table('product')->where('stock','In Stock')->where('cat',$category->id)->where('featured','1')->limit('4')->get(); $CountFeatured = count($Featured); $balance = 8-$CountFeatured; ?>
 
+                    @if($Featured->isEmpty())
+                    <div class="col-12">
+                        <div class="empty-state-message" style="text-align: center; padding: 2rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <i class="icon-box" style="font-size: 3rem; color: #ccc; margin-bottom: 0.75rem; display: block;"></i>
+                            <h3 style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Products Available</h3>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0;">Products for this category will appear here once they are added.</p>
+                        </div>
+                    </div>
+                    @else
                     @foreach ($Featured as $item)
                     <div class="col-6 col-md-4 col-lg-4 col-xl-3">
                         <div class="product" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
@@ -531,6 +573,7 @@
                         </div><!-- End .product -->
                     </div>
                     @endforeach
+                    @endif
 
                     {{--  --}}
                 </div><!-- End .owl-carousel -->
@@ -884,6 +927,8 @@
 
     <?php $OfferBanners = DB::table('offers')->where('category_id',$category->id)->get(); ?>
 
+    @if($OfferBanners->isEmpty())
+    @else
     <div class="container">
         <div class="row justify-content-center">
             @foreach ($OfferBanners as $offer)
@@ -931,6 +976,7 @@
 
         </div>
     </div>
+    @endif
     {{--  --}}
 
     {{-- One Banner --}}
@@ -960,6 +1006,14 @@
             <h2 class="section-title" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">Shop by Brands</h2>
             <p class="section-subtitle" style="color: #666; font-size: 1rem;">Trusted brands for quality car audio</p>
         </div>
+        <?php $Brand = DB::table('brands')->get() ?>
+        @if($Brand->isEmpty())
+        <div class="empty-state-message" style="text-align: center; padding: 3rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <i class="icon-star" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
+            <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Brands Available</h3>
+            <p style="color: #666; font-size: 0.95rem; margin: 0;">Brands will appear here once they are added to the system.</p>
+        </div>
+        @else
         <div class="modern-brands-carousel owl-carousel mb-5 owl-simple" data-toggle="owl"
             data-owl-options='{
                 "nav": false,
@@ -989,7 +1043,6 @@
                     }
                 }
             }'>
-            <?php $Brand = DB::table('brands')->get() ?>
             @foreach($Brand as $brand)
             <a href="{{url('/')}}/products/brand/{{$brand->name}}" class="modern-brand-card">
                 <div class="brand-image-wrapper">
@@ -998,6 +1051,7 @@
             </a>
             @endforeach
         </div><!-- End .owl-carousel -->
+        @endif
     </div><!-- End .container -->
 
     <style>
