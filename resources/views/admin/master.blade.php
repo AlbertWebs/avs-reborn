@@ -5,6 +5,7 @@
 <!-- BEGIN HEAD -->
 <head>
     <meta charset="UTF-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{$page_name}} | {{ config('app.name', 'Laravel') }}</title>
      <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 	<meta content="" name="Nekta CMS" />

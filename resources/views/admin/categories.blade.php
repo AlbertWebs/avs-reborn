@@ -87,9 +87,9 @@
                             @else
                                 <ul id="sortable-categories" style="list-style: none; padding: 0; margin: 0;">
                                     @foreach($Category as $value)
-                                    <li data-id="{{$value->id}}" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; margin-bottom: 12px; cursor: move; transition: all 0.3s; display: flex; align-items: center; justify-content: space-between;" 
+                                    <li data-id="{{$value->id}}" style="background: {{($value->status ?? 1) ? '#f8f9fa' : '#f0f0f0'}}; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; margin-bottom: 12px; cursor: move; transition: all 0.3s; display: flex; align-items: center; justify-content: space-between; opacity: {{($value->status ?? 1) ? '1' : '0.6'}};" 
                                         onmouseover="this.style.background='#f0f4ff'; this.style.borderColor='#667eea';" 
-                                        onmouseout="this.style.background='#f8f9fa'; this.style.borderColor='#e9ecef';">
+                                        onmouseout="this.style.background='{{($value->status ?? 1) ? '#f8f9fa' : '#f0f0f0'}}'; this.style.borderColor='#e9ecef';">
                                         <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
                                             <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; flex-shrink: 0; cursor: move;">
                                                 <i class="icon-move" style="font-size: 18px;"></i>
@@ -97,13 +97,28 @@
                                             <div style="flex: 1;">
                                                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
                                                     <h4 style="margin: 0; font-weight: 600; color: #333; font-size: 16px;">{{$value->cat}}</h4>
-                                                    <label style="margin: 0; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                                    @if(($value->home ?? 0))
+                                                    <span class="home-badge" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px;">Home</span>
+                                                    @endif
+                                                    @if(!($value->status ?? 1))
+                                                    <span class="status-badge-inactive" style="background: #ff6b6b; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px;">Inactive</span>
+                                                    @endif
+                                                    <label style="margin: 0; display: flex; align-items: center; gap: 5px; cursor: pointer;" onclick="event.stopPropagation();">
                                                         <input type="checkbox" 
                                                                class="home-toggle" 
                                                                data-id="{{$value->id}}" 
+                                                               id="home-toggle-{{$value->id}}"
                                                                {{($value->home ?? 0) ? 'checked' : ''}}
                                                                style="width: 18px; height: 18px; cursor: pointer;">
                                                         <span style="font-size: 12px; color: #666; font-weight: 500;">Show on Home</span>
+                                                    </label>
+                                                    <label style="margin: 0; display: flex; align-items: center; gap: 5px; cursor: pointer; margin-left: 10px;">
+                                                        <input type="checkbox" 
+                                                               class="status-toggle" 
+                                                               data-id="{{$value->id}}" 
+                                                               {{($value->status ?? 1) ? 'checked' : ''}}
+                                                               style="width: 18px; height: 18px; cursor: pointer;">
+                                                        <span style="font-size: 12px; color: #666; font-weight: 500;">Active</span>
                                                     </label>
                                                     <span style="color: #999; font-size: 13px;">Order: {{$value->order ?? 0}}</span>
                                                 </div>
@@ -177,83 +192,310 @@
 @endforeach
 
 <!-- jQuery UI for Sortable -->
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/ui-lightness/jquery-ui.css">
 
 <script>
-$(document).ready(function() {
-    // Initialize sortable
-    $("#sortable-categories").sortable({
-        handle: '.icon-move',
-        placeholder: "ui-state-highlight",
-        tolerance: "pointer",
-        cursor: "move",
-        opacity: 0.8,
-        update: function(event, ui) {
-            // Show save button when order changes
-            $('#saveOrderBtn').fadeIn();
+// Wait for jQuery AND jQuery UI to be loaded (jQuery is loaded in master.blade.php at bottom)
+(function() {
+    function loadjQueryUI() {
+        // Check if jQuery UI is already loaded
+        if (typeof jQuery !== 'undefined' && typeof jQuery.ui !== 'undefined') {
+            initCategoriesScript();
+            return;
         }
-    });
+        
+        // Check if jQuery is available first
+        if (typeof jQuery === 'undefined') {
+            console.log('Waiting for jQuery...');
+            setTimeout(loadjQueryUI, 100);
+            return;
+        }
+        
+        // jQuery is loaded, now load jQuery UI
+        if (typeof jQuery.ui === 'undefined') {
+            console.log('Loading jQuery UI...');
+            var script = document.createElement('script');
+            script.src = 'https://code.jquery.com/ui/1.13.2/jquery-ui.min.js';
+            script.onload = function() {
+                console.log('jQuery UI loaded successfully');
+                initCategoriesScript();
+            };
+            script.onerror = function() {
+                console.error('Failed to load jQuery UI');
+            };
+            document.head.appendChild(script);
+            return;
+        }
+        
+        initCategoriesScript();
+    }
     
-    // Save order
-    $('#saveOrderBtn').on('click', function() {
-        var order = [];
-        $('#sortable-categories li').each(function() {
-            order.push($(this).data('id'));
+    function initCategoriesScript() {
+        // Check if jQuery is available
+        if (typeof jQuery === 'undefined') {
+            console.error('jQuery is not loaded! Retrying in 100ms...');
+            setTimeout(loadjQueryUI, 100);
+            return;
+        }
+        
+        var $ = jQuery;
+        console.log('jQuery version:', $.fn.jquery);
+        
+        // Check if jQuery UI is available
+        if (typeof $.ui === 'undefined') {
+            console.error('jQuery UI is not loaded!');
+            setTimeout(loadjQueryUI, 100);
+            return;
+        }
+        
+        console.log('jQuery UI version:', $.ui.version);
+        console.log('Categories page script initializing...');
+        
+        // Test if checkboxes exist
+        var homeCheckboxes = $('.home-toggle');
+        console.log('Found', homeCheckboxes.length, 'home checkboxes');
+        
+        if (homeCheckboxes.length === 0) {
+            console.warn('WARNING: No home checkboxes found!');
+        }
+        
+        // Initialize sortable (only if jQuery UI is loaded)
+        if (typeof $.fn.sortable !== 'undefined') {
+            $("#sortable-categories").sortable({
+                handle: '.icon-move',
+                placeholder: "ui-state-highlight",
+                tolerance: "pointer",
+                cursor: "move",
+                opacity: 0.8,
+                update: function(event, ui) {
+                    $('#saveOrderBtn').fadeIn();
+                }
+            });
+        } else {
+            console.warn('jQuery UI sortable not available - drag and drop disabled');
+        }
+        
+        // Save order
+        $('#saveOrderBtn').on('click', function() {
+            var order = [];
+            $('#sortable-categories li').each(function() {
+                order.push($(this).data('id'));
+            });
+            
+            $(this).html('<i class="icon-spinner icon-spin"></i> Saving...').prop('disabled', true);
+            
+            $.ajax({
+                url: '{{url("/admin/updateCategoryOrder")}}',
+                method: 'POST',
+                data: {
+                    orders: order,
+                    _token: '{{csrf_token()}}'
+                },
+                success: function(response) {
+                    $('#saveOrderBtn').html('<i class="icon-ok"></i> Order Saved!').css('background', 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)');
+                    setTimeout(function() {
+                        $('#saveOrderBtn').fadeOut();
+                        location.reload();
+                    }, 1500);
+                },
+                error: function() {
+                    $('#saveOrderBtn').html('<i class="icon-remove"></i> Error').css('background', 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%)').prop('disabled', false);
+                    alert('Error saving order. Please try again.');
+                }
+            });
         });
         
-        $(this).html('<i class="icon-spinner icon-spin"></i> Saving...').prop('disabled', true);
-        
-        $.ajax({
-            url: '{{url("/admin/updateCategoryOrder")}}',
-            method: 'POST',
-            data: {
-                orders: order,
-                _token: '{{csrf_token()}}'
-            },
-            success: function(response) {
-                $('#saveOrderBtn').html('<i class="icon-ok"></i> Order Saved!').css('background', 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)');
-                setTimeout(function() {
-                    $('#saveOrderBtn').fadeOut();
-                    location.reload();
-                }, 1500);
-            },
-            error: function() {
-                $('#saveOrderBtn').html('<i class="icon-remove"></i> Error').css('background', 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%)').prop('disabled', false);
-                alert('Error saving order. Please try again.');
+        // Function to handle home toggle
+        function handleHomeToggle(checkbox) {
+            var categoryId = $(checkbox).data('id');
+            var isHome = $(checkbox).is(':checked') ? 1 : 0;
+            var $checkbox = $(checkbox);
+            var $li = $checkbox.closest('li');
+            
+            if (!categoryId) {
+                console.error('No category ID found!');
+                return;
             }
-        });
-    });
-    
-    // Toggle home display
-    $('.home-toggle').on('change', function() {
-        var categoryId = $(this).data('id');
-        var isHome = $(this).is(':checked') ? 1 : 0;
-        var $checkbox = $(this);
-        
-        $.ajax({
-            url: '{{url("/admin/toggleCategoryHome")}}',
-            method: 'POST',
-            data: {
+            
+            // Disable checkbox during request
+            $checkbox.prop('disabled', true);
+            
+            console.log('=== TOGGLE HOME ===');
+            console.log('Category ID:', categoryId);
+            console.log('Is Home:', isHome);
+            console.log('Checkbox element:', $checkbox[0]);
+            console.log('URL:', '{{url("/admin/toggleCategoryHome")}}');
+            console.log('CSRF Token:', '{{csrf_token()}}');
+            
+            // Get CSRF token from meta tag or use the one from blade
+            var csrfToken = $('meta[name="csrf-token"]').attr('content') || '{{csrf_token()}}';
+            
+            var requestData = {
                 id: categoryId,
                 home: isHome,
-                _token: '{{csrf_token()}}'
-            },
-            success: function(response) {
-                // Visual feedback
-                if (isHome) {
-                    $checkbox.closest('li').find('h4').after('<span class="home-badge" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px;">Home</span>');
-                } else {
-                    $checkbox.closest('li').find('.home-badge').remove();
+                _token: csrfToken
+            };
+            
+            console.log('Sending AJAX request with data:', requestData);
+            console.log('Full URL:', '{{url("/admin/toggleCategoryHome")}}');
+            console.log('CSRF Token:', csrfToken);
+            
+            // Setup AJAX defaults for CSRF
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
                 }
-            },
-            error: function() {
-                $checkbox.prop('checked', !isHome);
-                alert('Error updating category. Please try again.');
-            }
+            });
+            
+            $.ajax({
+                url: '{{url("/admin/toggleCategoryHome")}}',
+                method: 'POST',
+                data: requestData,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                beforeSend: function(xhr) {
+                    console.log('Request being sent...');
+                },
+                success: function(response) {
+                    console.log('SUCCESS RESPONSE:', response);
+                    if (response.success) {
+                        // Visual feedback
+                        if (isHome) {
+                            if ($li.find('.home-badge').length === 0) {
+                                $li.find('h4').after('<span class="home-badge" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px;">Home</span>');
+                            }
+                        } else {
+                            $li.find('.home-badge').remove();
+                        }
+                        console.log('Database updated successfully! Category ID:', response.id, 'Home:', response.home);
+                    } else {
+                        alert('Error: ' + (response.message || 'Unknown error'));
+                        $checkbox.prop('checked', !isHome);
+                    }
+                    $checkbox.prop('disabled', false);
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX ERROR DETAILS:');
+                    console.error('Status:', status);
+                    console.error('Error:', error);
+                    console.error('Response Text:', xhr.responseText);
+                    console.error('Status Code:', xhr.status);
+                    console.error('Response Headers:', xhr.getAllResponseHeaders());
+                    
+                    var errorMsg = 'Error updating category. ';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg += xhr.responseJSON.message;
+                    } else if (xhr.responseText) {
+                        errorMsg += xhr.responseText;
+                    } else {
+                        errorMsg += 'Status: ' + xhr.status + ' - ' + error;
+                    }
+                    
+                    alert(errorMsg);
+                    $checkbox.prop('checked', !isHome);
+                    $checkbox.prop('disabled', false);
+                }
+            });
+        }
+        
+        // Toggle home display - attach to both change and click events
+        function attachHomeToggleHandlers() {
+            // Remove any existing handlers to prevent duplicates
+            $('.home-toggle').off('change.homeToggle click.homeToggle');
+            
+            // Attach change handler
+            $(document).on('change.homeToggle', '.home-toggle', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                console.log('Change event fired on checkbox:', this);
+                handleHomeToggle(this);
+            });
+            
+            // Also attach click handler as backup (fires before change)
+            $(document).on('click.homeToggle', '.home-toggle', function(e) {
+                e.stopPropagation();
+                var self = this;
+                // Wait a tiny bit for checkbox state to update
+                setTimeout(function() {
+                    console.log('Click event fired on checkbox:', self);
+                    handleHomeToggle(self);
+                }, 50);
+            });
+            
+            // Direct binding to existing checkboxes
+            $('.home-toggle').each(function(index) {
+                var $cb = $(this);
+                console.log('Binding to checkbox', index + 1, 'ID:', $cb.data('id'));
+                
+                $cb.on('change', function(e) {
+                    e.stopPropagation();
+                    console.log('Direct change handler fired!');
+                    handleHomeToggle(this);
+                });
+            });
+        }
+        
+        // Attach handlers
+        attachHomeToggleHandlers();
+        
+        // Toggle status (active/inactive)
+        $(document).on('change', '.status-toggle', function() {
+            var categoryId = $(this).data('id');
+            var isActive = $(this).is(':checked') ? 1 : 0;
+            var $checkbox = $(this);
+            var $li = $checkbox.closest('li');
+            
+            $checkbox.prop('disabled', true);
+            
+            console.log('Toggling status for category:', categoryId, 'to:', isActive);
+            
+            $.ajax({
+                url: '{{url("/admin/toggleCategoryStatus")}}',
+                method: 'POST',
+                data: {
+                    id: categoryId,
+                    status: isActive,
+                    _token: '{{csrf_token()}}'
+                },
+                success: function(response) {
+                    console.log('Status update success:', response);
+                    if (isActive) {
+                        $li.css('opacity', '1').css('background', '#f8f9fa');
+                        $li.find('.status-badge-inactive').remove();
+                    } else {
+                        $li.css('opacity', '0.6').css('background', '#f0f0f0');
+                        if ($li.find('.status-badge-inactive').length === 0) {
+                            $li.find('h4').after('<span class="status-badge-inactive" style="background: #ff6b6b; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px;">Inactive</span>');
+                        }
+                    }
+                    $checkbox.prop('disabled', false);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Status update error:', xhr.responseText, status, error);
+                    $checkbox.prop('checked', !isActive);
+                    $checkbox.prop('disabled', false);
+                    alert('Error updating category status. Please try again.');
+                }
+            });
         });
-    });
-});
+        
+        console.log('All event handlers attached successfully!');
+    }
+    
+    // Wait for DOM to be ready, then load jQuery UI (jQuery is loaded at bottom of master.blade.php)
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait a bit for jQuery to load from master.blade.php
+            setTimeout(loadjQueryUI, 200);
+        });
+    } else {
+        // DOM already ready, wait for jQuery
+        setTimeout(loadjQueryUI, 200);
+    }
+})();
 </script>
 
 <style>

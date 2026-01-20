@@ -412,6 +412,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('/add_Category',  [AdminsController::class, 'add_Category']);
     Route::post('/updateCategoryOrder',  [AdminsController::class, 'updateCategoryOrder']);
     Route::post('/toggleCategoryHome',  [AdminsController::class, 'toggleCategoryHome']);
+    Route::post('/toggleCategoryStatus',  [AdminsController::class, 'toggleCategoryStatus']);
 
     Route::get('/categoriesBanners', [AdminsController::class, 'categoriesBanners']);
     Route::get('/editCategoriesBanners/{id}', [AdminsController::class, 'editCategoriesBanners']);

@@ -1167,10 +1167,35 @@ public function updateCategoryOrder(Request $request){
 }
 
 public function toggleCategoryHome(Request $request){
+    try {
+        $id = $request->id;
+        $home = $request->home;
+        
+        // Validate input
+        if (!$id) {
+            return response()->json(['success' => false, 'message' => 'Category ID is required'], 400);
+        }
+        
+        // Update database
+        $updated = DB::table('category')->where('id', $id)->update(['home' => $home]);
+        
+        if ($updated) {
+            \Log::info('Category home updated', ['id' => $id, 'home' => $home]);
+            return response()->json(['success' => true, 'message' => 'Category home status updated', 'id' => $id, 'home' => $home]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'No category found with that ID'], 404);
+        }
+    } catch (\Exception $e) {
+        \Log::error('Error updating category home', ['error' => $e->getMessage()]);
+        return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
+    }
+}
+
+public function toggleCategoryStatus(Request $request){
     $id = $request->id;
-    $home = $request->home;
-    DB::table('category')->where('id', $id)->update(['home' => $home]);
-    return response()->json(['success' => true, 'message' => 'Category home status updated']);
+    $status = $request->status;
+    DB::table('category')->where('id', $id)->update(['status' => $status]);
+    return response()->json(['success' => true, 'message' => 'Category status updated']);
 }
 
 public function addCategory(){

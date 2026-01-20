@@ -30,6 +30,7 @@ class Product extends Model
         'fb_pixels',
         'google_product_category',
         'offer',
+        'offer_banner',
         'stock',
         'replaced',
         'tag',

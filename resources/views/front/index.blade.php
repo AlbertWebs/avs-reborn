@@ -110,7 +110,7 @@
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(90deg, #66139b 0%, #764ba2 100%);
         transform: scaleX(0);
         transition: transform 0.3s ease;
     }
@@ -120,11 +120,11 @@
     .modern-cat-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 12px 24px rgba(102, 126, 234, 0.15);
-        border-color: #667eea;
+        border-color: #66139b;
     }
     .cat-card-image {
         width: 100%;
-        height: 100px;
+        height: 140px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -149,17 +149,59 @@
         transition: color 0.3s ease;
     }
     .modern-cat-card:hover .cat-card-title {
-        color: #667eea;
+        color: #66139b;
     }
     @media (max-width: 576px) {
+        .popular-categories-section {
+            padding: 1.25rem 0.5rem !important;
+        }
+        
+        .popular-categories-section .section-title {
+            font-size: 1.35rem !important;
+        }
+        
+        .popular-categories-section .section-subtitle {
+            font-size: 0.85rem !important;
+        }
+        
         .modern-cat-card {
-            padding: 1rem 0.75rem;
+            padding: 0.875rem 0.5rem !important;
+            min-height: 130px !important;
         }
         .cat-card-image {
-            height: 80px;
+            height: 90px !important;
+            margin-bottom: 0.625rem !important;
         }
         .cat-card-title {
-            font-size: 0.8rem;
+            font-size: 0.7rem !important;
+            line-height: 1.2 !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .popular-categories-section {
+            padding: 1rem 0.5rem !important;
+        }
+        
+        .popular-categories-section .section-title {
+            font-size: 1.25rem !important;
+        }
+        
+        .popular-categories-section .section-subtitle {
+            font-size: 0.8rem !important;
+        }
+        
+        .modern-cat-card {
+            padding: 0.75rem 0.4rem !important;
+            min-height: 120px !important;
+        }
+        
+        .cat-card-image {
+            height: 85px !important;
+        }
+        
+        .cat-card-title {
+            font-size: 0.65rem !important;
         }
     }
     </style>
@@ -257,7 +299,7 @@
                     <p class="section-subtitle-modern" style="color: #666; font-size: 0.95rem; margin: 0;">Limited time offers on premium products</p>
                 </div>
                 <div class="mt-3 mt-md-0">
-                    <a href="{{url('/')}}/products" class="btn-modern-view-all" style="padding: 0.75rem 1.5rem; background: #667eea; color: white; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block;">
+                    <a href="{{url('/')}}/products" class="btn-modern-view-all" style="padding: 0.75rem 1.5rem; background: #66139b; color: white; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block;">
                         View All <i class="icon-long-arrow-right"></i>
                     </a>
                 </div>
@@ -352,7 +394,7 @@
 
                                         $Difference = 100-$Change;
                                     ?>
-                                    <span class="product-label label-out" style="position: absolute; top: 10px; right: 10px; z-index: 2; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.5rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);"><strong>{{$Difference}}% Off</strong></span>
+                                    <span class="product-label label-out" style="position: absolute; top: 10px; right: 10px; z-index: 2; background: #66139b; color: white; padding: 0.5rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 12px rgba(102, 19, 155, 0.3);"><strong>{{$Difference}}% Off</strong></span>
                                 @endif
                                 @if($item->offer == 1)
                                 <a href="{{url('/')}}/product/{{$item->slung}}">
@@ -384,13 +426,13 @@
                                 <div class="product-cat" style="margin-bottom: 0.5rem;">
                                     <?php $Category = DB::table('category')->where('id',$item->cat)->get(); ?>
                                     @foreach ($Category as $Cat)
-                                    <a href="{{url('/products')}}/{{$Cat->slung}}" style="color: #667eea; font-size: 0.85rem; font-weight: 500; text-decoration: none;"> {{$Cat->cat}} </a>
+                                    <a href="{{url('/products')}}/{{$Cat->slung}}" style="color: #66139b; font-size: 0.85rem; font-weight: 500; text-decoration: none;"> {{$Cat->cat}} </a>
                                     @endforeach
                                 </div>
                                 <h3 class="product-title" style="margin-bottom: 0.75rem; line-height: 1.4;">
                                     <a href="{{url('/')}}/product/{{$item->slung}}" style="color: #333; font-size: 1rem; font-weight: 600; text-decoration: none; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{$item->name}}</a>
                                 </h3>
-                                <div class="product-price" style="font-size: 1.25rem; font-weight: 700; color: #667eea; margin-bottom: 1rem;">
+                                <div class="product-price" style="font-size: 1.25rem; font-weight: 700; color: #66139b; margin-bottom: 1rem;">
                                     KES {{number_format($item->price, 0)}}
                                 </div>
                                 <?php
@@ -504,7 +546,7 @@
 
                                         $Difference = 100-$Change;
                                     ?>
-                                    <span class="product-label label-out" style="position: absolute; top: 10px; right: 10px; z-index: 2; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.5rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);"><strong>{{$Difference}}% Off</strong></span>
+                                    <span class="product-label label-out" style="position: absolute; top: 10px; right: 10px; z-index: 2; background: #66139b; color: white; padding: 0.5rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 12px rgba(102, 19, 155, 0.3);"><strong>{{$Difference}}% Off</strong></span>
                                 @endif
                                 @if($item->offer == 1)
                                 <a href="{{url('/')}}/product/{{$item->slung}}">
@@ -603,16 +645,68 @@
     
     /* Hide sections on mobile */
     @media (max-width: 768px) {
-        .popular-categories-section {
-            display: none !important;
-        }
-        
         .modern-newsletter-section {
             display: none !important;
         }
         
         .modern-blog-section {
             display: none !important;
+        }
+    }
+    
+    /* Optimize Popular Categories Section for Mobile */
+    @media (max-width: 768px) {
+        .popular-categories-section {
+            display: block !important;
+            padding: 1.5rem 0.75rem !important;
+        }
+        
+        .popular-categories-section .section-header {
+            margin-bottom: 1.5rem !important;
+            padding: 0 0.5rem;
+        }
+        
+        .popular-categories-section .section-title {
+            font-size: 1.5rem !important;
+            font-weight: 700 !important;
+            color: #333 !important;
+            margin-bottom: 0.5rem !important;
+            line-height: 1.3 !important;
+        }
+        
+        .popular-categories-section .section-subtitle {
+            font-size: 0.9rem !important;
+            color: #666 !important;
+            padding: 0 0.5rem;
+            line-height: 1.5 !important;
+        }
+        
+        .popular-categories-section .row {
+            margin-left: -0.5rem !important;
+            margin-right: -0.5rem !important;
+        }
+        
+        .popular-categories-section .col-6 {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+            margin-bottom: 0.75rem !important;
+        }
+        
+        .popular-categories-section .modern-cat-card {
+            padding: 1rem 0.5rem !important;
+            border-radius: 12px !important;
+            min-height: 140px !important;
+        }
+        
+        .popular-categories-section .cat-card-image {
+            height: 100px !important;
+            margin-bottom: 0.75rem !important;
+        }
+        
+        .popular-categories-section .cat-card-title {
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            line-height: 1.3 !important;
         }
     }
     

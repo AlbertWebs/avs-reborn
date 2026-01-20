@@ -18,6 +18,7 @@ class Category extends Model
         'description',
         'image',
         'order',
-        'home'
+        'home',
+        'status'
     ];
 }
