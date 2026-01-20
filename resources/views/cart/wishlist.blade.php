@@ -34,11 +34,11 @@
                             <?php $UserID = Auth::user()->id; ?>
                             <?php
                             
-                                $WishList = \javcorreia\Wishlist\Facades\Wishlist::getUserWishList($UserID);    
+                                $WishList = \App\Helpers\WishlistHelper::getUserWishList($UserID);    
                             ?>
                             @foreach($WishList as $CartItem)
                             <?php
-                            $ProductsForCart = DB::table('product')->where('id', $CartItem->id)->get();
+                            $ProductsForCart = DB::table('product')->where('id', $CartItem->item_id)->get();
                             ?>
                             @foreach($ProductsForCart as $Product)
                             <tr>
@@ -79,11 +79,11 @@
                             <?php $UserIP = \Request::ip();  ?>
                             <?php
                             
-                                $WishList = \javcorreia\Wishlist\Facades\Wishlist::getUserWishList($UserIP,'session');    
+                                $WishList = \App\Helpers\WishlistHelper::getUserWishList($UserIP,'session');    
                             ?>
                             @foreach($WishList as $CartItem)
                             <?php
-                            $ProductsForCart = DB::table('product')->where('id', $CartItem->id)->get();
+                            $ProductsForCart = DB::table('product')->where('id', $CartItem->item_id)->get();
                             ?>
                             @foreach($ProductsForCart as $Product)
                             <tr>

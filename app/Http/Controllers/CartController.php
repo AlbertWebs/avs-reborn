@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 // use Request;
 use Illuminate\Support\Facades\Auth;
-use Bhavinjr\Wishlist\Facades\Wishlist;
+use App\Helpers\WishlistHelper as Wishlist;
 use Illuminate\Support\Facades\Redirect;
 use LamaLama\Wishlist\HasWishlists;
 use Session;
@@ -63,7 +63,7 @@ class CartController extends Controller
             $user_id = \Request::ip();
         }
       
-        $CartItems = Wishlist::getUserWishlist($user_id);
+        $CartItems = Wishlist::getUserWishList($user_id);
         $page_name = 'Your Cart';
         $keywords = 'Amani Vehicle Sounds';
         

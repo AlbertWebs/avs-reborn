@@ -7,7 +7,7 @@ use Request;
 use App\Models\Product;
 use App\Models\User;
 use DB;
-use javcorreia\Wishlist\Facades\Wishlist;
+use App\Helpers\WishlistHelper as Wishlist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Session;

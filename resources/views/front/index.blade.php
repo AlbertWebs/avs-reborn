@@ -51,8 +51,8 @@
     <!-- Modern Categories Section -->
     <div class="container py-4 popular-categories-section">
         <div class="section-header text-center mb-4">
-            <h2 class="section-title" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">Explore Popular Categories</h2>
-            <p class="section-subtitle" style="color: #666; font-size: 1rem;">Discover our wide range of premium car audio products</p>
+            <h2 class="section-title" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">Feel Every Note</h2>
+            <p class="section-subtitle" style="color: #666; font-size: 1rem;">Transform your cabin into a concert hall with our handpicked audio collections.</p>
         </div>
 
         <div class="modern-categories-grid">
@@ -334,7 +334,6 @@
 
                                 <div class="product-action-vertical">
                                     <a href="{{url('/')}}/wishlist/add-to-wishlist/{{$item->id}}" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="{{url('/')}}/compare/add-to-compare/{{$item->id}}" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
                                     <a href="{{url('/')}}/popup/{{$item->slung}}" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
                                 </div><!-- End .product-action-vertical -->
 
@@ -433,6 +432,10 @@
                     <h2 class="section-title-modern" style="font-size: 1.75rem; font-weight: 700; color: #333; margin-bottom: 0.25rem;">{{$category->cat}}</h2>
                     <p class="section-subtitle-modern" style="color: #666; font-size: 0.9rem; margin: 0;">Premium quality products</p>
                 </div>
+                <!-- View All Button -->
+                <a href="{{url('/')}}/products/{{$category->slung}}" class="btn-modern-view-all" style="padding: 0.75rem 1.5rem; background-color: rgb(102, 19, 155); color: white; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block; white-space: nowrap;">
+                    View All <i class="icon-long-arrow-right"></i>
+                </a>
             </div>
 
         <div class="tab-content tab-content-carousel">
@@ -473,7 +476,6 @@
 
                                 <div class="product-action-vertical">
                                     <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
                                     <a href="{{url('/')}}/popup/{{$item->slung}}" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
                                 </div><!-- End .product-action-vertical -->
 
@@ -534,13 +536,6 @@
                 </div><!-- End .owl-carousel -->
             </div><!-- .End .tab-pane -->
         </div><!-- End .tab-content -->
-        
-        <!-- View All Button -->
-        <div class="text-center mt-4">
-            <a href="{{url('/')}}/products/{{$category->slung}}" class="btn-modern-view-all" style="padding: 0.75rem 1.5rem; background: #667eea; color: white; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block;">
-                View All <i class="icon-long-arrow-right"></i>
-            </a>
-        </div>
     </div><!-- End .container -->
 
     <style>
@@ -601,43 +596,42 @@
             margin-right: auto !important;
         }
         
-        /* Section header responsive */
+        /* Section header responsive - Mobile Full Width with Background */
         .section-header-modern {
+            width: calc(100% + 1.5rem) !important;
+            background-color: rgb(102, 19, 155) !important;
+            padding: 1rem 1.25rem !important;
+            margin-left: -0.75rem !important;
+            margin-right: -0.75rem !important;
+            margin-bottom: 1.5rem !important;
+            border-radius: 0 !important;
             flex-direction: column !important;
             align-items: flex-start !important;
-            text-align: left;
-            gap: 1rem;
+            justify-content: flex-start !important;
+            gap: 0 !important;
         }
         
         .section-header-content {
-            width: 100%;
-            margin-bottom: 0;
-        }
-        
-        .section-header-action {
-            width: 100%;
-            margin-top: 0 !important;
+            width: 100% !important;
+            padding: 0 !important;
         }
         
         .section-title-modern {
-            font-size: 1.35rem !important;
-            margin-bottom: 0.5rem !important;
+            font-size: 1.25rem !important;
+            font-weight: 700 !important;
+            margin-bottom: 0 !important;
             line-height: 1.3 !important;
+            color: white !important;
+            word-wrap: break-word;
         }
         
         .section-subtitle-modern {
-            font-size: 0.85rem !important;
-            margin: 0 !important;
+            display: none !important;
         }
         
-        /* View All Button */
+        /* Hide View All Button on Mobile */
         .btn-modern-view-all {
-            padding: 0.625rem 1.25rem !important;
-            font-size: 0.9rem !important;
-            width: 100% !important;
-            text-align: center !important;
-            display: block !important;
-            margin-top: 1rem;
+            display: none !important;
         }
         
         /* Product grid responsive */
@@ -702,6 +696,33 @@
     }
     
     @media (max-width: 576px) {
+        /* Section Header - Small Mobile Improvements */
+        .section-header-modern {
+            gap: 0.5rem;
+            margin-bottom: 1.25rem !important;
+        }
+        
+        .section-header-content {
+            padding-right: 0.4rem;
+        }
+        
+        .section-title-modern {
+            font-size: 1.15rem !important;
+            margin-bottom: 0.2rem !important;
+        }
+        
+        /* Section header - Small Mobile - Ensure full width background */
+        .section-header-modern {
+            width: calc(100% + 1rem) !important;
+            padding: 0.875rem 1rem !important;
+            margin-left: -0.5rem !important;
+            margin-right: -0.5rem !important;
+        }
+        
+        .section-title-modern {
+            font-size: 1.15rem !important;
+        }
+        
         /* Category Product Sections - Small Mobile */
         .category-section-container {
             padding: 1rem !important;
@@ -712,19 +733,6 @@
         .category-section-container.container {
             padding-left: 0.5rem !important;
             padding-right: 0.5rem !important;
-        }
-        
-        .section-title-modern {
-            font-size: 1.2rem !important;
-        }
-        
-        .section-subtitle-modern {
-            font-size: 0.8rem !important;
-        }
-        
-        .btn-modern-view-all {
-            padding: 0.5rem 1rem !important;
-            font-size: 0.85rem !important;
         }
         
         /* Product images smaller on small screens */
