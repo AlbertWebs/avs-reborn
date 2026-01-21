@@ -153,32 +153,17 @@
             margin-bottom: 1rem !important;
         }
         
-        /* Make category cards square on mobile */
-        .popular-categories-section .row .col-6 {
-            aspect-ratio: 1;
-            padding-left: 0.5rem !important;
-            padding-right: 0.5rem !important;
-        }
-        
         .modern-cat-card {
-            padding: 0.75rem 0.5rem !important;
-            height: 100% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: space-between !important;
-            aspect-ratio: 1 !important;
+            padding: 0.875rem 0.5rem !important;
+            min-height: 130px !important;
         }
-        
         .cat-card-image {
-            height: 60% !important;
-            margin-bottom: 0.5rem !important;
-            flex-shrink: 0;
+            height: 90px !important;
+            margin-bottom: 0.625rem !important;
         }
-        
         .cat-card-title {
             font-size: 0.7rem !important;
             line-height: 1.2 !important;
-            margin-top: auto !important;
         }
     }
     
@@ -200,32 +185,17 @@
             margin-bottom: 0.875rem !important;
         }
         
-        /* Make category cards square on mobile */
-        .popular-categories-section .row .col-6 {
-            aspect-ratio: 1;
-            padding-left: 0.4rem !important;
-            padding-right: 0.4rem !important;
-        }
-        
         .modern-cat-card {
-            padding: 0.625rem 0.4rem !important;
-            height: 100% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: space-between !important;
-            aspect-ratio: 1 !important;
+            padding: 0.75rem 0.4rem !important;
+            min-height: 120px !important;
         }
         
         .cat-card-image {
-            height: 60% !important;
-            margin-bottom: 0.4rem !important;
-            flex-shrink: 0;
+            height: 85px !important;
         }
         
         .cat-card-title {
             font-size: 0.65rem !important;
-            line-height: 1.2 !important;
-            margin-top: auto !important;
         }
     }
     </style>
@@ -712,30 +682,11 @@
             margin-right: -0.5rem !important;
         }
         
-        /* Add vertical spacing between category cards and make them square */
+        /* Add vertical spacing between category cards */
         .popular-categories-section .col-6 {
             padding-left: 0.5rem !important;
             padding-right: 0.5rem !important;
             margin-bottom: 1rem !important;
-            aspect-ratio: 1;
-        }
-        
-        /* Make category cards square on tablets */
-        .popular-categories-section .modern-cat-card {
-            height: 100% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: space-between !important;
-            aspect-ratio: 1 !important;
-        }
-        
-        .popular-categories-section .cat-card-image {
-            height: 65% !important;
-            flex-shrink: 0;
-        }
-        
-        .popular-categories-section .cat-card-title {
-            margin-top: auto !important;
         }
         
         .popular-categories-section .modern-cat-card {
