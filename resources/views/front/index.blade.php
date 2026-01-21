@@ -1,4 +1,4 @@
-@extends('front.master')
+@extends('front.master-one')
 @section('content')
 <main class="main bg-light">
     <?php $Slider = DB::table('product')->where('stock','In Stock')->limit(10)->InRandomOrder()->where('slider','1')->get(); $CountSlider = count($Slider); ?>
@@ -45,6 +45,7 @@
     <div class="mb-5"></div>
     @endif
 
+    <br><br>
     <!-- Modern Categories Section -->
     <div class="container py-4 popular-categories-section">
         <div class="section-header text-center mb-4">
