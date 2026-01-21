@@ -447,6 +447,10 @@ class HomeController extends Controller
             Twitter::setSite('@amanisounds');
             $page_name = 'Terms';
             $Term = Delivery::all();
+            // If no delivery terms exist, create an empty collection to prevent errors
+            if ($Term->isEmpty()) {
+                $Term = collect([]);
+            }
             $page_title = 'Terms Of Delivery';
             $keywords = 'Vehicle Sound Systems, Vehicle Alarm Systems, Vehicle Surveillance Systems';
             return view('front.delivery', compact('page_title', 'Term', 'page_name','keywords'));

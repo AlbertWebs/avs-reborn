@@ -340,15 +340,35 @@ class AdminsController extends Controller
 
     public function delivery(){
         $Copyright = DB::table('delivery')->get();
+        // If no delivery record exists, create a default one
+        if ($Copyright->isEmpty()) {
+            DB::table('delivery')->insert([
+                'title' => 'Terms Of Delivery',
+                'content' => '',
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+            $Copyright = DB::table('delivery')->get();
+        }
         $page_title = 'formfiletext';//For Style Inheritance
         $page_name = 'Copyright';
         return view('admin.delivery',compact('page_title','page_name','Copyright'));
     }
     public function edit_delivery(Request $request){
         $updateDetails = array(
-            'content'=>$request->content
+            'content'=>$request->content,
+            'updated_at' => now()
         );
-        DB::table('delivery')->update($updateDetails);
+        // Check if any record exists, if not create one, otherwise update the first one
+        $existing = DB::table('delivery')->first();
+        if ($existing) {
+            DB::table('delivery')->where('id', $existing->id)->update($updateDetails);
+        } else {
+            DB::table('delivery')->insert(array_merge($updateDetails, [
+                'title' => 'Terms Of Delivery',
+                'created_at' => now()
+            ]));
+        }
 
         Session::flash('message', "Changes have Been Saved");
         return Redirect::back();
