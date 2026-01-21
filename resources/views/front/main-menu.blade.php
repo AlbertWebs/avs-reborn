@@ -31,14 +31,14 @@
 <style>
     .main-nav .menu li.active > a {
         color: #fff !important;
-        border-bottom: 4px solid #fff !important; /* Thick white underline */
+        border-bottom: 2px solid #fff !important; /* Reduced thickness */
         padding-bottom: 4px;
         transition: all 0.3s ease;
     }
     
     /* Ensure the underline doesn't shift the header height on hover/active */
     .main-nav .menu li > a {
-        border-bottom: 4px solid transparent;
+        border-bottom: 2px solid transparent;
         transition: all 0.3s ease;
     }
 </style>

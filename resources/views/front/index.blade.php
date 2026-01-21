@@ -532,6 +532,58 @@
         </div><!-- End .tab-content -->
     </div><!-- End .container -->
 
+    <?php $OfferBanners = DB::table('offers')->where('category_id',$category->id)->get(); ?>
+
+    @if(!$OfferBanners->isEmpty())
+    <div class="container">
+        <div class="row justify-content-center">
+            @foreach ($OfferBanners as $offer)
+            @if($offer->format == '1')
+            <div class="col-12">
+                <div class="banner banner-rad mt-5">
+                    <div class="bg-image d-flex justify-content-center pt-4 pb-4 mb-4 car-audio" style=" background-image: url('{{url('/')}}/uploads/CategoryBanners/{{$offer->banner}}'); background-size:cover">
+                        <div class="banner-content position-relative pt-0">
+                            <h4 class="banner-subtitle letter-spacing-normal font-size-normal text-white text-center pt-0 mb-1">
+                                <a href="#"></a>
+                            </h4>
+
+                            <h3 class="banner-title text-white text-center font-weight-bold mb-0">
+                                <a href="#">
+                                    <br> </a>
+                            </h3>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            @else
+
+            <div class="col-sm-6 col-md-<?php if($offer->format == '1'){ echo "12"; }elseif($offer->format == '2'){ echo "6"; }else { echo "4"; } ?>">
+                <div class="banner banner-overlay banner-sm banner-ad content-right align-center">
+                    <a href="#">
+                        <img src="{{url('/')}}/uploads/CategoryBanners/{{$offer->banner}}" alt="Banner">
+                    </a>
+                    <div class="banner-content">
+                        {{-- <h4 class="banner-subtitle" style="color:#ffffff;">{!!html_entity_decode($offer->content)!!}</h4> --}}
+                        <h4 class="banner-price"><span style="color:#ffffff;" class="price">{{$offer->title}}</span></h4>
+                        <?php $ProductIDD = DB::table('product')->where('id',$offer->product_id)->get(); ?>
+                        @foreach ($ProductIDD as $productidd)
+                        <a target="new" href="https://wa.me/254794301190/?text=Hello, i am intesereted in {{$productidd->name}}, Price: {{$productidd->price}} from your website" class="banner-link">Buy Now<i class="icon-long-arrow-right"></i></a>
+                        @endforeach
+
+                    </div>
+                </div>
+            </div>
+
+
+            @endif
+            @endforeach
+
+        </div>
+    </div>
+    @endif
+
     <style>
     /* ============================================
        MOBILE RESPONSIVE STYLES - COMPREHENSIVE FIX
@@ -543,12 +595,37 @@
         max-width: 100vw;
     }
     
-    /* Ensure all containers respect viewport */
+    /* Ensure all containers respect viewport - CRITICAL FIX */
     @media (max-width: 991px) {
         .container {
             max-width: 100% !important;
-            padding-left: 15px;
-            padding-right: 15px;
+            width: 100% !important;
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Fix for popular categories section */
+        .popular-categories-section.container {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+        }
+    }
+    
+    /* Extra small mobile devices */
+    @media (max-width: 576px) {
+        .container {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+        
+        .popular-categories-section.container {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
         }
     }
     
@@ -927,75 +1004,6 @@
         }
     }
     </style>
-
-    <?php $OfferBanners = DB::table('offers')->where('category_id',$category->id)->get(); ?>
-
-    @if($OfferBanners->isEmpty())
-    @else
-    <div class="container">
-        <div class="row justify-content-center">
-            @foreach ($OfferBanners as $offer)
-            @if($offer->format == '1')
-            <div class="col-12">
-                <div class="banner banner-rad mt-5">
-                    <div class="bg-image d-flex justify-content-center pt-4 pb-4 mb-4 car-audio" style=" background-image: url('{{url('/')}}/uploads/CategoryBanners/{{$offer->banner}}'); background-size:cover">
-                        <div class="banner-content position-relative pt-0">
-                            <h4 class="banner-subtitle letter-spacing-normal font-size-normal text-white text-center pt-0 mb-1">
-                                <a href="#"></a>
-                            </h4>
-
-                            <h3 class="banner-title text-white text-center font-weight-bold mb-0">
-                                <a href="#">
-                                    <br> </a>
-                            </h3>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            @else
-
-            <div class="col-sm-6 col-md-<?php if($offer->format == '1'){ echo "12"; }elseif($offer->format == '2'){ echo "6"; }else { echo "4"; } ?>">
-                <div class="banner banner-overlay banner-sm banner-ad content-right align-center">
-                    <a href="#">
-                        <img src="{{url('/')}}/uploads/CategoryBanners/{{$offer->banner}}" alt="Banner">
-                    </a>
-                    <div class="banner-content">
-                        {{-- <h4 class="banner-subtitle" style="color:#ffffff;">{!!html_entity_decode($offer->content)!!}</h4> --}}
-                        <h4 class="banner-price"><span style="color:#ffffff;" class="price">{{$offer->title}}</span></h4>
-                        <?php $ProductIDD = DB::table('product')->where('id',$offer->product_id)->get(); ?>
-                        @foreach ($ProductIDD as $productidd)
-                        <a target="new" href="https://wa.me/254794301190/?text=Hello, i am intesereted in {{$productidd->name}}, Price: {{$productidd->price}} from your website" class="banner-link">Buy Now<i class="icon-long-arrow-right"></i></a>
-                        @endforeach
-
-                    </div>
-                </div>
-            </div>
-
-
-            @endif
-            @endforeach
-
-        </div>
-    </div>
-    @endif
-    {{--  --}}
-
-    {{-- One Banner --}}
-
-
-
-
-{{-- Offer Banner Area --}}
-    <div class="mb-3"></div><!-- End .mb-3 -->
-
-    @if($counter==1)
-
-
-
-    @endif
-    <?php $counter = $counter+1; ?>
         @endif
     @endforeach
     <div class="mb-1"></div><!-- End .mb-1 -->
@@ -1208,6 +1216,14 @@ html {
 /* Container Max Width Optimization */
 .container {
     max-width: 1200px;
+}
+
+/* Override container width on mobile to prevent horizontal scroll */
+@media (max-width: 991px) {
+    .container {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
 }
 
 /* Image Optimization */
