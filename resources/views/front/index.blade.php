@@ -1,4 +1,4 @@
-@extends('front.master-one')
+@extends('front.master')
 @section('content')
 <main class="main bg-light">
     <?php $Slider = DB::table('product')->where('stock','In Stock')->limit(10)->InRandomOrder()->where('slider','1')->get(); $CountSlider = count($Slider); ?>
@@ -148,6 +148,11 @@
             font-size: 0.85rem !important;
         }
         
+        /* Add vertical spacing between category cards */
+        .popular-categories-section .row .col-6 {
+            margin-bottom: 1rem !important;
+        }
+        
         .modern-cat-card {
             padding: 0.875rem 0.5rem !important;
             min-height: 130px !important;
@@ -173,6 +178,11 @@
         
         .popular-categories-section .section-subtitle {
             font-size: 0.8rem !important;
+        }
+        
+        /* Add vertical spacing between category cards */
+        .popular-categories-section .row .col-6 {
+            margin-bottom: 0.875rem !important;
         }
         
         .modern-cat-card {
@@ -672,10 +682,11 @@
             margin-right: -0.5rem !important;
         }
         
+        /* Add vertical spacing between category cards */
         .popular-categories-section .col-6 {
             padding-left: 0.5rem !important;
             padding-right: 0.5rem !important;
-            margin-bottom: 0.75rem !important;
+            margin-bottom: 1rem !important;
         }
         
         .popular-categories-section .modern-cat-card {
