@@ -1166,6 +1166,11 @@ public function updateCategoryOrder(Request $request){
     return response()->json(['success' => true, 'message' => 'Category order updated successfully']);
 }
 
+public function updateSingleCategoryOrder(Request $request){
+    DB::table('category')->where('id', $request->id)->update(['order' => $request->order]);
+    return response()->json(['success' => true, 'message' => 'Order updated']);
+}
+
 public function toggleCategoryHome(Request $request){
     try {
         $id = $request->id;
@@ -1240,7 +1245,8 @@ public function edit_Category(Request $request, $id){
         'cat'=>$request->name,
         'keywords'=>$request->keywords,
         'description'=>$request->content,
-        'image'=>$image
+        'image'=>$image,
+        'order'=>$request->order
       
     );
     DB::table('category')->where('id',$id)->update($updateDetails);

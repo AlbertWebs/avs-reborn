@@ -120,7 +120,14 @@
                                                                style="width: 18px; height: 18px; cursor: pointer;">
                                                         <span style="font-size: 12px; color: #666; font-weight: 500;">Active</span>
                                                     </label>
-                                                    <span style="color: #999; font-size: 13px;">Order: {{$value->order ?? 0}}</span>
+                                                    <div style="display: flex; align-items: center; gap: 5px;">
+                                                        <span style="color: #999; font-size: 13px;">Order:</span>
+                                                        <input type="number" 
+                                                               class="order-input" 
+                                                               data-id="{{$value->id}}" 
+                                                               value="{{$value->order ?? 0}}" 
+                                                               style="width: 50px; height: 24px; padding: 2px 5px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; text-align: center;">
+                                                    </div>
                                                 </div>
                                                 @if($value->keywords)
                                                     <small style="color: #666; font-size: 12px;">{{$value->keywords}}</small>
@@ -258,6 +265,35 @@
         if (homeCheckboxes.length === 0) {
             console.warn('WARNING: No home checkboxes found!');
         }
+        
+        // Show save button when order input changes
+        $(document).on('change', '.order-input', function() {
+            var $input = $(this);
+            var categoryId = $input.data('id');
+            var newOrder = $input.val();
+            
+            $input.css('background', '#fff3cd');
+            
+            $.ajax({
+                url: '{{url("/admin/updateSingleCategoryOrder")}}',
+                method: 'POST',
+                data: {
+                    id: categoryId,
+                    order: newOrder,
+                    _token: '{{csrf_token()}}'
+                },
+                success: function(response) {
+                    $input.css('background', '#d4edda');
+                    setTimeout(function() {
+                        $input.css('background', '#fff');
+                    }, 1000);
+                },
+                error: function() {
+                    $input.css('background', '#f8d7da');
+                    alert('Error updating order');
+                }
+            });
+        });
         
         // Initialize sortable (only if jQuery UI is loaded)
         if (typeof $.fn.sortable !== 'undefined') {
