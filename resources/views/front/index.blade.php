@@ -368,12 +368,10 @@
                         <?php $Trending = DB::table('product')->where('stock','In Stock')->where('trending','1')->limit('10')->get(); ?>
 
                         @if($Trending->isEmpty())
-                        <div class="col-12">
-                            <div class="empty-state-message" style="text-align: center; padding: 3rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin: 1rem;">
-                                <i class="icon-fire" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
-                                <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Hot Deals Available</h3>
-                                <p style="color: #666; font-size: 0.95rem; margin: 0;">Trending products will appear here once they are added to the system.</p>
-                            </div>
+                        <div class="empty-state-message" style="text-align: center; padding: 3rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin: 1rem; width: 100%;">
+                            <i class="icon-fire" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
+                            <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Hot Deals Available</h3>
+                            <p style="color: #666; font-size: 0.95rem; margin: 0;">Trending products will appear here once they are added to the system.</p>
                         </div>
                         @else
                         @foreach ($Trending as $item)
@@ -618,8 +616,8 @@
                     @endif
 
                     {{--  --}}
-                </div><!-- End .owl-carousel -->
-            </div><!-- .End .tab-pane -->
+                </div><!-- End .row -->
+            </div><!-- End .products -->
         </div><!-- End .tab-content -->
     </div><!-- End .container -->
 
