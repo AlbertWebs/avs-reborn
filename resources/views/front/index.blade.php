@@ -2,15 +2,7 @@
 @section('content')
 <main class="main bg-light">
     <?php $Slider = DB::table('product')->where('stock','In Stock')->limit(10)->InRandomOrder()->where('slider','1')->get(); $CountSlider = count($Slider); ?>
-    @if($CountSlider == 0)
-    <div class="container py-5">
-        <div class="empty-state-message" style="text-align: center; padding: 3rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-            <i class="icon-images" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
-            <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Featured Products Available</h3>
-            <p style="color: #666; font-size: 0.95rem; margin: 0;">Featured products will appear here once they are added to the system.</p>
-        </div>
-    </div>
-    @else
+    @if($CountSlider > 0)
     <div class="intro-slider-container">
         <div class="intro-slider owl-carousel owl-simple owl-nav-inside" data-toggle="owl" data-owl-options='{
                 "nav": false,
@@ -50,15 +42,14 @@
 
         <span class="slider-loader"></span><!-- End .slider-loader -->
     </div><!-- End .intro-slider-container -->
-    @endif
-
     <div class="mb-5"></div>
+    @endif
 
     <!-- Modern Categories Section -->
     <div class="container py-4 popular-categories-section">
         <div class="section-header text-center mb-4">
-            <h2 class="section-title" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">Feel Every Note</h2>
-            <p class="section-subtitle" style="color: #666; font-size: 1rem;">Transform your cabin into a concert hall with our handpicked audio collections.</p>
+            <h1 class="section-title" style="font-size: 2.5rem; font-weight: 800; color: #333; margin-bottom: 0.5rem;">Your go-to plug for car audio systems</h1>
+            <p class="section-subtitle" style="color: #666; font-size: 1.1rem;">Transform your cabin into a concert hall with our handpicked audio collections.</p>
         </div>
 
         <div class="modern-categories-grid">
@@ -206,19 +197,10 @@
     }
     </style>
 
-    <h1 style="font-size:2px; margin:0 auto; color:#fff">Car Audio Shop in Nairobi</h1>
     
     <!-- Modern Offer Banners Section -->
     <?php $Full = DB::table('product')->where('stock','In Stock')->where('offer','11')->limit('10')->inRandomOrder()->get();  ?>
-    @if($Full->isEmpty())
-    <div class="container py-4">
-        <div class="empty-state-message" style="text-align: center; padding: 2rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-            <i class="icon-tag" style="font-size: 3rem; color: #ccc; margin-bottom: 0.75rem; display: block;"></i>
-            <h3 style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Special Offers Available</h3>
-            <p style="color: #666; font-size: 0.9rem; margin: 0;">Check back soon for exciting offers!</p>
-        </div>
-    </div>
-    @else
+    @if(!$Full->isEmpty())
     <div class="container py-4">
         <div class="modern-banners-grid">
             <div class="row g-3">
@@ -1196,12 +1178,10 @@
         object-position: center center;
         margin: 0 auto;
         display: block;
-        filter: grayscale(100%);
-        opacity: 0.7;
+        opacity: 1;
         transition: all 0.3s ease;
     }
     .modern-brand-card:hover .brand-image {
-        filter: grayscale(0%);
         opacity: 1;
         transform: scale(1.1);
     }

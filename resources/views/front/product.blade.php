@@ -1,7 +1,95 @@
 @extends('front.master-single')
 @section('content')
 @foreach($Products as $Product)
-<?php $SiteSettings = DB::table('sitesettings')->get();?>
+<?php 
+    $SiteSettings = DB::table('sitesettings')->get();
+    $Category = \App\Models\Category::find($Product->cat);
+    $Reviews = DB::table('reviews')->where('product_id',$Product->id)->where('status','1')->get();
+    $CountReviews = count($Reviews);
+    $Ratings = DB::table('reviews')->where('product_id',$Product->id)->where('status','1')->avg('rating');
+    $avg = $Ratings ? ceil($Ratings) : 5;
+?>
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{$Product->name}}",
+  "image": [
+    "{{url('/')}}/uploads/product/{{$Product->image_one}}",
+    "{{url('/')}}/uploads/product/{{$Product->image_two}}",
+    "{{url('/')}}/uploads/product/{{$Product->image_three}}"
+  ],
+  "description": "{{strip_tags($Product->meta)}}",
+  "sku": "AVS-{{$Product->id}}",
+  "brand": {
+    "@type": "Brand",
+    "name": "{{$Product->brand}}"
+  },
+  @if($CountReviews > 0)
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{$avg}}",
+    "reviewCount": "{{$CountReviews}}"
+  },
+  "review": [
+    @foreach($Reviews as $index => $review)
+    {
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": "{{$review->name}}"
+      },
+      "datePublished": "{{$review->created_at}}",
+      "reviewBody": "{{strip_tags(html_entity_decode($review->content))}}",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "{{$review->rating}}"
+      }
+    }{{ $index < $CountReviews - 1 ? ',' : '' }}
+    @endforeach
+  ],
+  @endif
+  "offers": {
+    "@type": "Offer",
+    "url": "{{url('/')}}/product/{{$Product->slung}}",
+    "priceCurrency": "KES",
+    "price": "{{$Product->price}}",
+    "priceValidUntil": "{{date('Y-12-31')}}",
+    "itemCondition": "https://schema.org/NewCondition",
+    "availability": "https://schema.org/{{ $Product->stock == 'In Stock' ? 'InStock' : 'OutOfStock' }}",
+    "seller": {
+      "@type": "Organization",
+      "name": "Amani Vehicle Sounds"
+    }
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "{{url('/')}}"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "{{$Category->cat}}",
+    "item": "{{url('/')}}/products/{{$Category->slung}}"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "{{$Product->name}}",
+    "item": "{{url('/')}}/product/{{$Product->slung}}"
+  }]
+}
+</script>
+
 @foreach($SiteSettings as $Settings)
 <main class="main">
     <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">

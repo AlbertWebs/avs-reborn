@@ -11,21 +11,20 @@
     <meta name="author" content="Designekta Studios">
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow"><!-- Google Specific -->
-    <meta name="subject" content="{{$tProduct->name}} - Amani Vehicle Sounds - <?php $CategoryList = \App\Models\Category::find($tProduct->cat); echo $CategoryList->cat ?> In Nairobi">
+    <meta name="subject" content="{{str_replace('"', "'", $tProduct->name)}} - Amani Vehicle Sounds - <?php $CategoryList = \App\Models\Category::find($tProduct->cat); echo $CategoryList->cat ?> In Nairobi">
     <meta name="rating" content="General">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="theme-color" content="#66139B">
 
 
-    <title>{{$tProduct->name}} - Amani Vehicle Sounds - <?php $CategoryList = \App\Models\Category::find($tProduct->cat); echo $CategoryList->cat ?> In Nairobi</title>
-    <meta name="description" content="{{$tProduct->meta}} Order today">
+    <title>{{str_replace('"', "'", $tProduct->name)}} - Amani Vehicle Sounds - <?php $CategoryList = \App\Models\Category::find($tProduct->cat); echo $CategoryList->cat ?> In Nairobi</title>
+    <meta name="description" content="{{str_replace('"', "'", $tProduct->meta)}} Order today">
     <link rel="canonical" href="https://amanivehiclesounds.com/product/{{$tProduct->slung}}">
-    <meta name="keywords" content="{{$tProduct->name}}, {{$tProduct->brand}} {{$CategoryList->cat}} in Nairobi, Car Stereo Kenya, Double Din Car Radio, Bluetooth Car Radio, Car Radio with Reverse Camera, Amani Vehicle Sounds Kenya">
 
 
     <!-- Open Graph Meta Tags (Facebook & Social Media) -->
-    <meta property="og:title" content="{{$tProduct->name}} - Amani Vehicle Sounds - <?php $CategoryList = \App\Models\Category::find($tProduct->cat); echo $CategoryList->cat ?> In Nairobi" />
-    <meta property="og:description" content="{{$tProduct->meta}} Order today" />
+    <meta property="og:title" content="{{str_replace('"', "'", $tProduct->name)}} - Amani Vehicle Sounds - <?php $CategoryList = \App\Models\Category::find($tProduct->cat); echo $CategoryList->cat ?> In Nairobi" />
+    <meta property="og:description" content="{{str_replace('"', "'", $tProduct->meta)}} Order today" />
     <meta property="og:type" content="product" />
     <meta property="og:url" content="https://amanivehiclesounds.com/product/{{$tProduct->slung}}" />
     <meta property="og:image" content="https://amanivehiclesounds.com/uploads/product/{{$tProduct->fb_pixels}}" />
@@ -41,11 +40,11 @@
     <meta property="product:retailer_item_id" content="{{$tProduct->id}}" />
 
     <!-- Twitter Meta Tags -->
-    <meta name="twitter:title" content="{{$tProduct->name}} - Amani Vehicle Sounds - <?php $CategoryList = \App\Models\Category::find($tProduct->cat); echo $CategoryList->cat ?> In Nairobi" />
+    <meta name="twitter:title" content="{{str_replace('"', "'", $tProduct->name)}} - Amani Vehicle Sounds - <?php $CategoryList = \App\Models\Category::find($tProduct->cat); echo $CategoryList->cat ?> In Nairobi" />
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@amanisounds">
     <meta name="twitter:url" content="https://amanivehiclesounds.com/product/{{$tProduct->slung}}">
-    <meta name="twitter:description" content="{{$tProduct->meta}} Order today" />
+    <meta name="twitter:description" content="{{str_replace('"', "'", $tProduct->meta)}} Order today" />
     <meta name="twitter:image" content="https://amanivehiclesounds.com/uploads/product/{{$tProduct->fb_pixels}}">
     <meta name="twitter:creator" content="@amanisounds">
     <meta name="twitter:image:alt" content="KENWOOD DDX419BTM Car Radio">
@@ -80,7 +79,6 @@
 </head>
 
 <body>
-    <h1 style="display:none">{{$tProduct->name}} in {{$tProduct->brand}} Brand, {{$tProduct->meta}}  Order from Amani Vehicle Sounds Today!</h1>
 <!--Div where the WhatsApp will be rendered-->
 <div style="z-index:100000" id="WAButton"></div>
 <style>

@@ -27,10 +27,10 @@
 
 <script type='application/ld+json'>
     {
-      "@context": "http://www.schema.org",
+      "@context": "https://schema.org",
       "@type": "ProfessionalService",
       "name": "Amani Vehicle Sounds",
-      "url": "http://amanivehiclesounds.com/",
+      "url": "https://amanivehiclesounds.com/",
       "logo": "https://amanivehiclesounds.com/uploads/logo/amaniCropped.png",
       "sameAs": [
         "https://web.facebook.com/amanivehiclesounds",

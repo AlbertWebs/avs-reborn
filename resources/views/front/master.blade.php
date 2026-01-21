@@ -13,19 +13,17 @@
     <meta name="author" content="Designekta Studios">
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow"><!-- Google Specific -->
-    <meta name="subject" content="Amani Vehicle Sounds - Premium Car Audio & Entertainment Systems in Nairobi">
     <meta name="rating" content="General">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="theme-color" content="#66139B">
 
-    <title>Amani Vehicle Sounds - Premium Car Audio & Entertainment Systems in Nairobi</title>
-    <meta name="description" content="Upgrade your car with Amani Vehicle Sounds – the best Car Audio Systems, Speakers, Subwoofers, Amplifiers, and In-Car Entertainment Solutions in Nairobi, Kenya. Affordable prices & expert installation.">
+    <title>Amani Vehicle Sounds | Your Go-To Plug for Car Audio Systems in Nairobi</title>
+    <meta name="description" content="Upgrade your driving experience with Nairobi's best car audio systems. Shop premium Android screens, speakers, subwoofers, and alarms at Amani Vehicle Sounds. Expert installation guaranteed.">
     <link rel="canonical" href="https://amanivehiclesounds.com"/>
-    <meta name="keywords" content="Car Audio Nairobi, Car Sound Systems Kenya, Car Speakers, Subwoofers, Amplifiers, Car Stereo Installation, In-Car Entertainment, High-Quality Car Audio, Amani Vehicle Sounds">
 
     <!-- Open Graph Meta Tags (Facebook & Social Media) -->
-    <meta property="og:title" content="Amani Vehicle Sounds - Premium Car Audio & Entertainment Systems in Nairobi" />
-    <meta property="og:description" content="Upgrade your car with Amani Vehicle Sounds – premium Car Audio Systems, Subwoofers, Amplifiers & Expert Installation in Nairobi. Best prices guaranteed!" />
+    <meta property="og:title" content="Amani Vehicle Sounds | Your Go-To Plug for Car Audio Systems" />
+    <meta property="og:description" content="Shop premium car audio systems, Android screens, and car accessories in Nairobi. Quality sound, expert installation, and unbeatable prices." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://amanivehiclesounds.com" />
     <meta property="og:image" content="https://amanivehiclesounds.com/uploads/logo/amaniCropped.png" />
