@@ -52,31 +52,23 @@
             <p class="section-subtitle" style="color: #666; font-size: 1.1rem;">Transform your cabin into a concert hall with our handpicked audio collections.</p>
         </div>
 
+        <?php $Categories = DB::table('category')->where('home','1')->orderBy('order', 'asc')->limit('6')->get(); ?>
+        @if(!$Categories->isEmpty())
         <div class="modern-categories-grid">
             <div class="row g-3">
-                <?php $Categories = DB::table('category')->where('home','1')->orderBy('order', 'asc')->limit('6')->get(); ?>
-                @if($Categories->isEmpty())
-                    <div class="col-12">
-                        <div class="empty-state-message" style="text-align: center; padding: 3rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <i class="icon-folder-open" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
-                            <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Categories Available</h3>
-                            <p style="color: #666; font-size: 0.95rem; margin: 0;">Categories will appear here once they are added to the system.</p>
+                @foreach($Categories as $Cat)
+                <div class="col-6 col-sm-4 col-lg-2">
+                    <a href="{{url('/')}}/products/{{$Cat->slung}}" class="modern-cat-card">
+                        <div class="cat-card-image">
+                            <img loading="lazy" src="{{url('/')}}/uploads/categories/{{$Cat->image}}" alt="{{$Cat->cat}}" class="img-fluid">
                         </div>
-                    </div>
-                @else
-                    @foreach($Categories as $Cat)
-                    <div class="col-6 col-sm-4 col-lg-2">
-                        <a href="{{url('/')}}/products/{{$Cat->slung}}" class="modern-cat-card">
-                            <div class="cat-card-image">
-                                <img loading="lazy" src="{{url('/')}}/uploads/categories/{{$Cat->image}}" alt="{{$Cat->cat}}" class="img-fluid">
-                            </div>
-                            <h3 class="cat-card-title">{{$Cat->cat}}</h3>
-                        </a>
-                    </div>
-                    @endforeach
-                @endif
+                        <h3 class="cat-card-title">{{$Cat->cat}}</h3>
+                    </a>
+                </div>
+                @endforeach
             </div>
         </div>
+        @endif
     </div>
 
     <style>
@@ -273,53 +265,10 @@
     <div class="mb-4"></div>
 
     <!-- Modern Hot Deals Section -->
+    <?php $Trending = DB::table('product')->where('stock','In Stock')->where('trending','1')->limit('10')->get(); ?>
+    @if(!$Trending->isEmpty())
     <div class="modern-deals-section" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 3rem 0;">
         <div class="container">
-            <!-- <div class="section-header-modern d-flex justify-content-between align-items-center mb-4 flex-wrap">
-                <div>
-                    <h2 class="section-title-modern" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">🔥 Hot Deals</h2>
-                    <p class="section-subtitle-modern" style="color: #666; font-size: 0.95rem; margin: 0;">Limited time offers on premium products</p>
-                </div>
-                <div class="mt-3 mt-md-0">
-                    <a href="{{url('/')}}/products" class="btn-modern-view-all" style="padding: 0.75rem 1.5rem; background: #66139b; color: white; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block;">
-                        View All <i class="icon-long-arrow-right"></i>
-                    </a>
-                </div>
-            </div> -->
-
-    <style>
-    .btn-modern-view-all:hover {
-        background: #5568d3 !important;
-        transform: translateX(5px);
-    }
-    .modern-deals-section .product {
-        background: white;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
-        height: 100%;
-    }
-    .modern-deals-section .product:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(102, 126, 234, 0.2);
-    }
-    .modern-deals-section .product-image {
-        transition: transform 0.5s ease;
-    }
-    .modern-deals-section .product:hover .product-image {
-        transform: scale(1.05);
-    }
-    @media (max-width: 768px) {
-        .section-header-modern {
-            text-align: center;
-        }
-        .section-title-modern {
-            font-size: 1.5rem !important;
-        }
-    }
-    </style>
-
             <div class="tab-content tab-content-carousel">
                 <div class="tab-pane p-0 fade show active" id="hot-all-tab" role="tabpanel" aria-labelledby="hot-all-link">
                     <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
@@ -347,15 +296,6 @@
                                 }
                             }
                         }'>
-                        <?php $Trending = DB::table('product')->where('stock','In Stock')->where('trending','1')->limit('10')->get(); ?>
-
-                        @if($Trending->isEmpty())
-                        <div class="empty-state-message" style="text-align: center; padding: 3rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin: 1rem; width: 100%;">
-                            <i class="icon-fire" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
-                            <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Hot Deals Available</h3>
-                            <p style="color: #666; font-size: 0.95rem; margin: 0;">Trending products will appear here once they are added to the system.</p>
-                        </div>
-                        @else
                         @foreach ($Trending as $item)
                         <div class="product">
                             <figure class="product-media" style="position: relative; overflow: hidden; border-radius: 16px 16px 0 0;">
@@ -440,12 +380,12 @@
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
                         @endforeach
-                        @endif
                     </div><!-- End .owl-carousel -->
                 </div><!-- .End .tab-pane -->
             </div><!-- End .tab-content -->
         </div><!-- End .container -->
     </div><!-- End .modern-deals-section -->
+    @endif
 
 
 
@@ -476,11 +416,11 @@
     <?php $Category = DB::table('category')->limit('15')->get(); $counter = 1; ?>
     @foreach ($Category as $category)
         <?php 
-            // Check if category has any products (in stock or out of stock)
-            $CategoryProducts = DB::table('product')->where('cat',$category->id)->get();
-            $CategoryProductCount = count($CategoryProducts);
+            // Check if category has featured products to display
+            $Featured = DB::table('product')->where('stock','In Stock')->where('cat',$category->id)->where('featured','1')->limit('4')->get();
+            $CountFeatured = count($Featured);
         ?>
-        @if($CategoryProductCount > 0)
+        @if($CountFeatured > 0)
         <div class="container py-5 category-section-container" style="background: #f8f9fa; border-radius: 24px; margin: 2rem auto; padding: 2.5rem !important;">
             <div class="section-header-modern d-flex justify-content-between align-items-center mb-4 flex-wrap">
                 <div class="section-header-content">
@@ -496,17 +436,6 @@
         <div class="tab-content tab-content-carousel">
                 <div class="products">
                 <div class="row">
-                    <?php $Featured = DB::table('product')->where('stock','In Stock')->where('cat',$category->id)->where('featured','1')->limit('4')->get(); $CountFeatured = count($Featured); $balance = 8-$CountFeatured; ?>
-
-                    @if($Featured->isEmpty())
-                    <div class="col-12">
-                        <div class="empty-state-message" style="text-align: center; padding: 2rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <i class="icon-box" style="font-size: 3rem; color: #ccc; margin-bottom: 0.75rem; display: block;"></i>
-                            <h3 style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Products Available</h3>
-                            <p style="color: #666; font-size: 0.9rem; margin: 0;">Products for this category will appear here once they are added.</p>
-                        </div>
-                    </div>
-                    @else
                     @foreach ($Featured as $item)
                     <div class="col-6 col-md-4 col-lg-4 col-xl-3">
                         <div class="product" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
@@ -595,7 +524,6 @@
                         </div><!-- End .product -->
                     </div>
                     @endforeach
-                    @endif
 
                     {{--  --}}
                 </div><!-- End .row -->
@@ -1075,19 +1003,13 @@
 
 
     <!-- Modern Brands Section -->
+    <?php $Brand = DB::table('brands')->get() ?>
+    @if(!$Brand->isEmpty())
     <div class="container py-5">
         <div class="section-header text-center mb-4">
             <h2 class="section-title" style="font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">Shop by Brands</h2>
             <p class="section-subtitle" style="color: #666; font-size: 1rem;">Trusted brands for quality car audio</p>
         </div>
-        <?php $Brand = DB::table('brands')->get() ?>
-        @if($Brand->isEmpty())
-        <div class="empty-state-message" style="text-align: center; padding: 3rem 1rem; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-            <i class="icon-star" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
-            <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">No Brands Available</h3>
-            <p style="color: #666; font-size: 0.95rem; margin: 0;">Brands will appear here once they are added to the system.</p>
-        </div>
-        @else
         <div class="modern-brands-carousel owl-carousel mb-5 owl-simple" data-toggle="owl"
             data-owl-options='{
                 "nav": false,
@@ -1125,8 +1047,8 @@
             </a>
             @endforeach
         </div><!-- End .owl-carousel -->
-        @endif
     </div><!-- End .container -->
+    @endif
 
     <style>
     .modern-newsletter-form {
