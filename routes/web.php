@@ -180,7 +180,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('/edit_Testimonial/{id}',  [AdminsController::class, 'edit_Testimonial']);
 
 
-    Route::get('/edit-Product-slung',  [AdminsController::class, 'edit_Product_slung']);
+    Route::get('/updateCategorySlugs',  [AdminsController::class, 'updateCategorySlugs']);
+    Route::get('/updateProductSlugs',  [AdminsController::class, 'updateProductSlugs']);
 
     Route::get('/addProductToFacebookPixel','AdminsController@addProductToFacebookPixel');
     Route::get('/emptyProductToFacebookPixel','AdminsController@emptyProductToFacebookPixel');

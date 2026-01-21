@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 
 use Stevebauman\Location\Facades\Location;
 
@@ -119,8 +120,6 @@ use App\Models\How;
 use App\Models\Action;
 
 use App\Models\File;
-
-use Illuminate\Support\Str;
 
 use App\Models\ServiceRequest;
 
@@ -1214,8 +1213,14 @@ public function add_Category(Request $request){
     // Get the highest order value and add 1
     $maxOrder = DB::table('category')->max('order') ?? 0;
     
+    $slung = $request->slung;
+    if($slung == null || $slung == ""){
+        $slung = Str::slug($request->name);
+    }
+    
     $Category = new Category;
     $Category->cat = $request->name;
+    $Category->slung = $slung;
     $Category->order = $maxOrder + 1;
     $Category->home = $request->home ?? 0;
     
@@ -1241,8 +1246,13 @@ public function edit_Category(Request $request, $id){
         }else{
             $image = $request->image_cheat;
         }
+    $slung = $request->slung;
+    if($slung == null || $slung == ""){
+        $slung = Str::slug($request->name);
+    }
     $updateDetails = array(
         'cat'=>$request->name,
+        'slung'=>$slung,
         'keywords'=>$request->keywords,
         'description'=>$request->content,
         'image'=>$image,
@@ -1501,19 +1511,37 @@ public function edit_Product_Details(Request $request, $id){
     return Redirect::back();
 }
 
-public function edit_Product_slung(){
-    $variable = DB::table('category')->get();
-    foreach ($variable as $key => $value) {
-        $slung = Str::slug($value->cat);
-        $updateDetails = array(
-        
-            'slung' => $slung,
-            
-        );
-        DB::table('category')->where('id',$value->id)->update($updateDetails);
+    public function updateCategorySlugs(){
+        $categories = DB::table('category')->get();
+        $count = 0;
+        foreach ($categories as $value) {
+            $slung = Str::slug($value->cat);
+            $updateDetails = array(
+                'slung' => $slung,
+            );
+            DB::table('category')->where('id',$value->id)->update($updateDetails);
+            $count++;
+        }
+        return back()->with('message', $count . ' Category slugs updated successfully');
     }
-    echo "done";
-}
+
+    public function updateProductSlugs(){
+        $products = DB::table('product')->whereNull('slung')->orWhere('slung', '')->get();
+        $count = 0;
+        foreach ($products as $product) {
+            $slung = Str::slug($product->name);
+            // Check if slug already exists to prevent duplicates
+            $originalSlung = $slung;
+            $i = 1;
+            while(DB::table('product')->where('slung', $slung)->where('id', '!=', $product->id)->exists()){
+                $slung = $originalSlung . '-' . $i;
+                $i++;
+            }
+            DB::table('product')->where('id', $product->id)->update(['slung' => $slung]);
+            $count++;
+        }
+        return back()->with('message', $count . ' Product slugs updated successfully');
+    }
 
 
 

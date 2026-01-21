@@ -87,6 +87,16 @@
                                     </div>
 
                                     <div class="form-group" style="margin-bottom: 20px;">
+                                        <label for="slung" class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            Category Slug
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <input type="text" id="slung" name="slung" value="{{$Category->slung}}" placeholder="e.g car-speakers" class="form-control" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px; transition: all 0.3s;" />
+                                            <small class="help-block" style="color: #666; margin-top: 5px;"><i class="icon-info-sign"></i> Leave empty to automatically generate from name</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" style="margin-bottom: 20px;">
                                         <label for="order" class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
                                             Display Order
                                         </label>

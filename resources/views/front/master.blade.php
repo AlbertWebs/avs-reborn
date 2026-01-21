@@ -31,11 +31,11 @@
     <meta property="og:locale" content="en_US">
 
     <!-- Twitter Meta Tags -->
-    <meta name="twitter:title" content="Amani Vehicle Sounds - Premium Car Audio & Entertainment Systems in Nairobi" />
+    <meta name="twitter:title" content="Amani Vehicle Sounds | Your Go-To Plug for Car Audio Systems in Nairobi" />
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@amanisounds">
     <meta name="twitter:url" content="https://amanivehiclesounds.com">
-    <meta name="twitter:description" content="Upgrade your car with Amani Vehicle Sounds – premium Car Audio Systems, Subwoofers, Amplifiers & Expert Installation in Nairobi. Best prices guaranteed!" />
+    <meta name="twitter:description" content="Upgrade your driving experience with Nairobi's best car audio systems. Shop premium Android screens, speakers, subwoofers, and alarms at Amani Vehicle Sounds." />
     <meta name="twitter:image" content="https://amanivehiclesounds.com/uploads/logo/amaniCropped.png">
 
     {{-- SEO --}}

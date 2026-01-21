@@ -23,9 +23,17 @@
                                 <h1 style="margin: 0 0 10px 0; font-weight: 600; font-size: 32px;">Categories Management</h1>
                                 <p style="margin: 0; opacity: 0.9; font-size: 16px;">Manage and organize your product categories</p>
                             </div>
-                            <a href="{{url('/admin/addCategory')}}" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 12px 24px; border-radius: 8px; transition: all 0.3s; text-decoration: none; font-weight: 500;">
-                                <i class="icon-plus"></i> Add New Category
-                            </a>
+                            <div style="display: flex; gap: 10px;">
+                                <a href="{{url('/admin/updateCategorySlugs')}}" class="btn" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 12px 24px; border-radius: 8px; transition: all 0.3s; text-decoration: none; font-weight: 500;">
+                                    <i class="icon-refresh"></i> Update Category Slugs
+                                </a>
+                                <a href="{{url('/admin/updateProductSlugs')}}" class="btn" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 12px 24px; border-radius: 8px; transition: all 0.3s; text-decoration: none; font-weight: 500;">
+                                    <i class="icon-refresh"></i> Update Product Slugs
+                                </a>
+                                <a href="{{url('/admin/addCategory')}}" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 12px 24px; border-radius: 8px; transition: all 0.3s; text-decoration: none; font-weight: 500;">
+                                    <i class="icon-plus"></i> Add New Category
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
