@@ -148,13 +148,12 @@
                             @endphp
                             <div class="row">
                                 <!-- Main Image Display -->
-                                <figure class="product-main-image" style="position: relative; margin-bottom: 1.5rem; background: #f8f9fa; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-                                    <div style="position: relative; padding-top: 100%; background: #fff;">
+                                <figure class="product-main-image product-main-image-fill">
+                                    <div class="product-main-image-frame">
                                         <img id="product-zoom" 
                                              src="{{url('/')}}/uploads/product/{{$mainGalleryImage}}" 
                                              data-zoom-image="{{url('/')}}/uploads/product/{{$mainGalleryImage}}" 
-                                             alt="{{$Product->name}}"
-                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s ease; cursor: zoom-in;">
+                                             alt="{{$Product->name}}">
                                     </div>
                                     <a href="#" id="btn-product-gallery" class="btn-product-gallery" style="position: absolute; top: 15px; right: 15px; width: 44px; height: 44px; background: rgba(255,255,255,0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.15); transition: all 0.3s ease; z-index: 10;">
                                         <i class="icon-arrows" style="font-size: 1.6rem; color: #333;"></i>
@@ -556,6 +555,35 @@
 </main><!-- End .main -->
 
 <style>
+    /* Main image fills the card */
+    .product-main-image-fill {
+        position: relative;
+        margin-bottom: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .product-main-image-fill .product-main-image-frame {
+        position: relative;
+        padding-top: 100%;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .product-main-image-fill #product-zoom {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 0.3s ease;
+        cursor: zoom-in;
+    }
+
     /* Enhanced Product Gallery Styles */
     .product-gallery-item.active {
         border-color: #cc9966 !important;
@@ -590,8 +618,8 @@
         color: white !important;
     }
     
-    #product-zoom:hover {
-        transform: scale(1.05);
+    .product-main-image-fill #product-zoom:hover {
+        transform: scale(1.03);
     }
     
     /* Image counter animation */
