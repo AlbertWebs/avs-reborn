@@ -292,6 +292,32 @@
                         <div class="product-desc-content">
                             <h3>Product Information</h3>
                             <p>{!!html_entity_decode($Product->content)!!}</p>
+
+                            @php
+                                $categoryName = $Category->cat ?? 'car audio';
+                                $categoryUrl = isset($Category->slung) ? url('/products/' . $Category->slung) : url('/products');
+                                $formattedPrice = is_numeric($Product->price) ? number_format((float) $Product->price) : $Product->price;
+                                $brandName = trim($Product->brand ?? '');
+                                $brandPhrase = $brandName !== '' ? $brandName . ' ' : '';
+                                $stockPhrase = ($Product->stock ?? '') === 'In Stock' ? 'in stock and ready to ship' : 'available to order';
+                            @endphp
+
+                            <aside class="product-seo-snippet" aria-label="Buy {{ $Product->name }} in Kenya">
+                                <p>
+                                    Buy <strong>{{ $Product->name }}</strong> in
+                                    <a href="{{ $categoryUrl }}">{{ $categoryName }}</a>
+                                    from <strong>Amani Vehicle Sounds</strong> at
+                                    <strong>KES {{ $formattedPrice }}</strong> in Kenya today.
+                                    @if($brandName !== '')
+                                        Shop genuine <strong>{{ $brandName }}</strong> car audio gear with confidence —
+                                    @else
+                                        Shop premium car audio gear with confidence —
+                                    @endif
+                                    {{ $stockPhrase }}, fast delivery in <strong>Nairobi</strong> and nationwide, professional installation support, and unbeatable value on
+                                    {{ strtolower($brandPhrase) }}{{ strtolower($categoryName) }}, car speakers, car stereos, subwoofers, tweeters, Android radios, alarms, reverse cameras, and dashcams.
+                                    Order online now from Kenya's trusted car sound specialists and transform your in-car entertainment experience.
+                                </p>
+                            </aside>
                         </div><!-- End .product-desc-content -->
                     </div><!-- .End .tab-pane -->
                     <div class="tab-pane fade" id="product-info-tab" role="tabpanel" aria-labelledby="product-info-link">
@@ -513,6 +539,31 @@
             font-size: 0.75rem !important;
             padding: 4px 10px !important;
         }
+    }
+
+    .product-seo-snippet {
+        margin-top: 2rem;
+        padding: 1.25rem 1.5rem;
+        background: linear-gradient(135deg, #f8f9fc 0%, #f3f6ff 100%);
+        border-left: 4px solid #667eea;
+        border-radius: 0 8px 8px 0;
+    }
+
+    .product-seo-snippet p {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.75;
+        color: #444;
+    }
+
+    .product-seo-snippet a {
+        color: #667eea;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .product-seo-snippet a:hover {
+        text-decoration: underline;
     }
 </style>
 
