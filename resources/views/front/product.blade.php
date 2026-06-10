@@ -165,11 +165,11 @@
                                     <?php
                                         $images = [];
                                         foreach ($productGallery as $galleryIndex => $galleryFile) {
-                                            if ($galleryFile === ($Product->fb_pixels ?? null)) {
-                                                $label = 'Facebook Pixel';
-                                            } elseif ($galleryFile === ($Product->thumbnail ?? null)) {
+                                            if ($galleryFile === ($Product->thumbnail ?? null)) {
                                                 $label = 'Thumbnail';
-                                            } elseif ($galleryIndex === 0) {
+                                            } elseif ($galleryFile === ($Product->fb_pixels ?? null)) {
+                                                $label = 'Facebook Pixel';
+                                            } elseif ($galleryFile === ($Product->image_one ?? null)) {
                                                 $label = 'Main Image';
                                             } else {
                                                 $label = 'Image ' . ($galleryIndex + 1);

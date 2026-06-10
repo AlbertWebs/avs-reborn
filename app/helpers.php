@@ -152,6 +152,15 @@ function product_gallery_filenames($product, bool $includeMarketingImages = true
         $append($product->fb_pixels ?? null);
     }
 
+    // Storefront: show the dedicated thumbnail image first by default
+    if ($includeMarketingImages && !empty($product->thumbnail) && $product->thumbnail !== '0') {
+        $thumbnail = $product->thumbnail;
+        $images = array_values(array_filter($images, function ($filename) use ($thumbnail) {
+            return $filename !== $thumbnail;
+        }));
+        array_unshift($images, $thumbnail);
+    }
+
     return $images;
 }
 ?>
