@@ -140,31 +140,28 @@
             <div class="product-details-top">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="product-gallery product-gallery-vertical product-gallery-below" style="position: relative;">
+                        <div class="avs-product-gallery">
                             @php
                                 $productGallery = product_gallery_filenames($Product);
                                 $mainGalleryImage = $productGallery[0] ?? $Product->image_one;
                                 $imageCount = count($productGallery);
                             @endphp
-                            <div class="row">
-                                <!-- Main Image Display -->
-                                <figure class="product-main-image product-main-image-fill">
-                                    <div class="product-main-image-frame">
+                                <figure class="avs-product-main">
+                                    <div class="avs-product-main-frame">
                                         <img id="product-zoom" 
                                              src="{{url('/')}}/uploads/product/{{$mainGalleryImage}}" 
                                              data-zoom-image="{{url('/')}}/uploads/product/{{$mainGalleryImage}}" 
                                              alt="{{$Product->name}}">
-                                        <a href="javascript:void(0)" id="btn-product-gallery" class="btn-product-gallery product-gallery-overlay-btn" aria-label="Open gallery" role="button">
+                                        <a href="javascript:void(0)" id="btn-product-gallery" class="btn-product-gallery avs-gallery-expand" aria-label="Open gallery" role="button">
                                             <i class="icon-arrows"></i>
                                         </a>
-                                        <div id="image-counter" class="product-image-counter"{{ $imageCount <= 1 ? ' style="display:none;"' : '' }}>
+                                        <div id="image-counter" class="avs-image-counter"{{ $imageCount <= 1 ? ' style="display:none;"' : '' }}>
                                             <span id="current-image">1</span> / <span id="total-images">{{ max($imageCount, 1) }}</span>
                                         </div>
                                     </div>
-                                </figure><!-- End .product-main-image -->
+                                </figure>
 
-                                <!-- Thumbnail Gallery -->
-                                <div id="product-zoom-gallery" class="product-image-gallery" style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
+                                <div id="product-zoom-gallery" class="avs-product-thumbs">
                                     <?php
                                         $images = [];
                                         foreach ($productGallery as $galleryIndex => $galleryFile) {
@@ -184,21 +181,17 @@
                                         }
                                     ?>
                                     @foreach($images as $index => $img)
-                                    <a class="product-gallery-item {{$index == 0 ? 'active' : ''}}" 
+                                    <a class="product-gallery-item avs-product-thumb {{$index == 0 ? 'active' : ''}}" 
                                        href="{{url('/')}}/uploads/product/{{$img['url']}}" 
                                        data-image="{{url('/')}}/uploads/product/{{$img['url']}}" 
                                        data-zoom-image="{{url('/')}}/uploads/product/{{$img['url']}}"
-                                       data-index="{{$index + 1}}"
-                                       style="position: relative; display: block; width: 90px; height: 90px; border-radius: 8px; overflow: hidden; border: 3px solid transparent; transition: all 0.3s ease; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer;">
+                                       data-index="{{$index + 1}}">
                                         <img src="{{url('/')}}/uploads/product/{{$img['url']}}" 
-                                             alt="{{$Product->name}} - {{$img['name']}}"
-                                             style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
-                                        <div class="gallery-item-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.05); opacity: 0; transition: opacity 0.3s ease;"></div>
+                                             alt="{{$Product->name}} - {{$img['name']}}">
                                     </a>
                                     @endforeach
-                                </div><!-- End .product-image-gallery -->
-                            </div><!-- End .row -->
-                        </div><!-- End .product-gallery -->
+                                </div>
+                        </div>
                     </div><!-- End .col-md-6 -->
 
                     <div class="col-md-6">
@@ -555,44 +548,32 @@
 </main><!-- End .main -->
 
 <style>
-    /* Keep thumbnails below main image on all breakpoints */
-    .product-gallery-below .row {
-        flex-direction: column !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+    /* Product gallery — isolated from theme vertical gallery styles */
+    .avs-product-gallery {
+        width: 100%;
     }
 
-    .product-gallery-below .product-main-image,
-    .product-gallery-below .product-image-gallery {
-        flex: 0 0 100% !important;
-        max-width: 100% !important;
-        width: 100% !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-    }
-
-    /* Main image fills the card edge-to-edge */
-    .product-main-image-fill {
+    .avs-product-main {
         position: relative;
-        margin: 0 0 1.5rem;
+        margin: 0 0 1rem;
         padding: 0;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        line-height: 0;
+        background: #f4f4f4;
     }
 
-    .product-main-image-fill .product-main-image-frame {
+    .avs-product-main-frame {
         position: relative;
         width: 100%;
         aspect-ratio: 1 / 1;
         overflow: hidden;
-        background: #111;
+        background: #f4f4f4;
     }
 
-    .product-main-image-fill #product-zoom,
-    .product-main-image-fill .zoomWrapper,
-    .product-main-image-fill .zoomWrapper img {
+    .avs-product-main-frame #product-zoom,
+    .avs-product-main-frame .zoomWrapper,
+    .avs-product-main-frame .zoomWrapper img {
         display: block;
         position: absolute !important;
         top: 0 !important;
@@ -604,39 +585,52 @@
         padding: 0 !important;
         object-fit: cover !important;
         object-position: center !important;
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        transition: opacity 0.3s ease;
         cursor: zoom-in;
     }
 
-    .product-main-image-fill .product-gallery-overlay-btn {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        width: 44px;
-        height: 44px;
+    .avs-product-main-frame .avs-gallery-expand,
+    .avs-product-main-frame .btn-product-gallery {
+        position: absolute !important;
+        top: 12px !important;
+        right: 12px !important;
+        bottom: auto !important;
+        left: auto !important;
+        width: 42px;
+        height: 42px;
         background: rgba(255, 255, 255, 0.95);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-        transition: all 0.3s ease;
         z-index: 30;
         line-height: 1;
+        text-decoration: none;
+        transition: background 0.3s ease, transform 0.3s ease;
     }
 
-    .product-main-image-fill .product-gallery-overlay-btn i {
-        font-size: 1.6rem;
+    .avs-gallery-expand i {
+        font-size: 1.5rem;
         color: #333;
     }
 
-    .product-main-image-fill .product-image-counter {
+    .avs-gallery-expand:hover {
+        background: #cc9966 !important;
+        transform: rotate(90deg);
+    }
+
+    .avs-gallery-expand:hover i {
+        color: #fff !important;
+    }
+
+    .avs-image-counter {
         position: absolute;
-        bottom: 15px;
-        left: 15px;
+        bottom: 12px;
+        left: 12px;
         background: rgba(0, 0, 0, 0.72);
         color: #fff;
-        padding: 6px 12px;
+        padding: 5px 12px;
         border-radius: 20px;
         font-size: 0.85rem;
         font-weight: 500;
@@ -645,47 +639,52 @@
         pointer-events: none;
     }
 
-    /* Enhanced Product Gallery Styles */
-    .product-gallery-item.active {
-        border-color: #cc9966 !important;
-        box-shadow: 0 4px 12px rgba(204, 153, 102, 0.3) !important;
-        transform: scale(1.05);
+    .avs-product-thumbs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        margin: 0;
+        padding: 0;
+        width: 100%;
     }
-    
-    .product-gallery-item:hover {
-        border-color: #cc9966 !important;
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 6px 16px rgba(204, 153, 102, 0.25) !important;
+
+    .avs-product-thumb {
+        position: relative;
+        display: block;
+        flex: 0 0 auto;
+        width: 72px;
+        height: 72px;
+        padding: 0 !important;
+        margin: 0 !important;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     }
-    
-    .product-gallery-item:hover img {
-        transform: scale(1.1);
+
+    .avs-product-thumb::before,
+    .avs-product-thumb::after {
+        display: none !important;
+        content: none !important;
     }
-    
-    .product-gallery-item:hover .gallery-item-overlay {
-        opacity: 1 !important;
+
+    .avs-product-thumb img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        max-width: none;
     }
-    
-    .product-gallery-item.active .gallery-item-overlay {
-        opacity: 0.3 !important;
-    }
-    
-    #btn-product-gallery:hover {
-        background: #cc9966 !important;
-        transform: rotate(90deg) scale(1.1);
-    }
-    
-    #btn-product-gallery:hover i {
-        color: white !important;
-    }
-    
-    .product-main-image-fill #product-zoom:hover {
-        transform: scale(1.03);
-    }
-    
-    /* Image counter animation */
-    #image-counter {
-        animation: fadeIn 0.3s ease;
+
+    .avs-product-thumb.active,
+    .avs-product-thumb:hover {
+        border-color: #cc9966;
+        box-shadow: 0 4px 12px rgba(204, 153, 102, 0.3);
+        transform: translateY(-2px);
     }
     
     @keyframes fadeIn {
@@ -699,29 +698,28 @@
         }
     }
     
-    /* Responsive adjustments */
     @media (max-width: 768px) {
-        .product-image-gallery {
-            gap: 0.5rem !important;
+        .avs-product-thumbs {
+            gap: 0.5rem;
         }
-        
-        .product-gallery-item {
-            width: 70px !important;
-            height: 70px !important;
+
+        .avs-product-thumb {
+            width: 64px;
+            height: 64px;
         }
-        
-        #btn-product-gallery {
-            width: 38px !important;
-            height: 38px !important;
-            top: 10px !important;
-            right: 10px !important;
+
+        .avs-gallery-expand {
+            width: 36px;
+            height: 36px;
+            top: 10px;
+            right: 10px;
         }
-        
-        #image-counter {
-            bottom: 10px !important;
-            left: 10px !important;
-            font-size: 0.75rem !important;
-            padding: 4px 10px !important;
+
+        .avs-image-counter {
+            bottom: 10px;
+            left: 10px;
+            font-size: 0.75rem;
+            padding: 4px 10px;
         }
     }
 
@@ -1026,7 +1024,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         function fixMainImageFrame() {
-            const frame = document.querySelector('.product-main-image-frame');
+            const frame = document.querySelector('.avs-product-main-frame');
             if (!frame) return;
 
             frame.querySelectorAll('.zoomWrapper').forEach(function(wrapper) {
