@@ -310,9 +310,9 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        @include('admin.partials.product-image-dropzone')
                                     </div>
+
+                                    @include('admin.partials.product-image-dropzone')
                                 </div>
 
                                 <!-- Form Actions -->

@@ -411,9 +411,9 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        @include('admin.partials.product-image-dropzone', ['product' => $Product])
                                     </div>
+
+                                    @include('admin.partials.product-image-dropzone', ['product' => $Product])
                                 </div>
 
                                 <!-- Form Actions -->
