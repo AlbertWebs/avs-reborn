@@ -1,7 +1,7 @@
 @php
     $isEdit = isset($product);
     $maxGalleryImages = 20;
-    $existingGallery = $isEdit ? product_gallery_filenames($product) : [];
+    $existingGallery = $isEdit ? product_gallery_filenames($product, false) : [];
     $initialGallery = [];
 
     foreach ($existingGallery as $index => $filename) {

@@ -118,29 +118,40 @@ function unique_product_code(string $code, ?int $exceptId = null): string
     }
 }
 
-function product_gallery_filenames($product): array
+function product_gallery_filenames($product, bool $includeMarketingImages = true): array
 {
     if (!$product) {
         return [];
     }
 
+    $images = [];
+    $append = function ($filename) use (&$images) {
+        if (!is_string($filename) || $filename === '' || $filename === '0') {
+            return;
+        }
+        if (!in_array($filename, $images, true)) {
+            $images[] = $filename;
+        }
+    };
+
     if (!empty($product->gallery_images)) {
         $decoded = json_decode($product->gallery_images, true);
         if (is_array($decoded)) {
-            return array_values(array_filter($decoded, function ($filename) {
-                return is_string($filename) && $filename !== '' && $filename !== '0';
-            }));
+            foreach ($decoded as $filename) {
+                $append($filename);
+            }
         }
     }
 
-    $images = [];
     foreach (['image_one', 'image_two', 'image_three'] as $field) {
-        $filename = $product->{$field} ?? null;
-        if (!empty($filename) && $filename !== '0') {
-            $images[] = $filename;
-        }
+        $append($product->{$field} ?? null);
     }
 
-    return array_values(array_unique($images));
+    if ($includeMarketingImages) {
+        $append($product->thumbnail ?? null);
+        $append($product->fb_pixels ?? null);
+    }
+
+    return $images;
 }
 ?>

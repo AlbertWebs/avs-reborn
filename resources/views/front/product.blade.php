@@ -141,14 +141,15 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="product-gallery product-gallery-vertical" style="position: relative;">
+                            @php
+                                $productGallery = product_gallery_filenames($Product);
+                                $mainGalleryImage = $productGallery[0] ?? $Product->image_one;
+                                $imageCount = count($productGallery);
+                            @endphp
                             <div class="row">
                                 <!-- Main Image Display -->
                                 <figure class="product-main-image" style="position: relative; margin-bottom: 1.5rem; background: #f8f9fa; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
                                     <div style="position: relative; padding-top: 100%; background: #fff;">
-                                        @php
-                                            $productGallery = product_gallery_filenames($Product);
-                                            $mainGalleryImage = $productGallery[0] ?? $Product->image_one;
-                                        @endphp
                                         <img id="product-zoom" 
                                              src="{{url('/')}}/uploads/product/{{$mainGalleryImage}}" 
                                              data-zoom-image="{{url('/')}}/uploads/product/{{$mainGalleryImage}}" 
@@ -158,8 +159,8 @@
                                     <a href="#" id="btn-product-gallery" class="btn-product-gallery" style="position: absolute; top: 15px; right: 15px; width: 44px; height: 44px; background: rgba(255,255,255,0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.15); transition: all 0.3s ease; z-index: 10;">
                                         <i class="icon-arrows" style="font-size: 1.6rem; color: #333;"></i>
                                     </a>
-                                    <div id="image-counter" style="position: absolute; bottom: 15px; left: 15px; background: rgba(0,0,0,0.7); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">
-                                        <span id="current-image">1</span> / <span id="total-images">1</span>
+                                    <div id="image-counter" style="position: absolute; bottom: 15px; left: 15px; background: rgba(0,0,0,0.7); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;{{ $imageCount <= 1 ? ' display: none;' : '' }}">
+                                        <span id="current-image">1</span> / <span id="total-images">{{ max($imageCount, 1) }}</span>
                                     </div>
                                 </figure><!-- End .product-main-image -->
 
@@ -168,12 +169,20 @@
                                     <?php
                                         $images = [];
                                         foreach ($productGallery as $galleryIndex => $galleryFile) {
+                                            if ($galleryFile === ($Product->fb_pixels ?? null)) {
+                                                $label = 'Facebook Pixel';
+                                            } elseif ($galleryFile === ($Product->thumbnail ?? null)) {
+                                                $label = 'Thumbnail';
+                                            } elseif ($galleryIndex === 0) {
+                                                $label = 'Main Image';
+                                            } else {
+                                                $label = 'Image ' . ($galleryIndex + 1);
+                                            }
                                             $images[] = [
                                                 'url' => $galleryFile,
-                                                'name' => $galleryIndex === 0 ? 'Main Image' : 'Image ' . ($galleryIndex + 1),
+                                                'name' => $label,
                                             ];
                                         }
-                                        $imageCount = count($images);
                                     ?>
                                     @foreach($images as $index => $img)
                                     <a class="product-gallery-item {{$index == 0 ? 'active' : ''}}" 
@@ -194,86 +203,166 @@
                     </div><!-- End .col-md-6 -->
 
                     <div class="col-md-6">
-                        <div class="product-details">
-                            <h1 class="product-title">{{$Product->name}}</h1><!-- End .product-title -->
+                        @php
+                            $productCategory = \App\Models\Category::find($Product->cat);
+                            $categoryName = $productCategory->cat ?? null;
+                            $categorySlug = $productCategory->slung ?? null;
+                            $brandName = trim($Product->brand ?? '');
+                            $productCode = trim($Product->code ?? '') ?: 'AVS-' . $Product->id;
+                            $rawPrice = $Product->price;
+                            $hasPrice = $rawPrice !== null && $rawPrice !== '' && is_numeric($rawPrice) && (float) $rawPrice > 0;
+                            $formattedPrice = $hasPrice ? number_format((float) $rawPrice) : null;
+                            $isInStock = ($Product->stock ?? '') === 'In Stock';
+                            $hasOffer = ($Product->offer ?? 0) == 1 && !empty($Product->price_raw) && is_numeric($Product->price_raw);
+                            $formattedOldPrice = $hasOffer ? number_format((float) $Product->price_raw) : null;
+                            $productTag = null;
+                            if (!empty($Product->tag)) {
+                                $tagRow = DB::table('tags')->where('id', $Product->tag)->first();
+                                $productTag = $tagRow->title ?? null;
+                            }
+                            $whatsappNumber = str_replace([' ', '-', '(', ')'], '', $Settings->mobile_one ?? $Settings->mobile ?? '254794301190');
+                            $whatsappPriceText = $formattedPrice ? ", Price: KES {$formattedPrice}" : '';
+                            $whatsappMessage = urlencode("Hello, I am interested in {$Product->name}{$whatsappPriceText} from your website");
+                            $whatsappUrl = "https://wa.me/{$whatsappNumber}?text={$whatsappMessage}";
+                            $detailReviews = DB::table('reviews')->where('product_id', $Product->id)->where('status', '1')->get();
+                            $detailReviewCount = count($detailReviews);
+                            $detailAvgRating = $detailReviews->isEmpty() ? 0 : ceil(DB::table('reviews')->where('product_id', $Product->id)->where('status', '1')->avg('rating'));
+                        @endphp
 
-                            <?php 
-                                $Reviews = DB::table('reviews')->where('product_id',$Product->id)->get(); 
-                                $CountReviews = count($Reviews);
-                                $Ratings = DB::table('reviews')->where('product_id',$Product->id)->avg('rating');
-                                $avg = ceil($Ratings);
-                            ?>
-                            @if($Reviews->isEmpty())
-
-                            @else
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <?php
-                                        //Average Rating 
-                                    ?>
-                                    <div class="ratings-val" style="width: {{$avg}}%;"></div><!-- End .ratings-val -->
-                                </div>
-                                <span class="ratings-text">( {{$CountReviews}} Reviews )</span>
+                        <div class="product-details product-summary-panel">
+                            @if($categoryName)
+                            <div class="product-summary-category">
+                                <a href="{{ url('/products/' . $categorySlug) }}">{{ $categoryName }}</a>
                             </div>
                             @endif
 
-                            <div class="product-price">
-                                KES {{$Product->price}}
-                                @if($Product->offer == 1)
-                                &nbsp; <span style="text-decoration: line-through;" class="old-price">KES {{$Product->price_raw}}</span>
+                            <h1 class="product-title">{{ $Product->name }}</h1>
+
+                            @if($detailReviewCount > 0)
+                            <div class="ratings-container">
+                                <div class="ratings">
+                                    <div class="ratings-val" style="width: {{ $detailAvgRating }}%;"></div>
+                                </div>
+                                <span class="ratings-text">({{ $detailReviewCount }} {{ $detailReviewCount === 1 ? 'Review' : 'Reviews' }})</span>
+                            </div>
+                            @endif
+
+                            <div class="product-price-block">
+                                @if($hasPrice)
+                                    <div class="product-price">
+                                        <span class="price-currency">KES</span>
+                                        <span class="price-amount">{{ $formattedPrice }}</span>
+                                    </div>
+                                    @if($hasOffer)
+                                    <span class="old-price">KES {{ $formattedOldPrice }}</span>
+                                    <span class="offer-badge">On Sale</span>
+                                    @endif
+                                @else
+                                    <div class="product-price product-price-contact">
+                                        <a href="{{ $whatsappUrl }}" target="_blank">Contact for price</a>
+                                    </div>
                                 @endif
-                            </div><!-- End .product-price -->
+                            </div>
 
-                            <div class="product-content">
-                                <p>{{$Product->meta}} </p>
-                            </div><!-- End .product-content -->
+                            <div class="product-stock-row">
+                                <span class="stock-badge {{ $isInStock ? 'in-stock' : 'out-of-stock' }}">
+                                    {{ $isInStock ? 'In Stock' : 'Available to Order' }}
+                                </span>
+                                <span class="sku-label">SKU: {{ $productCode }}</span>
+                            </div>
 
-                            
+                            @if(!empty(trim($Product->meta ?? '')))
+                            <div class="product-excerpt">
+                                <p>{{ $Product->meta }}</p>
+                            </div>
+                            @endif
 
-                            
+                            <ul class="product-specs-list">
+                                <li>
+                                    <span class="spec-label">Product Code</span>
+                                    <span class="spec-value">{{ $productCode }}</span>
+                                </li>
+                                @if($categoryName)
+                                <li>
+                                    <span class="spec-label">Category</span>
+                                    <span class="spec-value">
+                                        <a href="{{ url('/products/' . $categorySlug) }}">{{ $categoryName }}</a>
+                                    </span>
+                                </li>
+                                @endif
+                                @if($brandName !== '')
+                                <li>
+                                    <span class="spec-label">Brand</span>
+                                    <span class="spec-value">
+                                        <a href="{{ url('/products/brand/' . $brandName) }}">{{ $brandName }}</a>
+                                    </span>
+                                </li>
+                                @endif
+                                <li>
+                                    <span class="spec-label">Availability</span>
+                                    <span class="spec-value {{ $isInStock ? 'text-success' : '' }}">
+                                        {{ $isInStock ? 'In stock — ready to ship' : 'Available to order' }}
+                                    </span>
+                                </li>
+                                @if($productTag)
+                                <li>
+                                    <span class="spec-label">Tag</span>
+                                    <span class="spec-value">{{ $productTag }}</span>
+                                </li>
+                                @endif
+                                <li>
+                                    <span class="spec-label">Delivery</span>
+                                    <span class="spec-value">Nairobi &amp; nationwide</span>
+                                </li>
+                            </ul>
 
-                            <div class="details-filter-row details-row-size">
-                                <label for="qty">Qty:</label>
+                            <div class="product-trust-badges">
+                                <div class="trust-badge">
+                                    <i class="icon-truck"></i>
+                                    <span>Fast Delivery</span>
+                                </div>
+                                <div class="trust-badge">
+                                    <i class="icon-check-circle-o"></i>
+                                    <span>Genuine Products</span>
+                                </div>
+                                <div class="trust-badge">
+                                    <i class="icon-headphones"></i>
+                                    <span>Expert Support</span>
+                                </div>
+                            </div>
+
+                            <div class="details-filter-row details-row-size product-qty-row">
+                                <label for="qty">Quantity</label>
                                 <div class="product-details-quantity">
                                     <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
-                                </div><!-- End .product-details-quantity -->
-                            </div><!-- End .details-filter-row -->
+                                </div>
+                            </div>
 
-                            <div class="product-details-action">
-                                <a href="{{url('/')}}/shopping-cart/add-to-cart/{{$Product->id}}" class="btn-product btn-cart" style="margin-right: 10px;"><span>Add to Cart</span></a>
-
-                                <?php
-                                    $whatsappNumber = str_replace([' ', '-', '(', ')'], '', $Settings->mobile_one ?? $Settings->mobile ?? '254794301190');
-                                    $whatsappMessage = urlencode("Hello, I am interested in {$Product->name}, Price: KES {$Product->price} from your website");
-                                    $whatsappUrl = "https://wa.me/{$whatsappNumber}?text={$whatsappMessage}";
-                                ?>
-                                <a href="{{$whatsappUrl}}" target="_blank" class="btn-product btn-cart" style="background-color: #25D366; color: white; display: inline-flex; align-items: center;">
-                                    <svg style="width: 18px; height: 18px; margin-right: 8px;" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <div class="product-details-action product-action-row">
+                                <a href="{{ url('/') }}/shopping-cart/add-to-cart/{{ $Product->id }}" class="btn-product btn-cart btn-add-cart">
+                                    <span>Add to Cart</span>
+                                </a>
+                                <a href="{{ $whatsappUrl }}" target="_blank" rel="noopener" class="btn-product btn-cart btn-whatsapp" id="btn-whatsapp-buy">
+                                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                                     </svg>
-                                    <span>Buy Now</span>
+                                    <span>Buy on WhatsApp</span>
                                 </a>
-                            </div><!-- End .product-details-action -->
+                            </div>
 
-                            <div class="product-details-footer">
-                                <div class="product-cat">
-                                    <span>Category:</span>
-                                    <?php $ProductCategories = DB::table('category')->where('id',$Product->cat)->get(); ?>
-                                    @foreach ($ProductCategories as $Cat)
-                                    <a href="{{url('/products')}}/{{$Cat->slung}}"> {{$Cat->cat}} </a> |
-                                    @endforeach
-                                    <a href="#">Brand</a>:
-                                    <a href="{{url('/')}}/products/brand/{{$Product->brand}}">{{$Product->brand}}</a>
-                                </div><!-- End .product-cat -->
-
+                            <div class="product-details-footer product-summary-footer">
+                                <div class="product-help-line">
+                                    <i class="icon-phone"></i>
+                                    Need help? Call <a href="tel:{{ $Settings->mobile_one ?? $Settings->mobile }}">{{ $Settings->mobile_one ?? $Settings->mobile ?? '+254 794 301190' }}</a>
+                                </div>
                                 <div class="social-icons social-icons-sm">
                                     <span class="social-label">Share:</span>
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{url('/')}}/product/{{$Product->slung}}" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
-                                    <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
-                                    <a href="https://www.instagram.com/amanivehiclesounds/?hl=en" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
-                                    <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/product/' . $Product->slung)) }}" class="social-icon" title="Facebook" target="_blank" rel="noopener"><i class="icon-facebook-f"></i></a>
+                                    <a href="https://twitter.com/intent/tweet?url={{ urlencode(url('/product/' . $Product->slung)) }}&text={{ urlencode($Product->name) }}" class="social-icon" title="Twitter" target="_blank" rel="noopener"><i class="icon-twitter"></i></a>
+                                    <a href="https://www.instagram.com/amanivehiclesounds/?hl=en" class="social-icon" title="Instagram" target="_blank" rel="noopener"><i class="icon-instagram"></i></a>
+                                    <a href="https://wa.me/?text={{ urlencode($Product->name . ' - ' . url('/product/' . $Product->slung)) }}" class="social-icon" title="WhatsApp" target="_blank" rel="noopener"><i class="icon-whatsapp"></i></a>
                                 </div>
-                            </div><!-- End .product-details-footer -->
+                            </div>
                         </div><!-- End .product-details -->
                     </div><!-- End .col-md-6 -->
                 </div><!-- End .row -->
@@ -571,27 +660,298 @@
     .product-seo-snippet a:hover {
         text-decoration: underline;
     }
+
+    .product-summary-panel {
+        padding: 0.5rem 0 1rem;
+    }
+
+    .product-summary-category {
+        margin-bottom: 0.75rem;
+    }
+
+    .product-summary-category a {
+        display: inline-block;
+        padding: 0.35rem 0.85rem;
+        background: #f3f6ff;
+        color: #667eea;
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-radius: 20px;
+        text-decoration: none;
+    }
+
+    .product-summary-panel .product-title {
+        font-size: 1.85rem;
+        line-height: 1.3;
+        margin-bottom: 0.75rem;
+    }
+
+    .product-price-block {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 1rem 0;
+        padding: 1rem 0;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+    }
+
+    .product-price-block .product-price {
+        margin: 0;
+        display: flex;
+        align-items: baseline;
+        gap: 0.35rem;
+    }
+
+    .product-price-block .price-currency {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #cc9966;
+    }
+
+    .product-price-block .price-amount {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #cc9966;
+        line-height: 1;
+    }
+
+    .product-price-contact a {
+        color: #25D366;
+        font-weight: 700;
+        font-size: 1.25rem;
+        text-decoration: none;
+    }
+
+    .product-price-block .old-price {
+        font-size: 1.1rem;
+        color: #999;
+        text-decoration: line-through;
+    }
+
+    .offer-badge {
+        background: #dc3545;
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.6rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+    }
+
+    .product-stock-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .stock-badge {
+        display: inline-block;
+        padding: 0.3rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.82rem;
+        font-weight: 600;
+    }
+
+    .stock-badge.in-stock {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .stock-badge.out-of-stock {
+        background: #fff3e0;
+        color: #e65100;
+    }
+
+    .sku-label {
+        font-size: 0.85rem;
+        color: #777;
+    }
+
+    .product-excerpt {
+        margin-bottom: 1.25rem;
+        padding: 1rem 1.15rem;
+        background: #fafafa;
+        border-radius: 8px;
+        border-left: 3px solid #cc9966;
+    }
+
+    .product-excerpt p {
+        margin: 0;
+        color: #555;
+        line-height: 1.65;
+        font-size: 0.95rem;
+    }
+
+    .product-specs-list {
+        list-style: none;
+        margin: 0 0 1.25rem;
+        padding: 0;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .product-specs-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.7rem 1rem;
+        border-bottom: 1px solid #eee;
+        font-size: 0.9rem;
+    }
+
+    .product-specs-list li:last-child {
+        border-bottom: none;
+    }
+
+    .product-specs-list .spec-label {
+        color: #888;
+        font-weight: 500;
+        flex-shrink: 0;
+    }
+
+    .product-specs-list .spec-value {
+        color: #333;
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .product-specs-list .spec-value a {
+        color: #667eea;
+        text-decoration: none;
+    }
+
+    .product-specs-list .spec-value a:hover {
+        text-decoration: underline;
+    }
+
+    .product-specs-list .text-success {
+        color: #2e7d32 !important;
+    }
+
+    .product-trust-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .trust-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.5rem 0.85rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .trust-badge i {
+        color: #cc9966;
+        font-size: 1rem;
+    }
+
+    .product-qty-row {
+        margin-bottom: 1rem;
+    }
+
+    .product-action-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .product-action-row .btn-product {
+        flex: 1;
+        min-width: 140px;
+        justify-content: center;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-whatsapp {
+        background-color: #25D366 !important;
+        color: #fff !important;
+        border-color: #25D366 !important;
+    }
+
+    .btn-whatsapp:hover {
+        background-color: #1da851 !important;
+        color: #fff !important;
+    }
+
+    .product-summary-footer {
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .product-help-line {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.75rem;
+    }
+
+    .product-help-line i {
+        color: #cc9966;
+        margin-right: 0.35rem;
+    }
+
+    .product-help-line a {
+        color: #333;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+        .product-summary-panel .product-title {
+            font-size: 1.45rem;
+        }
+
+        .product-price-block .price-amount {
+            font-size: 1.65rem;
+        }
+
+        .product-specs-list li {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+
+        .product-specs-list .spec-value {
+            text-align: left;
+        }
+    }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Quantity and WhatsApp link update
         const qtyInput = document.getElementById('qty');
-        const whatsappLink = document.querySelector('a[href*="wa.me"]');
+        const whatsappLink = document.getElementById('btn-whatsapp-buy');
         
         if (qtyInput && whatsappLink) {
-            const originalWhatsappUrl = whatsappLink.href;
-            
             qtyInput.addEventListener('change', updateWhatsappLink);
             qtyInput.addEventListener('input', updateWhatsappLink);
 
             function updateWhatsappLink() {
                 const quantity = qtyInput.value;
-                const productName = "{{ $Product->name }}";
-                const productPrice = "{{ $Product->price }}";
-                const whatsappNumber = "{{ str_replace([' ', '-', '(', ')'], '', $Settings->mobile_one ?? $Settings->mobile ?? '254794301190') }}";
+                const productName = @json($Product->name);
+                const productPrice = @json($formattedPrice ?? '');
+                const whatsappNumber = @json(str_replace([' ', '-', '(', ')'], '', $Settings->mobile_one ?? $Settings->mobile ?? '254794301190'));
+                const pricePart = productPrice ? `, Price: KES ${productPrice} each` : '';
 
-                const newWhatsappMessage = encodeURIComponent(`Hello, I am interested in ${quantity} unit(s) of ${productName}, Price: KES ${productPrice} each, from your website`);
+                const newWhatsappMessage = encodeURIComponent(`Hello, I am interested in ${quantity} unit(s) of ${productName}${pricePart} from your website`);
                 whatsappLink.href = `https://wa.me/${whatsappNumber}?text=${newWhatsappMessage}`;
             }
         }

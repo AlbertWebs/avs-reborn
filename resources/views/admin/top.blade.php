@@ -140,7 +140,12 @@
 <style>
 /* Modern Admin Navbar Styles */
 :root {
-    --admin-navbar-height: 70px;
+    --admin-navbar-height: 76px;
+    --admin-nav-control-size: 52px;
+    --admin-font-base: 14px;
+    --admin-font-sm: 12px;
+    --admin-font-md: 14px;
+    --admin-font-lg: 16px;
 }
 
 /* Keep page content below the fixed navbar — body only, not #top (avoids double gap) */
@@ -224,7 +229,7 @@ body.padTop53 #left #menu.affix {
 }
 
 .navbar-logo {
-    max-height: 45px;
+    max-height: 48px;
     width: auto;
     object-fit: contain;
 }
@@ -236,14 +241,14 @@ body.padTop53 #left #menu.affix {
 }
 
 .logo-text-main {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 700;
     color: #333;
     letter-spacing: -0.02em;
 }
 
 .logo-text-sub {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: #666;
     text-transform: uppercase;
@@ -269,6 +274,8 @@ body.padTop53 #left #menu.affix {
 
 .nav-item {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 /* Nav Link Icons */
@@ -276,8 +283,8 @@ body.padTop53 #left #menu.affix {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 45px;
-    height: 45px;
+    width: var(--admin-nav-control-size);
+    height: var(--admin-nav-control-size);
     color: #666;
     text-decoration: none;
     border-radius: 12px;
@@ -296,7 +303,7 @@ body.padTop53 #left #menu.affix {
 }
 
 .nav-link-icon i {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
 }
 
 .nav-link-label {
@@ -311,8 +318,8 @@ body.padTop53 #left #menu.affix {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     color: white;
     border-radius: 10px;
-    padding: 2px 6px;
-    font-size: 0.7rem;
+    padding: 2px 7px;
+    font-size: 0.75rem;
     font-weight: 700;
     min-width: 18px;
     text-align: center;
@@ -334,16 +341,19 @@ body.padTop53 #left #menu.affix {
 .nav-link-profile {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem 1rem;
+    gap: 0.6rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.45rem;
     color: #333;
     text-decoration: none;
     border-radius: 12px;
     transition: all 0.3s ease;
     background: #fff;
     border: 1px solid #e9ecef;
-    height: 50px;
+    min-height: var(--admin-nav-control-size);
+    max-height: var(--admin-nav-control-size);
+    max-width: 220px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    line-height: 1.2;
 }
 
 .nav-link-profile:hover {
@@ -354,8 +364,9 @@ body.padTop53 #left #menu.affix {
 }
 
 .profile-avatar {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
     border-radius: 50%;
     overflow: hidden;
     background: #e9ecef;
@@ -375,32 +386,40 @@ body.padTop53 #left #menu.affix {
 .avatar-initials {
     color: #667eea;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 1.05rem;
 }
 
 .profile-info {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    min-width: 0;
+    flex: 1;
 }
 
 .profile-name {
-    font-size: 0.9rem;
+    font-size: var(--admin-font-md);
     font-weight: 600;
     color: #333;
     line-height: 1.2;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .profile-role {
-    font-size: 0.75rem;
+    font-size: var(--admin-font-sm);
     color: #666;
     line-height: 1.2;
 }
 
 .dropdown-arrow {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: #666;
     transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 0.15rem;
 }
 
 .dropdown-toggle[aria-expanded="true"] .dropdown-arrow {
@@ -637,7 +656,7 @@ body.padTop53 #left #menu.affix {
 }
 
 .profile-details strong {
-    font-size: 1rem;
+    font-size: var(--admin-font-lg);
     font-weight: 600;
     color: #333;
     margin-bottom: 0.25rem;
@@ -647,7 +666,7 @@ body.padTop53 #left #menu.affix {
 }
 
 .profile-details span {
-    font-size: 0.85rem;
+    font-size: var(--admin-font-md);
     color: #666;
     white-space: nowrap;
     overflow: hidden;
@@ -667,7 +686,7 @@ body.padTop53 #left #menu.affix {
     padding: 0.875rem 1.25rem;
     color: #333;
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: var(--admin-font-md);
     transition: all 0.3s ease;
 }
 
@@ -746,17 +765,18 @@ body.padTop53 #left #menu.affix {
     }
 
     .nav-link-icon {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
     }
 
     .nav-link-profile {
-        padding: 0.5rem;
+        padding: 0.35rem;
+        max-width: none;
     }
 
     .profile-avatar {
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
     }
 }
 

@@ -91,9 +91,9 @@
                                             Product Price (KES) <span style="color: #dc3545;">*</span>
                                         </label>
                                         <div class="col-lg-8">
-                                            <div class="input-group" style="display: flex;">
-                                                <span class="input-group-addon" style="background: #f8f9fa; border: 1px solid #ddd; border-right: none; border-radius: 6px 0 0 6px; padding: 10px 15px;">KES</span>
-                                                <input type="number" id="product-price" name="price" value="{{ old('price') }}" placeholder="e.g 12500" class="form-control" required min="1" step="1" style="border-radius: 0 6px 6px 0; border-left: none; padding: 10px 15px;" />
+                                            <div class="input-group admin-price-input">
+                                                <span class="input-group-addon">KES</span>
+                                                <input type="number" id="product-price" name="price" value="{{ old('price') }}" placeholder="e.g 12500" class="form-control" required min="1" step="1" />
                                             </div>
                                         </div>
                                     </div>
@@ -356,6 +356,21 @@
                         }
                         .fileupload .thumbnail img {
                             border-radius: 6px;
+                        }
+                        .admin-price-input .input-group-addon {
+                            background: #f8f9fa;
+                            border: 1px solid #ddd;
+                            color: #333;
+                            font-weight: 600;
+                            padding: 10px 14px;
+                            min-width: 58px;
+                            text-align: center;
+                            white-space: nowrap;
+                        }
+                        .admin-price-input .form-control {
+                            border: 1px solid #ddd;
+                            padding: 10px 15px;
+                            height: auto;
                         }
                     </style>
                     <script>
