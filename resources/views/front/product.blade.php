@@ -948,7 +948,7 @@
                 const quantity = qtyInput.value;
                 const productName = @json($Product->name);
                 const productPrice = @json($formattedPrice ?? '');
-                const whatsappNumber = @json(str_replace([' ', '-', '(', ')'], '', $Settings->mobile_one ?? $Settings->mobile ?? '254794301190'));
+                const whatsappNumber = @json($whatsappNumber);
                 const pricePart = productPrice ? `, Price: KES ${productPrice} each` : '';
 
                 const newWhatsappMessage = encodeURIComponent(`Hello, I am interested in ${quantity} unit(s) of ${productName}${pricePart} from your website`);
