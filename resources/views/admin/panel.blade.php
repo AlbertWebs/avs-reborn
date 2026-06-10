@@ -44,10 +44,7 @@
 @endif
 </center>
 
-<div style="text-align: center;">
-                           
-                           
-
+<div class="admin-quick-panel">
                             <a class="quick-btn" href="{{url('/admin/allMessages')}}">
                                 <i class="icon-envelope icon-2x"></i>
                                 <span>Messages</span>
@@ -101,7 +98,4 @@
 
 
                              
-                            
-                            
-                            
                         </div>

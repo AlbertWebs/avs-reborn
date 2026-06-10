@@ -143,7 +143,7 @@
     --admin-navbar-height: 70px;
 }
 
-/* Keep page content below the fixed navbar */
+/* Keep page content below the fixed navbar — body only, not #top (avoids double gap) */
 body.padTop53 {
     padding-top: var(--admin-navbar-height);
 }
@@ -153,7 +153,10 @@ body.padTop53 #left #menu.affix {
 }
 
 #top {
-    height: var(--admin-navbar-height);
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
 }
 
 .modern-admin-navbar {

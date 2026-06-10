@@ -253,8 +253,8 @@
                             <div class="product-details-footer">
                                 <div class="product-cat">
                                     <span>Category:</span>
-                                    <?php $Category = DB::table('category')->where('id',$Product->cat)->get(); ?>
-                                    @foreach ($Category as $Cat)
+                                    <?php $ProductCategories = DB::table('category')->where('id',$Product->cat)->get(); ?>
+                                    @foreach ($ProductCategories as $Cat)
                                     <a href="{{url('/products')}}/{{$Cat->slung}}"> {{$Cat->cat}} </a> |
                                     @endforeach
                                     <a href="#">Brand</a>:
@@ -294,8 +294,9 @@
                             <p>{!!html_entity_decode($Product->content)!!}</p>
 
                             @php
-                                $categoryName = $Category->cat ?? 'car audio';
-                                $categoryUrl = isset($Category->slung) ? url('/products/' . $Category->slung) : url('/products');
+                                $productCategory = \App\Models\Category::find($Product->cat);
+                                $categoryName = $productCategory->cat ?? 'car audio';
+                                $categoryUrl = isset($productCategory->slung) ? url('/products/' . $productCategory->slung) : url('/products');
                                 $formattedPrice = is_numeric($Product->price) ? number_format((float) $Product->price) : $Product->price;
                                 $brandName = trim($Product->brand ?? '');
                                 $brandPhrase = $brandName !== '' ? $brandName . ' ' : '';
