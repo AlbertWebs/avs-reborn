@@ -17,9 +17,14 @@
   "@type": "Product",
   "name": "{{$Product->name}}",
   "image": [
-    "{{url('/')}}/uploads/product/{{$Product->image_one}}",
-    "{{url('/')}}/uploads/product/{{$Product->image_two}}",
-    "{{url('/')}}/uploads/product/{{$Product->image_three}}"
+    @php $schemaGallery = product_gallery_filenames($Product); @endphp
+    @if(count($schemaGallery) > 0)
+    @foreach($schemaGallery as $index => $galleryFile)
+    "{{url('/')}}/uploads/product/{{$galleryFile}}"{{ $index < count($schemaGallery) - 1 ? ',' : '' }}
+    @endforeach
+    @else
+    "{{url('/')}}/uploads/product/{{$Product->image_one}}"
+    @endif
   ],
   "description": "{{strip_tags($Product->meta)}}",
   "sku": "AVS-{{$Product->id}}",
@@ -140,9 +145,13 @@
                                 <!-- Main Image Display -->
                                 <figure class="product-main-image" style="position: relative; margin-bottom: 1.5rem; background: #f8f9fa; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
                                     <div style="position: relative; padding-top: 100%; background: #fff;">
+                                        @php
+                                            $productGallery = product_gallery_filenames($Product);
+                                            $mainGalleryImage = $productGallery[0] ?? $Product->image_one;
+                                        @endphp
                                         <img id="product-zoom" 
-                                             src="{{url('/')}}/uploads/product/{{$Product->image_one}}" 
-                                             data-zoom-image="{{url('/')}}/uploads/product/{{$Product->image_one}}" 
+                                             src="{{url('/')}}/uploads/product/{{$mainGalleryImage}}" 
+                                             data-zoom-image="{{url('/')}}/uploads/product/{{$mainGalleryImage}}" 
                                              alt="{{$Product->name}}"
                                              style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s ease; cursor: zoom-in;">
                                     </div>
@@ -156,17 +165,13 @@
 
                                 <!-- Thumbnail Gallery -->
                                 <div id="product-zoom-gallery" class="product-image-gallery" style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
-                                    <?php 
+                                    <?php
                                         $images = [];
-                                        $images[] = ['url' => $Product->image_one, 'name' => 'Main Image'];
-                                        if($Product->fb_pixels && $Product->fb_pixels != '0') {
-                                            $images[] = ['url' => $Product->fb_pixels, 'name' => 'Image 2'];
-                                        }
-                                        if($Product->image_two && $Product->image_two != '0' && $Product->image_two != null) {
-                                            $images[] = ['url' => $Product->image_two, 'name' => 'Image 3'];
-                                        }
-                                        if($Product->image_three && $Product->image_three != '0' && $Product->image_three != null) {
-                                            $images[] = ['url' => $Product->image_three, 'name' => 'Image 4'];
+                                        foreach ($productGallery as $galleryIndex => $galleryFile) {
+                                            $images[] = [
+                                                'url' => $galleryFile,
+                                                'name' => $galleryIndex === 0 ? 'Main Image' : 'Image ' . ($galleryIndex + 1),
+                                            ];
                                         }
                                         $imageCount = count($images);
                                     ?>

@@ -68,4 +68,79 @@ function upload_base_name(\Illuminate\Http\Request $request, array $fields = ['n
 
     return 'upload';
 }
+
+function product_code_from_name(string $name): string
+{
+    $name = trim($name);
+
+    if ($name === '') {
+        return 'PRODUCT-' . strtoupper(\Illuminate\Support\Str::random(6));
+    }
+
+    $words = preg_split('/\s+/', $name);
+    $brandWord = preg_replace('/[^a-zA-Z]/', '', $words[0] ?? '');
+    $prefix = strtoupper(substr($brandWord, 0, min(4, max(3, strlen($brandWord)))));
+
+    if (strlen($prefix) < 2) {
+        $prefix = 'PRD';
+    }
+
+    $remainder = implode(' ', array_slice($words, 1));
+    $model = preg_replace('/[^a-zA-Z0-9]/', '', $remainder !== '' ? $remainder : $name);
+
+    if ($model === '') {
+        $model = preg_replace('/[^a-zA-Z0-9]/', '', $name);
+    }
+
+    $code = $prefix . '-' . strtoupper(substr($model, 0, 24));
+
+    return trim($code, '-') ?: 'PRODUCT-' . strtoupper(\Illuminate\Support\Str::random(6));
+}
+
+function unique_product_code(string $code, ?int $exceptId = null): string
+{
+    $base = $code;
+    $suffix = 1;
+
+    while (true) {
+        $query = \Illuminate\Support\Facades\DB::table('product')->where('code', $code);
+
+        if ($exceptId !== null) {
+            $query->where('id', '!=', $exceptId);
+        }
+
+        if (!$query->exists()) {
+            return $code;
+        }
+
+        $suffix++;
+        $code = $base . '-' . $suffix;
+    }
+}
+
+function product_gallery_filenames($product): array
+{
+    if (!$product) {
+        return [];
+    }
+
+    if (!empty($product->gallery_images)) {
+        $decoded = json_decode($product->gallery_images, true);
+        if (is_array($decoded)) {
+            return array_values(array_filter($decoded, function ($filename) {
+                return is_string($filename) && $filename !== '' && $filename !== '0';
+            }));
+        }
+    }
+
+    $images = [];
+    foreach (['image_one', 'image_two', 'image_three'] as $field) {
+        $filename = $product->{$field} ?? null;
+        if (!empty($filename) && $filename !== '0') {
+            $images[] = $filename;
+        }
+    }
+
+    return array_values(array_unique($images));
+}
 ?>

@@ -1,30 +1,5 @@
 <div class="header-right">
     <div class="header-dropdown-link">
-        <div class="dropdown compare-dropdown">
-            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
-                <i class="icon-random"></i>
-                <span class="compare-txt">Compare</span>
-            </a>
-
-            <div class="dropdown-menu dropdown-menu-right">
-                <ul class="compare-products">
-                    @if(session('compare'))
-                    @foreach(session('compare') as $id => $details)
-                    <li class="compare-product">
-                        <a href="{{url('/')}}/compare/remove-from-compare/{{$details['id']}}" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                        <h4 class="compare-product-title"><a href="{{url('/')}}/product/{{$details['slung']}}">{{$details['name']}}</a></h4>
-                    </li>
-                    @endforeach
-                    @endif
-                </ul>
-
-                <div class="compare-actions">
-                    <a href="{{url('/')}}/compare/clear-compare" class="action-link">Clear All</a>
-                    <a href="{{url('/')}}/compare" class="btn btn-outline-primary-2"><span>Compare</span><i class="icon-long-arrow-right"></i></a>
-                </div>
-            </div><!-- End .dropdown-menu -->
-        </div><!-- End .compare-dropdown -->
-
         @if(Auth::check())
 
            <?php $UserID = Auth::user()->id; ?>

@@ -1032,8 +1032,30 @@ public function addProduct(){
 
 public function add_Product(Request $request){
 
+    if (trim($request->name ?? '') === '') {
+        Session::flash('messageError', 'Product name is required.');
+        return Redirect::back()->withInput();
+    }
+
+    if ($request->price === null || $request->price === '' || !is_numeric($request->price) || (float) $request->price <= 0) {
+        Session::flash('messageError', 'Product price is required and must be greater than zero.');
+        return Redirect::back()->withInput();
+    }
+
+    if (empty($request->cat)) {
+        Session::flash('messageError', 'Please select a category.');
+        return Redirect::back()->withInput();
+    }
+
     $path = 'uploads/product';
     $productName = $request->name;
+    $productCode = trim($request->code ?? '');
+
+    if ($productCode === '') {
+        $productCode = product_code_from_name($productName);
+    }
+
+    $productCode = unique_product_code(strtoupper($productCode));
 
     $fb_pixels = $this->uploadSeoImage($request, 'fb_pixels', $path, $productName, 'facebook-pixel');
     if ($fb_pixels === false) {
@@ -1045,25 +1067,17 @@ public function add_Product(Request $request){
         return Redirect::back();
     }
 
-    $image_one = $this->storeProductGalleryImage($request, 'image_one', $path, $productName, 'main-image');
-    if ($image_one === false) {
+    $gallery = $this->processProductGalleryUploads($request, $path, $productName);
+    if ($gallery === false) {
         return Redirect::back();
     }
 
-    $image_two = $this->storeProductGalleryImage($request, 'image_two', $path, $productName, 'gallery-2');
-    if ($image_two === false) {
-        return Redirect::back();
-    }
-
-    $image_three = $this->storeProductGalleryImage($request, 'image_three', $path, $productName, 'gallery-3');
-    if ($image_three === false) {
-        return Redirect::back();
-    }
-
-    if (empty($image_one)) {
+    if (empty($gallery)) {
         Session::flash('messageError', 'Please add at least one gallery image (main product image).');
         return Redirect::back();
     }
+
+    $galleryColumns = $this->syncProductGalleryColumns($gallery);
 
     $slung = Str::slug($request->name);
     $Product = new Product;
@@ -1076,17 +1090,16 @@ public function add_Product(Request $request){
     $Product->price = $request->price;
     $Product->brand = $request->brand;
     $Product->price_raw = $request->price;
-    $Product->code = $request->code;
+    $Product->code = $productCode;
     $Product->cat = $request->cat;
     $Product->sub_cat = $request->sub_cat;
-    $Product->image_one = $image_one;
+    $Product->image_one = $galleryColumns['image_one'];
     $Product->fb_pixels = $fb_pixels;
-    
     $Product->thumbnail = $thumbnail;
-    
-    $Product->image_two = $image_two;
-    $Product->image_three = $image_three;
- 
+    $Product->image_two = $galleryColumns['image_two'];
+    $Product->image_three = $galleryColumns['image_three'];
+    $Product->gallery_images = $galleryColumns['gallery_images'];
+
     $Product->save();
     
     Session::flash('message', "You have Added One New Product");
@@ -1184,20 +1197,12 @@ public function edit_Product(Request $request, $id){
         return Redirect::back();
     }
 
-    $image_one = $this->storeProductGalleryImage($request, 'image_one', $path, $productName, 'main-image', 'image_one_cheat');
-    if ($image_one === false) {
+    $gallery = $this->processProductGalleryUploads($request, $path, $productName);
+    if ($gallery === false) {
         return Redirect::back();
     }
 
-    $image_two = $this->storeProductGalleryImage($request, 'image_two', $path, $productName, 'gallery-2', 'image_two_cheat');
-    if ($image_two === false) {
-        return Redirect::back();
-    }
-
-    $image_three = $this->storeProductGalleryImage($request, 'image_three', $path, $productName, 'gallery-3', 'image_three_cheat');
-    if ($image_three === false) {
-        return Redirect::back();
-    }
+    $galleryColumns = $this->syncProductGalleryColumns($gallery);
 
    if($request->stock == 'on'){
        $stock = 'In Stock';
@@ -1215,13 +1220,14 @@ public function edit_Product(Request $request, $id){
         'google_product_category'=>$request->google_product_category,
         'iframe' => $request->iframe,
         'content' => $request->content,
-        'image_one' =>$image_one,
-        'thumbnail' =>$thumbnail,
+        'image_one' => $galleryColumns['image_one'],
+        'thumbnail' => $thumbnail,
         'stock' => $stock,
-        'brand' =>$request->brand,
-        'fb_pixels' =>$fb_pixels,
-        'image_two' =>$image_two,
-        'image_three' =>$image_three,
+        'brand' => $request->brand,
+        'fb_pixels' => $fb_pixels,
+        'image_two' => $galleryColumns['image_two'],
+        'image_three' => $galleryColumns['image_three'],
+        'gallery_images' => $galleryColumns['gallery_images'],
         'price' =>$request->price,
         'price_raw' =>$request->price_raw,
         'code' =>$request->code,
@@ -3079,6 +3085,74 @@ private function threeGalleryImageRoles(): array
         'image_one' => 'main-image',
         'image_two' => 'gallery-2',
         'image_three' => 'gallery-3',
+    ];
+}
+
+private function processProductGalleryUploads(Request $request, string $path, string $productName, int $maxImages = 20)
+{
+    $maxSize = 1800000;
+    $order = json_decode($request->input('gallery_order_json', '[]'), true);
+
+    if (!is_array($order)) {
+        $order = [];
+    }
+
+    $newFiles = $request->file('gallery_files', []);
+    if (!is_array($newFiles)) {
+        $newFiles = $newFiles ? [$newFiles] : [];
+    }
+
+    $gallery = [];
+    $nextIndex = 1;
+
+    foreach ($order as $item) {
+        if (count($gallery) >= $maxImages) {
+            break;
+        }
+
+        if (!is_array($item) || empty($item['type'])) {
+            continue;
+        }
+
+        if ($item['type'] === 'existing' && !empty($item['filename'])) {
+            $gallery[] = $item['filename'];
+            $nextIndex++;
+            continue;
+        }
+
+        if ($item['type'] === 'new') {
+            $fileIndex = $item['index'] ?? null;
+            $file = ($fileIndex !== null && isset($newFiles[$fileIndex])) ? $newFiles[$fileIndex] : null;
+
+            if (!$file || !$file->isValid()) {
+                continue;
+            }
+
+            if ($file->getSize() >= $maxSize) {
+                Session::flash('message', 'File Exceeded the maximum allowed Size');
+                Session::flash('messageError', 'An error occured, You may have exceeded the maximum size for an image you uploaded');
+
+                return false;
+            }
+
+            $role = $nextIndex === 1 ? 'main-image' : 'gallery-' . $nextIndex;
+            $gallery[] = move_upload_with_seo_name($file, $path, $productName, $role);
+            $nextIndex++;
+        }
+    }
+
+    return $gallery;
+}
+
+private function syncProductGalleryColumns(array $gallery): array
+{
+    $gallery = array_values($gallery);
+
+    return [
+        'gallery_images' => json_encode($gallery),
+        'image_one' => $gallery[0] ?? null,
+        'image_two' => $gallery[1] ?? null,
+        'image_three' => $gallery[2] ?? null,
     ];
 }
 

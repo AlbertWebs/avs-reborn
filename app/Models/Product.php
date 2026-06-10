@@ -27,6 +27,7 @@ class Product extends Model
         'image_one',
         'image_two',
         'image_three',
+        'gallery_images',
         'fb_pixels',
         'google_product_category',
         'offer',

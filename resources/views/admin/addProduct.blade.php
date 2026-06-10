@@ -82,7 +82,7 @@
                                             Product Name <span style="color: #dc3545;">*</span>
                                         </label>
                                         <div class="col-lg-8">
-                                            <input id="limiter-text" type="text" id="text1" name="name" value="" placeholder="e.g Sony XS-162ES 6.5\" 2-Way Car Speakers" class="form-control" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px; transition: all 0.3s;" />
+                                            <input id="product-name" type="text" name="name" value="{{ old('name') }}" placeholder="e.g Sony XS-162ES 6.5&quot; 2-Way Car Speakers" class="form-control" required style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px; transition: all 0.3s;" />
                                         </div>
                                     </div>
 
@@ -93,7 +93,7 @@
                                         <div class="col-lg-8">
                                             <div class="input-group" style="display: flex;">
                                                 <span class="input-group-addon" style="background: #f8f9fa; border: 1px solid #ddd; border-right: none; border-radius: 6px 0 0 6px; padding: 10px 15px;">KES</span>
-                                                <input type="number" id="text1" name="price" value="" placeholder="e.g 12500" class="form-control" style="border-radius: 0 6px 6px 0; border-left: none; padding: 10px 15px;" />
+                                                <input type="number" id="product-price" name="price" value="{{ old('price') }}" placeholder="e.g 12500" class="form-control" required min="1" step="1" style="border-radius: 0 6px 6px 0; border-left: none; padding: 10px 15px;" />
                                             </div>
                                         </div>
                                     </div>
@@ -102,12 +102,12 @@
                     
 
                                     <div class="form-group" style="margin-bottom: 20px;">
-                                        <label for="text1" class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                        <label for="product-code" class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
                                             Product Code
                                         </label>
                                         <div class="col-lg-8">
-                                            <input type="text" id="text1" name="code" value="" placeholder="e.g AASAA" class="form-control" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;" />
-                                            <small class="help-block" style="color: #666; margin-top: 5px;">Unique product identifier</small>
+                                            <input type="text" id="product-code" name="code" value="{{ old('code') }}" placeholder="Auto-generated from product name" class="form-control" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px; text-transform: uppercase;" />
+                                            <small class="help-block" style="color: #666; margin-top: 5px;">Auto-generated from the product name (e.g. Pioneer TS-S20 Super Tweeters → PIO-TSS20SUPERTWEETERS). You can edit it if needed.</small>
                                         </div>
                                     </div>
 
@@ -146,7 +146,7 @@
                                             Category <span style="color: #dc3545;">*</span>
                                         </label>
                                         <div class="col-lg-8">
-                                            <select name="cat" data-placeholder="Choose Category" class="form-control chzn-select" tabindex="2" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;">
+                                            <select name="cat" data-placeholder="Choose Category" class="form-control chzn-select" tabindex="2" required style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;">
                                                 <option value="">-- Select Category --</option>
                                                 <?php $TheCategoryList = DB::table('category')->get(); ?>
                                                 @foreach($TheCategoryList as $value)
@@ -358,6 +358,55 @@
                             border-radius: 6px;
                         }
                     </style>
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var nameInput = document.getElementById('product-name');
+                        var codeInput = document.getElementById('product-code');
+                        var codeEdited = {{ old('code') ? 'true' : 'false' }};
+
+                        function slugifyCode(name) {
+                            name = (name || '').trim();
+                            if (!name) {
+                                return '';
+                            }
+
+                            var words = name.split(/\s+/);
+                            var brandWord = (words[0] || '').replace(/[^a-zA-Z]/g, '');
+                            var prefix = brandWord.substring(0, Math.min(4, Math.max(3, brandWord.length))).toUpperCase();
+
+                            if (prefix.length < 2) {
+                                prefix = 'PRD';
+                            }
+
+                            var remainder = words.slice(1).join(' ');
+                            var model = (remainder || name).replace(/[^a-zA-Z0-9]/g, '');
+
+                            if (!model) {
+                                model = name.replace(/[^a-zA-Z0-9]/g, '');
+                            }
+
+                            return (prefix + '-' + model.substring(0, 24).toUpperCase()).replace(/-+$/, '');
+                        }
+
+                        function updateCodeFromName() {
+                            if (!codeEdited && nameInput && codeInput) {
+                                codeInput.value = slugifyCode(nameInput.value);
+                            }
+                        }
+
+                        if (nameInput) {
+                            nameInput.addEventListener('input', updateCodeFromName);
+                            updateCodeFromName();
+                        }
+
+                        if (codeInput) {
+                            codeInput.addEventListener('input', function () {
+                                codeEdited = true;
+                                codeInput.value = codeInput.value.toUpperCase();
+                            });
+                        }
+                    });
+                    </script>
                 </div>
 
             </div>

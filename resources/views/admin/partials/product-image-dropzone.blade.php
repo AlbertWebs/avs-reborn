@@ -1,10 +1,17 @@
 @php
     $isEdit = isset($product);
-    $gallerySlots = [
-        ['field' => 'image_one', 'label' => 'Main Image', 'required' => !$isEdit],
-        ['field' => 'image_two', 'label' => 'Image Two', 'required' => false],
-        ['field' => 'image_three', 'label' => 'Image Three', 'required' => false],
-    ];
+    $maxGalleryImages = 20;
+    $existingGallery = $isEdit ? product_gallery_filenames($product) : [];
+    $initialGallery = [];
+
+    foreach ($existingGallery as $index => $filename) {
+        $initialGallery[] = [
+            'type' => 'existing',
+            'filename' => $filename,
+            'url' => url('/uploads/product/' . $filename),
+            'label' => $index === 0 ? 'Main image' : 'Gallery ' . ($index + 1),
+        ];
+    }
 @endphp
 
 <div class="product-gallery-wrap">
@@ -16,61 +23,34 @@
             @endif
         </label>
         <p class="product-gallery-help">
-            Upload up to 3 gallery images. The first slot is the main product image.
-            Max file size: 1.8MB each. Accepted formats: JPG, PNG, GIF, WebP.
+            Drag and drop or click to add images. The first image is the main product image shown on the shop and product page.
+            Up to {{ $maxGalleryImages }} images, 1.8MB each. Formats: JPG, PNG, GIF, WebP.
         </p>
 
-        <div class="row product-gallery-slots">
-            @foreach($gallerySlots as $slot)
-                @php
-                    $field = $slot['field'];
-                    $existingFile = $isEdit ? ($product->{$field} ?? '') : '';
-                    $previewUrl = $existingFile !== '' ? url('/uploads/product/' . $existingFile) : '';
-                @endphp
-                <div class="col-lg-4 col-md-4 col-sm-12" style="margin-bottom: 20px;">
-                    <div class="gallery-slot-card" data-slot="{{ $field }}">
-                        <label class="gallery-slot-label">
-                            {{ $slot['label'] }}
-                            @if($slot['required'])
-                                <span class="text-danger">*</span>
-                            @endif
-                        </label>
-
-                        <div class="gallery-slot-preview" id="preview-box-{{ $field }}">
-                            @if($previewUrl !== '')
-                                <img src="{{ $previewUrl }}" alt="{{ $slot['label'] }}" class="gallery-slot-image">
-                            @else
-                                <div class="gallery-slot-placeholder">
-                                    <i class="icon-picture"></i>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="gallery-slot-actions">
-                            <label class="btn btn-primary btn-sm gallery-slot-choose">
-                                <i class="icon-upload"></i>
-                                <span>{{ $previewUrl !== '' ? 'Change' : 'Select Image' }}</span>
-                                <input
-                                    type="file"
-                                    name="{{ $field }}"
-                                    id="input-{{ $field }}"
-                                    class="gallery-slot-input"
-                                    accept="image/jpeg,image/png,image/gif,image/webp,image/jpg"
-                                    @if($slot['required'] && !$isEdit) data-required-slot="1" @endif
-                                >
-                            </label>
-                            <button type="button" class="btn btn-danger btn-sm gallery-slot-clear" data-slot="{{ $field }}">
-                                <i class="icon-trash"></i> Remove
-                            </button>
-                        </div>
-
-                        @if($isEdit)
-                            <input type="hidden" name="{{ $field }}_cheat" id="{{ $field }}_cheat" value="{{ $existingFile }}">
-                        @endif
-                    </div>
-                </div>
-            @endforeach
+        <div class="pg-dropzone" id="pg-dropzone">
+            <div class="pg-dropzone-inner" id="pg-dropzone-trigger">
+                <i class="icon-cloud-upload"></i>
+                <strong>Drop images here</strong>
+                <span>or click to browse — select multiple files at once</span>
+            </div>
+            <input
+                type="file"
+                id="pg-file-picker"
+                accept="image/jpeg,image/png,image/gif,image/webp,image/jpg"
+                multiple
+                style="display: none;"
+            >
         </div>
+
+        <div class="pg-gallery-meta">
+            <span><strong id="pg-count">0</strong> / {{ $maxGalleryImages }} images</span>
+            <span class="pg-gallery-hint">First image = main product photo on the storefront</span>
+        </div>
+
+        <div class="pg-gallery-grid" id="pg-gallery-grid"></div>
+
+        <input type="hidden" name="gallery_order_json" id="gallery_order_json" value="[]">
+        <input type="file" name="gallery_files[]" id="gallery_files_input" multiple accept="image/*" style="display: none;">
     </div>
 </div>
 
@@ -101,176 +81,325 @@
         margin-bottom: 15px;
     }
 
-    .gallery-slot-card {
+    .pg-dropzone {
+        border: 2px dashed #667eea;
+        border-radius: 10px;
+        background: #fff;
+        margin-bottom: 12px;
+        transition: border-color 0.2s, background 0.2s;
+    }
+
+    .pg-dropzone.is-dragover {
+        border-color: #28a745;
+        background: #f3fff6;
+    }
+
+    .pg-dropzone-inner {
+        padding: 28px 16px;
+        text-align: center;
+        cursor: pointer;
+        color: #667eea;
+    }
+
+    .pg-dropzone-inner i {
+        display: block;
+        font-size: 36px;
+        margin-bottom: 8px;
+    }
+
+    .pg-dropzone-inner strong {
+        display: block;
+        font-size: 15px;
+        color: #333;
+        margin-bottom: 4px;
+    }
+
+    .pg-dropzone-inner span {
+        font-size: 13px;
+        color: #888;
+    }
+
+    .pg-gallery-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+        font-size: 13px;
+        color: #666;
+    }
+
+    .pg-gallery-hint {
+        color: #999;
+        font-size: 12px;
+    }
+
+    .pg-gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 14px;
+    }
+
+    .pg-gallery-grid:empty {
+        display: none;
+    }
+
+    .pg-gallery-card {
         background: #fff;
         border: 1px solid #ddd;
         border-radius: 8px;
-        padding: 15px;
-        text-align: center;
-        height: 100%;
-    }
-
-    .gallery-slot-label {
-        display: block;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 12px;
-        font-size: 14px;
-    }
-
-    .gallery-slot-preview {
-        width: 100%;
-        height: 180px;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 6px;
         overflow: hidden;
-        margin-bottom: 12px;
         display: flex;
-        align-items: center;
-        justify-content: center;
+        flex-direction: column;
     }
 
-    .gallery-slot-image {
+    .pg-gallery-card.is-main {
+        border-color: #667eea;
+        box-shadow: 0 0 0 1px #667eea;
+    }
+
+    .pg-gallery-thumb {
+        width: 100%;
+        height: 140px;
+        background: #f1f3f5;
+        overflow: hidden;
+    }
+
+    .pg-gallery-thumb img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
     }
 
-    .gallery-slot-placeholder {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        color: #ccc;
-        font-size: 48px;
+    .pg-gallery-card-body {
+        padding: 8px 10px 10px;
+        text-align: center;
     }
 
-    .gallery-slot-actions {
+    .pg-gallery-badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 600;
+        color: #667eea;
+        background: #eef1ff;
+        border-radius: 20px;
+        padding: 2px 8px;
+        margin-bottom: 6px;
+    }
+
+    .pg-gallery-badge.is-secondary {
+        color: #666;
+        background: #f0f0f0;
+    }
+
+    .pg-gallery-actions {
         display: flex;
+        justify-content: center;
+        gap: 4px;
         flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
     }
 
-    .gallery-slot-choose {
-        margin: 0 !important;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .gallery-slot-input {
-        position: absolute;
-        top: 0;
-        right: 0;
-        min-width: 100%;
-        min-height: 100%;
-        opacity: 0;
+    .pg-gallery-actions button {
+        border: none;
+        background: #f8f9fa;
+        color: #555;
+        border-radius: 4px;
+        padding: 3px 7px;
+        font-size: 11px;
         cursor: pointer;
     }
 
-    .gallery-slot-clear {
-        margin: 0 !important;
+    .pg-gallery-actions button:hover {
+        background: #e9ecef;
+    }
+
+    .pg-gallery-actions .pg-remove {
+        color: #dc3545;
     }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var isEdit = {{ $isEdit ? 'true' : 'false' }};
+    var maxImages = {{ $maxGalleryImages }};
     var maxFileSize = 1800000;
-    var slots = ['image_one', 'image_two', 'image_three'];
+    var uploadBase = '{{ url('/uploads/product') }}';
 
-    function setPreview(slot, src) {
-        var box = document.getElementById('preview-box-' + slot);
-        if (!box) {
-            return;
+    var queue = @json($initialGallery);
+
+    var dropzone = document.getElementById('pg-dropzone');
+    var trigger = document.getElementById('pg-dropzone-trigger');
+    var picker = document.getElementById('pg-file-picker');
+    var grid = document.getElementById('pg-gallery-grid');
+    var countEl = document.getElementById('pg-count');
+    var orderInput = document.getElementById('gallery_order_json');
+    var filesInput = document.getElementById('gallery_files_input');
+    var productForm = document.getElementById('productForm');
+
+    function syncHiddenFields() {
+        var order = [];
+        var newIndex = 0;
+
+        queue.forEach(function (entry) {
+            if (entry.type === 'existing') {
+                order.push({ type: 'existing', filename: entry.filename });
+            } else {
+                order.push({ type: 'new', index: newIndex });
+                newIndex++;
+            }
+        });
+
+        orderInput.value = JSON.stringify(order);
+
+        if (typeof DataTransfer !== 'undefined' && filesInput) {
+            var dt = new DataTransfer();
+            queue.forEach(function (entry) {
+                if (entry.type === 'new') {
+                    dt.items.add(entry.file);
+                }
+            });
+            filesInput.files = dt.files;
         }
 
-        if (src) {
-            box.innerHTML = '<img src="' + src + '" alt="" class="gallery-slot-image">';
-        } else {
-            box.innerHTML = '<div class="gallery-slot-placeholder"><i class="icon-picture"></i></div>';
-        }
+        countEl.textContent = queue.length;
     }
 
-    function updateChooseLabel(slot, hasImage) {
-        var card = document.querySelector('.gallery-slot-card[data-slot="' + slot + '"]');
-        if (!card) {
-            return;
-        }
+    function renderGallery() {
+        grid.innerHTML = '';
 
-        var label = card.querySelector('.gallery-slot-choose span');
-        if (label) {
-            label.textContent = hasImage ? 'Change' : 'Select Image';
-        }
+        queue.forEach(function (entry, index) {
+            var card = document.createElement('div');
+            card.className = 'pg-gallery-card' + (index === 0 ? ' is-main' : '');
+            card.dataset.index = String(index);
+
+            var src = entry.type === 'existing' ? entry.url : entry.preview;
+            var label = index === 0 ? 'Main image' : 'Gallery ' + (index + 1);
+
+            card.innerHTML =
+                '<div class="pg-gallery-thumb"><img src="' + src + '" alt=""></div>' +
+                '<div class="pg-gallery-card-body">' +
+                    '<span class="pg-gallery-badge ' + (index === 0 ? '' : 'is-secondary') + '">' + label + '</span>' +
+                    '<div class="pg-gallery-actions">' +
+                        (index > 0 ? '<button type="button" class="pg-move-left" title="Move left">&larr;</button>' : '') +
+                        (index < queue.length - 1 ? '<button type="button" class="pg-move-right" title="Move right">&rarr;</button>' : '') +
+                        '<button type="button" class="pg-remove" title="Remove">Remove</button>' +
+                    '</div>' +
+                '</div>';
+
+            grid.appendChild(card);
+        });
+
+        syncHiddenFields();
     }
 
-    slots.forEach(function (slot) {
-        var input = document.getElementById('input-' + slot);
-        var cheat = document.getElementById(slot + '_cheat');
-        var clearBtn = document.querySelector('.gallery-slot-clear[data-slot="' + slot + '"]');
+    function addFiles(fileList) {
+        Array.prototype.forEach.call(fileList, function (file) {
+            if (queue.length >= maxImages) {
+                return;
+            }
 
-        if (!input) {
-            return;
-        }
-
-        input.addEventListener('change', function () {
-            var file = input.files && input.files[0];
-
-            if (!file) {
+            if (!file.type.match(/^image\//)) {
                 return;
             }
 
             if (file.size >= maxFileSize) {
-                alert('File exceeded the maximum allowed size of 1.8MB.');
-                input.value = '';
+                alert('"' + file.name + '" exceeds the 1.8MB limit.');
                 return;
-            }
-
-            if (cheat) {
-                cheat.value = '';
             }
 
             var reader = new FileReader();
             reader.onload = function (e) {
-                setPreview(slot, e.target.result);
-                updateChooseLabel(slot, true);
+                queue.push({
+                    type: 'new',
+                    file: file,
+                    preview: e.target.result
+                });
+                renderGallery();
             };
             reader.readAsDataURL(file);
         });
+    }
 
-        if (clearBtn) {
-            clearBtn.addEventListener('click', function () {
-                input.value = '';
-                if (cheat) {
-                    cheat.value = '';
-                }
-                setPreview(slot, null);
-                updateChooseLabel(slot, false);
-            });
+    function removeAt(index) {
+        queue.splice(index, 1);
+        renderGallery();
+    }
+
+    function moveAt(index, direction) {
+        var target = index + direction;
+        if (target < 0 || target >= queue.length) {
+            return;
+        }
+
+        var temp = queue[index];
+        queue[index] = queue[target];
+        queue[target] = temp;
+        renderGallery();
+    }
+
+    trigger.addEventListener('click', function () {
+        picker.click();
+    });
+
+    picker.addEventListener('change', function () {
+        if (picker.files && picker.files.length) {
+            addFiles(picker.files);
+            picker.value = '';
         }
     });
 
-    var productForm = document.getElementById('productForm');
-    if (productForm && !isEdit) {
-        productForm.addEventListener('submit', function (event) {
-            var hasGalleryImage = false;
+    ['dragenter', 'dragover'].forEach(function (eventName) {
+        dropzone.addEventListener(eventName, function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.add('is-dragover');
+        });
+    });
 
-            slots.forEach(function (slot) {
-                var input = document.getElementById('input-' + slot);
-                if (input && input.files && input.files.length > 0) {
-                    hasGalleryImage = true;
-                }
-            });
+    ['dragleave', 'drop'].forEach(function (eventName) {
+        dropzone.addEventListener(eventName, function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.remove('is-dragover');
+        });
+    });
 
-            if (!hasGalleryImage) {
-                event.preventDefault();
+    dropzone.addEventListener('drop', function (e) {
+        if (e.dataTransfer && e.dataTransfer.files) {
+            addFiles(e.dataTransfer.files);
+        }
+    });
+
+    grid.addEventListener('click', function (e) {
+        var card = e.target.closest('.pg-gallery-card');
+        if (!card) {
+            return;
+        }
+
+        var index = parseInt(card.dataset.index, 10);
+
+        if (e.target.classList.contains('pg-remove')) {
+            removeAt(index);
+        } else if (e.target.classList.contains('pg-move-left')) {
+            moveAt(index, -1);
+        } else if (e.target.classList.contains('pg-move-right')) {
+            moveAt(index, 1);
+        }
+    });
+
+    if (productForm) {
+        productForm.addEventListener('submit', function (e) {
+            syncHiddenFields();
+
+            if (!isEdit && queue.length === 0) {
+                e.preventDefault();
                 alert('Please add at least one gallery image (main product image).');
             }
         });
     }
+
+    renderGallery();
 });
 </script>
