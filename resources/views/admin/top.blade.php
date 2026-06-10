@@ -139,12 +139,29 @@
 
 <style>
 /* Modern Admin Navbar Styles */
+:root {
+    --admin-navbar-height: 70px;
+}
+
+/* Keep page content below the fixed navbar */
+body.padTop53 {
+    padding-top: var(--admin-navbar-height);
+}
+
+body.padTop53 #left #menu.affix {
+    top: var(--admin-navbar-height);
+}
+
+#top {
+    height: var(--admin-navbar-height);
+}
+
 .modern-admin-navbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 70px;
+    height: var(--admin-navbar-height);
     background: #f8f9fa;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     border-bottom: 1px solid #e9ecef;

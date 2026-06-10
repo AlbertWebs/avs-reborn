@@ -23,11 +23,11 @@
             <div class="products">
                 <div class="row">
                     @foreach($Products as $item)
-                    <div class="col-6 col-md-4 col-lg-4 col-xl-3">
-                        <div class="product">
+                    <div class="col-6 col-md-4 col-lg-4 col-xl-3" style="margin-bottom: 1.5rem;">
+                        <div class="product product-card-fill">
                             <figure class="product-media">
                                 @if($item->stock == "Out of Stock")
-                                <span class="product-label label-out">Out of Stock</span>
+                                <span class="product-label label-out product-card-label">Out of Stock</span>
                                 @endif
                                 @if($item->offer == 1)
                                     <?php
@@ -41,31 +41,29 @@
                                         
                                         $Difference = 100-$Change;
                                     ?>
-                                    <span class="product-label label-out"><strong>{{$Difference}}% Off</strong></span>
+                                    <span class="product-label label-out product-card-label product-card-label-offer"><strong>{{$Difference}}% Off</strong></span>
                                 @endif
-                                {{-- <span class="product-label label-new">New</span> --}}
                                 @if($item->offer == 1)
-                                <a href="{{url('/')}}/product/{{$item->slung}}">
-                                    <img style="max-width:217px !important;" src="{{url('/')}}/uploads/product/{{$item->offer_banner}}" alt="{{$item->name}}" class="product-image">
+                                <a href="{{url('/')}}/product/{{$item->slung}}" class="product-media-link">
+                                    <img loading="lazy" src="{{url('/')}}/uploads/product/{{$item->offer_banner}}" alt="{{$item->name}}" class="product-image">
                                 </a>
                                 @else
-                                <a href="{{url('/')}}/product/{{$item->slung}}">
-                                    <img style="max-width:217px !important;" src="{{url('/')}}/uploads/product/{{$item->thumbnail}}" alt="{{$item->name}}" class="product-image">
+                                <a href="{{url('/')}}/product/{{$item->slung}}" class="product-media-link">
+                                    <img loading="lazy" src="{{url('/')}}/uploads/product/{{$item->thumbnail}}" alt="{{$item->name}}" class="product-image">
                                 </a>
-                                
                                 @endif
-    
+
                                 <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
+                                    <a href="{{url('/')}}/wishlist/add-to-wishlist/{{$item->id}}" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                    <a href="{{url('/')}}/compare/add-to-compare/{{$item->id}}" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
                                     <a href="{{url('/')}}/popup/{{$item->slung}}" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
                                 </div><!-- End .product-action-vertical -->
-    
+
                                 @if($item->stock == "Out of Stock")
                                 <div class="product-action">
                                     <a onclick="alert('Out Of Stock')" href="#" class="btn-product btn-cart" title="Add to cart"><span>Buy Now</span></a>
                                 </div><!-- End .product-action -->
-                                @else 
+                                @else
                                 <div class="product-action">
                                     <a href="{{url('/')}}/shopping-cart/add-to-cart/{{$item->id}}" class="btn-product btn-cart" title="Add to cart"><span>Buy Now</span></a>
                                 </div><!-- End .product-action -->
@@ -113,4 +111,67 @@
         </div><!-- End .container -->
     </div><!-- End .page-content -->
 </main><!-- End .main -->
+
+<style>
+    .products .product-card-fill {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        height: 100%;
+    }
+
+    .products .product-card-fill .product-media {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 0;
+        background: #f4f4f4;
+    }
+
+    .products .product-card-fill .product-media-link {
+        display: block;
+        line-height: 0;
+    }
+
+    .products .product-card-fill .product-image {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        display: block;
+        margin: 0;
+        max-width: none !important;
+    }
+
+    .products .product-card-fill .product-card-label {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 12;
+    }
+
+    .products .product-card-fill .product-card-label-offer {
+        left: auto;
+        right: 10px;
+    }
+
+    .products .product-card-fill .product-action-vertical {
+        top: 1rem;
+        right: 1rem;
+        z-index: 11;
+    }
+
+    .products .product-card-fill .product-action {
+        z-index: 11;
+    }
+
+    .products .product-card-fill .product-body {
+        padding: 1.2rem 1.4rem 1.4rem;
+    }
+
+    @media (max-width: 575px) {
+        .products .product-card-fill .product-image {
+            height: 180px;
+        }
+    }
+</style>
 @endsection

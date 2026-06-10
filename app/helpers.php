@@ -33,4 +33,39 @@ function dollar($value){
     $newValue = $value/110;
     return $newValue;
 }
+
+function seo_upload_filename(string $baseName, string $role, string $extension): string
+{
+    $slug = \Illuminate\Support\Str::slug($baseName);
+    $roleSlug = \Illuminate\Support\Str::slug($role);
+
+    if ($slug === '') {
+        $slug = 'upload';
+    }
+
+    $filename = $roleSlug !== '' ? "{$slug}-{$roleSlug}" : $slug;
+    $extension = strtolower(ltrim($extension, '.'));
+
+    return "{$filename}.{$extension}";
+}
+
+function move_upload_with_seo_name(\Illuminate\Http\UploadedFile $file, string $path, string $baseName, string $role = ''): string
+{
+    $filename = seo_upload_filename($baseName, $role, $file->getClientOriginalExtension());
+    $file->move($path, $filename);
+
+    return $filename;
+}
+
+function upload_base_name(\Illuminate\Http\Request $request, array $fields = ['name', 'title', 'cat', 'sitename']): string
+{
+    foreach ($fields as $field) {
+        $value = $request->input($field);
+        if (!empty($value)) {
+            return $value;
+        }
+    }
+
+    return 'upload';
+}
 ?>

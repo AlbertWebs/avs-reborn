@@ -69,7 +69,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div style="background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 30px; margin-bottom: 20px;">
-                            <form class="form-horizontal" method="post" action="{{url('/admin/edit_Product')}}/{{$Product->id}}" enctype="multipart/form-data">
+                            <form id="productForm" class="form-horizontal" method="post" action="{{url('/admin/edit_Product')}}/{{$Product->id}}" enctype="multipart/form-data">
 
                                 <!-- Basic Information Section -->
                                 <div style="border-bottom: 2px solid #f0f0f0; padding-bottom: 25px; margin-bottom: 30px;">
@@ -348,7 +348,7 @@
                                             Description <span style="color: #dc3545;">*</span>
                                         </label>
                                         <div class="col-lg-8">
-                                            <textarea name="content" id="article_ckeditor" rows="10" cols="80" class="form-control" style="border-radius: 6px;">{{$Product->content}}</textarea>
+                                            <textarea name="content" id="wysihtml5" class="form-control" rows="10">{{$Product->content}}</textarea>
                                             <small class="help-block" style="color: #666; margin-top: 5px;">Detailed product description and specifications</small>
                                         </div>
                                     </div>
@@ -386,32 +386,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- Main Image -->
-                                        <div class="col-lg-4" style="margin-bottom: 25px;">
-                                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px dashed #ddd; text-align: center;">
-                                                <label class="control-label" style="font-weight: 600; color: #333; display: block; margin-bottom: 15px;">
-                                                    <i class="icon-picture"></i> Main Image
-                                                </label>
-                                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                                    <div class="fileupload-new thumbnail" style="width: 100%; height: 180px; background: white; border-radius: 6px; overflow: hidden; border: 1px solid #ddd;">
-                                                        <img src="{{url('/')}}/uploads/product/{{$Product->image_one}}" alt="" style="width: 100%; height: 100%; object-fit: cover;" />
-                                                    </div>
-                                                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 100%; max-height: 180px; border-radius: 6px; overflow: hidden;"></div>
-                                                    <div style="margin-top: 15px;">
-                                                        <span class="btn btn-file btn-primary" style="border-radius: 6px; padding: 8px 20px;">
-                                                            <span class="fileupload-new"><i class="icon-upload"></i> Select Image</span>
-                                                            <span class="fileupload-exists"><i class="icon-edit"></i> Change</span>
-                                                            <input name="image_one" type="file" />
-                                                        </span>
-                                                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload" style="border-radius: 6px; padding: 8px 15px; margin-left: 5px;">
-                                                            <i class="icon-trash"></i> Remove
-                                                        </a>
-                                                    </div>
-                                                    <small style="display: block; margin-top: 10px; color: #666;">Recommended: 300x300px</small>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                         <!-- Facebook Pixels -->
                                         <div class="col-lg-4" style="margin-bottom: 25px;">
                                             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px dashed #ddd; text-align: center;">
@@ -438,69 +412,7 @@
                                             </div>
                                         </div>
 
-                                        <!-- Image Two -->
-                                        <div class="col-lg-4" style="margin-bottom: 25px;">
-                                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px dashed #ddd; text-align: center;">
-                                                <label class="control-label" style="font-weight: 600; color: #333; display: block; margin-bottom: 15px;">
-                                                    <i class="icon-picture"></i> Image Two
-                                                </label>
-                                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                                    <div class="fileupload-new thumbnail" style="width: 100%; height: 180px; background: white; border-radius: 6px; overflow: hidden; border: 1px solid #ddd;">
-                                                        @if($Product->image_two)
-                                                            <img src="{{url('/')}}/uploads/product/{{$Product->image_two}}" alt="" style="width: 100%; height: 100%; object-fit: cover;" />
-                                                        @else
-                                                            <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                                                <i class="icon-picture" style="font-size: 48px; color: #ccc;"></i>
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 100%; max-height: 180px; border-radius: 6px; overflow: hidden;"></div>
-                                                    <div style="margin-top: 15px;">
-                                                        <span class="btn btn-file btn-primary" style="border-radius: 6px; padding: 8px 20px;">
-                                                            <span class="fileupload-new"><i class="icon-upload"></i> Select Image</span>
-                                                            <span class="fileupload-exists"><i class="icon-edit"></i> Change</span>
-                                                            <input name="image_two" type="file" />
-                                                        </span>
-                                                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload" style="border-radius: 6px; padding: 8px 15px; margin-left: 5px;">
-                                                            <i class="icon-trash"></i> Remove
-                                                        </a>
-                                                    </div>
-                                                    <small style="display: block; margin-top: 10px; color: #666;">Recommended: 1280x293px</small>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Image Three -->
-                                        <div class="col-lg-4" style="margin-bottom: 25px;">
-                                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px dashed #ddd; text-align: center;">
-                                                <label class="control-label" style="font-weight: 600; color: #333; display: block; margin-bottom: 15px;">
-                                                    <i class="icon-picture"></i> Image Three
-                                                </label>
-                                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                                    <div class="fileupload-new thumbnail" style="width: 100%; height: 180px; background: white; border-radius: 6px; overflow: hidden; border: 1px solid #ddd;">
-                                                        @if($Product->image_three)
-                                                            <img src="{{url('/')}}/uploads/product/{{$Product->image_three}}" alt="" style="width: 100%; height: 100%; object-fit: cover;" />
-                                                        @else
-                                                            <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                                                <i class="icon-picture" style="font-size: 48px; color: #ccc;"></i>
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 100%; max-height: 180px; border-radius: 6px; overflow: hidden;"></div>
-                                                    <div style="margin-top: 15px;">
-                                                        <span class="btn btn-file btn-primary" style="border-radius: 6px; padding: 8px 20px;">
-                                                            <span class="fileupload-new"><i class="icon-upload"></i> Select Image</span>
-                                                            <span class="fileupload-exists"><i class="icon-edit"></i> Change</span>
-                                                            <input name="image_three" type="file" />
-                                                        </span>
-                                                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload" style="border-radius: 6px; padding: 8px 15px; margin-left: 5px;">
-                                                            <i class="icon-trash"></i> Remove
-                                                        </a>
-                                                    </div>
-                                                    <small style="display: block; margin-top: 10px; color: #666;">Recommended: 300x300px</small>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        @include('admin.partials.product-image-dropzone', ['product' => $Product])
                                     </div>
                                 </div>
 
@@ -516,11 +428,8 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="image_one_cheat" value="{{$Product->image_one}}">
                                 <input type="hidden" name="fb_pixels_cheat" value="{{$Product->fb_pixels}}">
                                 <input type="hidden" name="thumbnail_cheat" value="{{$Product->thumbnail}}">
-                                <input type="hidden" name="image_two_cheat" value="{{$Product->image_two}}">
-                                <input type="hidden" name="image_three_cheat" value="{{$Product->image_three}}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             </form>
                         </div>
@@ -529,15 +438,6 @@
 
                 <!-- Scripts and Styles Section -->
                 <div>
-                    <script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script>
-                    <script>
-                        CKEDITOR.replace( 'article_ckeditor', {
-                            height: 300,
-                            filebrowserUploadUrl: "{{ url('/admin/ckeditor/upload') }}?_token={{ csrf_token() }}",
-                            filebrowserUploadMethod: 'form'
-                        } );
-                    </script>
-
                     <style>
                         .form-control:focus {
                             border-color: #667eea;
