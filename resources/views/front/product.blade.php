@@ -140,7 +140,7 @@
             <div class="product-details-top">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="product-gallery product-gallery-vertical" style="position: relative;">
+                        <div class="product-gallery product-gallery-vertical product-gallery-below" style="position: relative;">
                             @php
                                 $productGallery = product_gallery_filenames($Product);
                                 $mainGalleryImage = $productGallery[0] ?? $Product->image_one;
@@ -154,12 +154,12 @@
                                              src="{{url('/')}}/uploads/product/{{$mainGalleryImage}}" 
                                              data-zoom-image="{{url('/')}}/uploads/product/{{$mainGalleryImage}}" 
                                              alt="{{$Product->name}}">
-                                    </div>
-                                    <a href="#" id="btn-product-gallery" class="btn-product-gallery" style="position: absolute; top: 15px; right: 15px; width: 44px; height: 44px; background: rgba(255,255,255,0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.15); transition: all 0.3s ease; z-index: 10;">
-                                        <i class="icon-arrows" style="font-size: 1.6rem; color: #333;"></i>
-                                    </a>
-                                    <div id="image-counter" style="position: absolute; bottom: 15px; left: 15px; background: rgba(0,0,0,0.7); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;{{ $imageCount <= 1 ? ' display: none;' : '' }}">
-                                        <span id="current-image">1</span> / <span id="total-images">{{ max($imageCount, 1) }}</span>
+                                        <a href="javascript:void(0)" id="btn-product-gallery" class="btn-product-gallery product-gallery-overlay-btn" aria-label="Open gallery" role="button">
+                                            <i class="icon-arrows"></i>
+                                        </a>
+                                        <div id="image-counter" class="product-image-counter"{{ $imageCount <= 1 ? ' style="display:none;"' : '' }}>
+                                            <span id="current-image">1</span> / <span id="total-images">{{ max($imageCount, 1) }}</span>
+                                        </div>
                                     </div>
                                 </figure><!-- End .product-main-image -->
 
@@ -185,7 +185,7 @@
                                     ?>
                                     @foreach($images as $index => $img)
                                     <a class="product-gallery-item {{$index == 0 ? 'active' : ''}}" 
-                                       href="#" 
+                                       href="{{url('/')}}/uploads/product/{{$img['url']}}" 
                                        data-image="{{url('/')}}/uploads/product/{{$img['url']}}" 
                                        data-zoom-image="{{url('/')}}/uploads/product/{{$img['url']}}"
                                        data-index="{{$index + 1}}"
@@ -555,33 +555,94 @@
 </main><!-- End .main -->
 
 <style>
-    /* Main image fills the card */
+    /* Keep thumbnails below main image on all breakpoints */
+    .product-gallery-below .row {
+        flex-direction: column !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .product-gallery-below .product-main-image,
+    .product-gallery-below .product-image-gallery {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* Main image fills the card edge-to-edge */
     .product-main-image-fill {
         position: relative;
-        margin-bottom: 1.5rem;
-        background: #f8f9fa;
+        margin: 0 0 1.5rem;
+        padding: 0;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        line-height: 0;
     }
 
     .product-main-image-fill .product-main-image-frame {
         position: relative;
-        padding-top: 100%;
-        background: #fff;
+        width: 100%;
+        aspect-ratio: 1 / 1;
         overflow: hidden;
+        background: #111;
     }
 
-    .product-main-image-fill #product-zoom {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        transition: transform 0.3s ease;
+    .product-main-image-fill #product-zoom,
+    .product-main-image-fill .zoomWrapper,
+    .product-main-image-fill .zoomWrapper img {
+        display: block;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        object-fit: cover !important;
+        object-position: center !important;
+        transition: opacity 0.3s ease, transform 0.3s ease;
         cursor: zoom-in;
+    }
+
+    .product-main-image-fill .product-gallery-overlay-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 44px;
+        height: 44px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        z-index: 30;
+        line-height: 1;
+    }
+
+    .product-main-image-fill .product-gallery-overlay-btn i {
+        font-size: 1.6rem;
+        color: #333;
+    }
+
+    .product-main-image-fill .product-image-counter {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        background: rgba(0, 0, 0, 0.72);
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        z-index: 30;
+        line-height: 1.4;
+        pointer-events: none;
     }
 
     /* Enhanced Product Gallery Styles */
@@ -964,6 +1025,50 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        function fixMainImageFrame() {
+            const frame = document.querySelector('.product-main-image-frame');
+            if (!frame) return;
+
+            frame.querySelectorAll('.zoomWrapper').forEach(function(wrapper) {
+                wrapper.style.position = 'absolute';
+                wrapper.style.top = '0';
+                wrapper.style.left = '0';
+                wrapper.style.width = '100%';
+                wrapper.style.height = '100%';
+                wrapper.style.margin = '0';
+            });
+
+            const img = document.getElementById('product-zoom');
+            if (img) {
+                img.style.position = 'absolute';
+                img.style.top = '0';
+                img.style.left = '0';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+            }
+        }
+
+        if (typeof $.fn.elevateZoom !== 'undefined') {
+            const $zoom = $('#product-zoom');
+            const existingZoom = $zoom.data('elevateZoom');
+            if (existingZoom) {
+                $('.zoomContainer').remove();
+                $zoom.removeData('elevateZoom');
+            }
+
+            $zoom.elevateZoom({
+                gallery: 'product-zoom-gallery',
+                galleryActiveClass: 'active',
+                zoomType: 'inner',
+                imageCrossfade: false,
+                cursor: 'crosshair',
+                responsive: true
+            });
+
+            setTimeout(fixMainImageFrame, 50);
+        }
+
         // Quantity and WhatsApp link update
         const qtyInput = document.getElementById('qty');
         const whatsappLink = document.getElementById('btn-whatsapp-buy');
@@ -1026,14 +1131,22 @@
                     currentImageSpan.textContent = index + 1;
                 }
                 
-                // Reinitialize zoom if available
                 if (typeof $.fn.elevateZoom !== 'undefined') {
-                    $('#product-zoom').elevateZoom({
-                        zoomType: "inner",
-                        cursor: "crosshair",
-                        zoomWindowFadeIn: 500,
-                        zoomWindowFadeOut: 500
+                    const $zoom = $('#product-zoom');
+                    const existingZoom = $zoom.data('elevateZoom');
+                    if (existingZoom) {
+                        $('.zoomContainer').remove();
+                        $zoom.removeData('elevateZoom');
+                    }
+                    $zoom.elevateZoom({
+                        gallery: 'product-zoom-gallery',
+                        galleryActiveClass: 'active',
+                        zoomType: 'inner',
+                        imageCrossfade: false,
+                        cursor: 'crosshair',
+                        responsive: true
                     });
+                    setTimeout(fixMainImageFrame, 50);
                 }
             });
         });
@@ -1059,17 +1172,42 @@
             });
         });
         
-        // Fullscreen gallery button
+        function openProductLightbox(startIndex) {
+            const items = [];
+            galleryItems.forEach(function(item) {
+                const src = item.getAttribute('data-image') || item.getAttribute('href');
+                if (src && src !== '#' && src.indexOf('javascript:') !== 0) {
+                    items.push({ src: src, type: 'image' });
+                }
+            });
+
+            if (!items.length || typeof $.fn.magnificPopup === 'undefined') {
+                return;
+            }
+
+            $.magnificPopup.open({
+                items: items,
+                type: 'image',
+                gallery: {
+                    enabled: items.length > 1
+                },
+                fixedContentPos: false,
+                removalDelay: 300,
+                closeBtnInside: true
+            }, startIndex || 0);
+        }
+
         const fullscreenBtn = document.getElementById('btn-product-gallery');
         if (fullscreenBtn) {
-            fullscreenBtn.addEventListener('click', function(e) {
+            $('#btn-product-gallery').off('click').on('click', function(e) {
                 e.preventDefault();
-                // Open fullscreen view or lightbox
-                const currentActive = document.querySelector('.product-gallery-item.active');
-                if (currentActive) {
-                    const imageSrc = currentActive.getAttribute('data-image');
-                    window.open(imageSrc, '_blank');
-                }
+                let startIndex = 0;
+                galleryItems.forEach(function(item, index) {
+                    if (item.classList.contains('active')) {
+                        startIndex = index;
+                    }
+                });
+                openProductLightbox(startIndex);
             });
         }
     });

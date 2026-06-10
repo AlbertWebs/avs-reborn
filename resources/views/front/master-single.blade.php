@@ -78,7 +78,7 @@
      <link rel="stylesheet" href="https://rawcdn.githack.com/rafaelbotazini/floating-whatsapp/3d18b26d5c7d430a1ab0b664f8ca6b69014aed68/floating-wpp.min.css">
 </head>
 
-<body>
+<body class="page-product-single">
 <!--Div where the WhatsApp will be rendered-->
 <div style="z-index:100000" id="WAButton"></div>
 <style>
@@ -89,6 +89,19 @@
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
+    }
+
+    /* Product page: hide top header on mobile (bottom nav still available) */
+    body.page-product-single .header {
+        display: none !important;
+    }
+
+    body.page-product-single .page-wrapper {
+        padding-top: 0 !important;
+    }
+
+    body.page-product-single .breadcrumb-nav {
+        padding-top: 0.75rem;
     }
 }
 </style>
