@@ -161,7 +161,7 @@
                                                             <i class="icon-trash"></i> Remove
                                                         </a>
                                                     </div>
-                                                    <small style="display: block; margin-top: 10px; color: #666;">Recommended: 870x200px</small>
+                                                    <small style="display: block; margin-top: 10px; color: #666;">Recommended: 870x200px. Max file size: 20MB.</small>
                                                 </div>
                                             </div>
                                         </div>

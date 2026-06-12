@@ -24,7 +24,7 @@
         </label>
         <p class="product-gallery-help">
             Drag and drop or click to add images. The first image is the main product image shown on the shop and product page.
-            Up to {{ $maxGalleryImages }} images, 1.8MB each. Formats: JPG, PNG, GIF, WebP.
+            Up to {{ $maxGalleryImages }} images, 20MB each. Formats: JPG, PNG, GIF, WebP.
         </p>
 
         <div class="pg-dropzone" id="pg-dropzone">
@@ -224,7 +224,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     var isEdit = {{ $isEdit ? 'true' : 'false' }};
     var maxImages = {{ $maxGalleryImages }};
-    var maxFileSize = 1800000;
+    var maxFileSize = 20971520;
     var uploadBase = '{{ url('/uploads/product') }}';
 
     var queue = @json($initialGallery);
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (file.size >= maxFileSize) {
-                alert('"' + file.name + '" exceeds the 1.8MB limit.');
+                alert('"' + file.name + '" exceeds the 20MB limit.');
                 return;
             }
 

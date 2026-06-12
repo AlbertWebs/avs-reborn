@@ -125,6 +125,8 @@ use App\Models\ServiceRequest;
 
 class AdminsController extends Controller
 {
+    private const PRODUCT_CATEGORY_MAX_UPLOAD_BYTES = 20971520; // 20MB
+
      /**
      * Create a new controller instance.
      *
@@ -952,7 +954,10 @@ public function editCategories($id){
 
 public function edit_Category(Request $request, $id){
     $path = 'uploads/categories';
-        $image = $this->uploadSeoImageSimple($request, 'image', $path, $request->name, 'category-image', 'image_cheat');
+        $image = $this->uploadSeoImage($request, 'image', $path, $request->name, 'category-image', 'image_cheat', null, self::PRODUCT_CATEGORY_MAX_UPLOAD_BYTES);
+        if ($image === false) {
+            return Redirect::back();
+        }
     $slung = $request->slung;
     if($slung == null || $slung == ""){
         $slung = Str::slug($request->name);
@@ -1057,12 +1062,12 @@ public function add_Product(Request $request){
 
     $productCode = unique_product_code(strtoupper($productCode));
 
-    $fb_pixels = $this->uploadSeoImage($request, 'fb_pixels', $path, $productName, 'facebook-pixel');
+    $fb_pixels = $this->uploadSeoImage($request, 'fb_pixels', $path, $productName, 'facebook-pixel', null, null, self::PRODUCT_CATEGORY_MAX_UPLOAD_BYTES);
     if ($fb_pixels === false) {
         return Redirect::back();
     }
 
-    $thumbnail = $this->uploadSeoImage($request, 'thumbnail', $path, $productName, 'thumbnail');
+    $thumbnail = $this->uploadSeoImage($request, 'thumbnail', $path, $productName, 'thumbnail', null, null, self::PRODUCT_CATEGORY_MAX_UPLOAD_BYTES);
     if ($thumbnail === false) {
         return Redirect::back();
     }
@@ -1187,12 +1192,12 @@ public function edit_Product(Request $request, $id){
     $path = 'uploads/product';
     $productName = $request->name;
 
-    $fb_pixels = $this->uploadSeoImage($request, 'fb_pixels', $path, $productName, 'facebook-pixel', 'fb_pixels_cheat');
+    $fb_pixels = $this->uploadSeoImage($request, 'fb_pixels', $path, $productName, 'facebook-pixel', 'fb_pixels_cheat', null, self::PRODUCT_CATEGORY_MAX_UPLOAD_BYTES);
     if ($fb_pixels === false) {
         return Redirect::back();
     }
 
-    $thumbnail = $this->uploadSeoImage($request, 'thumbnail', $path, $productName, 'thumbnail', 'thumbnail_cheat');
+    $thumbnail = $this->uploadSeoImage($request, 'thumbnail', $path, $productName, 'thumbnail', 'thumbnail_cheat', null, self::PRODUCT_CATEGORY_MAX_UPLOAD_BYTES);
     if ($thumbnail === false) {
         return Redirect::back();
     }
@@ -3090,7 +3095,7 @@ private function threeGalleryImageRoles(): array
 
 private function processProductGalleryUploads(Request $request, string $path, string $productName, int $maxImages = 20)
 {
-    $maxSize = 1800000;
+    $maxSize = self::PRODUCT_CATEGORY_MAX_UPLOAD_BYTES;
     $order = json_decode($request->input('gallery_order_json', '[]'), true);
 
     if (!is_array($order)) {
