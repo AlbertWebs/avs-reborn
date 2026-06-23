@@ -61,10 +61,10 @@
                  <form class="form-horizontal" method="post"  action="{{url('/admin/edit_SubCategory')}}/{{$Category->id}}" enctype="multipart/form-data">
                     
                  <div class="form-group">
-                        <label for="text1" class="control-label col-lg-4">Sub Cateory Name</label>
+                        <label for="text1" class="control-label col-lg-4">Car Model Name</label>
 
                         <div class="col-lg-8">
-                            <input type="text" id="text1" name="name" value="{{$Category->name}}"  class="form-control" />
+                            <input type="text" id="text1" name="name" value="{{ old('name', $Category->name) }}" class="form-control" required />
                         </div>
                     </div>
 
@@ -80,11 +80,11 @@
                         ?>
 
                     <div class="col-lg-8">
-                        <select name="cat_id" data-placeholder="Choose a parent Category" class="form-control chzn-select" tabindex="2">
-                           <option selected value="{{$Category->cat_id}}">@foreach($TheCategory as $valuee){{$valuee->cat}} @endforeach</option>
+                        <select name="cat_id" data-placeholder="Choose a parent Category" class="form-control chzn-select" tabindex="2" required>
+                           <option value="">-- Select Parent Category --</option>
                            <?php $TheCategoryList = DB::table('category')->get(); ?>
                            @foreach($TheCategoryList as $value)
-                              <option value="{{$value->id}}">{{$value->cat}}</option>
+                              <option value="{{$value->id}}" {{ (string) old('cat_id', $Category->cat_id) === (string) $value->id ? 'selected' : '' }}>{{$value->cat}}</option>
                            @endforeach
 
                         </select>

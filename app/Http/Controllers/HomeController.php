@@ -130,12 +130,87 @@ class HomeController extends Controller
                     $keywords = "$page_name, $value->keywords";
                     // infinite Scroll
                     $Products = DB::table('product')->where('cat',$value->id)->paginate(24);
-                    return view('front.products-category', compact('keywords','page_title', 'Products', 'page_name','search_results','search_results_category','Category'));
+                    $isAndroidByModel = Str::lower((string) ($value->slung ?? '')) === 'android-radios-by-car-model';
+                    $SubCategories = $isAndroidByModel
+                        ? DB::table('sub_category')->where('cat_id', $value->id)->orderBy('name')->get()
+                        : collect([]);
+                    $selectedSubCategory = null;
+
+                    return view('front.products-category', compact(
+                        'keywords',
+                        'page_title',
+                        'Products',
+                        'page_name',
+                        'search_results',
+                        'search_results_category',
+                        'Category',
+                        'SubCategories',
+                        'selectedSubCategory',
+                        'isAndroidByModel'
+                    ));
             }
         }
 
 
 
+    }
+
+    public function product_category_model($category, $model){
+        Session::forget('Category');
+        $Category = DB::table('category')->where('slung', $category)->get();
+
+        foreach ($Category as $key => $value) {
+            $page_name = $value->cat;
+            $SEOSettings = DB::table('seosettings')->get();
+            foreach ($SEOSettings as $Settings) {
+                $subCategories = DB::table('sub_category')->where('cat_id', $value->id)->orderBy('name')->get();
+                $selectedSubCategory = $subCategories->first(function ($subCategory) use ($model) {
+                    return (string) $subCategory->id === (string) $model
+                        || (!empty($subCategory->slung) && (string) $subCategory->slung === (string) $model)
+                        || Str::slug($subCategory->name) === (string) $model;
+                });
+
+                if (!$selectedSubCategory) {
+                    return redirect()->route('product-category', ['slung' => $category]);
+                }
+
+                $page_name = $value->cat . ' - ' . $selectedSubCategory->name;
+                SEOMeta::setTitle(' '.$page_name.'  | ' . $Settings->sitename .'');
+                SEOMeta::setDescription(''.$page_name.' '.$value->keywords.'');
+                SEOMeta::setCanonical('' . $Settings->url . '/products/'.$category.'/model/'.$selectedSubCategory->id.'');
+                OpenGraph::setDescription('' . $page_name . '');
+                OpenGraph::setTitle('' . $page_name . '');
+                OpenGraph::setUrl('' . $Settings->url . '/products/'.$category.'/model/'.$selectedSubCategory->id.'');
+                OpenGraph::addProperty('type', 'website');
+                Twitter::setTitle('' . $Settings->sitename. '');
+                Twitter::setSite('@amanisounds');
+                Session::put('Category', $page_name);
+
+                $page_title = 'Products';
+                $search_results ='';
+                $search_results_category = '';
+                $keywords = "$page_name, $value->keywords";
+                $Products = DB::table('product')
+                    ->where('cat', $value->id)
+                    ->where('sub_cat', $selectedSubCategory->id)
+                    ->paginate(24);
+                $SubCategories = $subCategories;
+                $isAndroidByModel = true;
+
+                return view('front.products-category', compact(
+                    'keywords',
+                    'page_title',
+                    'Products',
+                    'page_name',
+                    'search_results',
+                    'search_results_category',
+                    'Category',
+                    'SubCategories',
+                    'selectedSubCategory',
+                    'isAndroidByModel'
+                ));
+            }
+        }
     }
 
     public function products_discounts($category){

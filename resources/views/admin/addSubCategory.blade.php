@@ -62,10 +62,10 @@
                  <form class="form-horizontal" method="post"  action="{{url('/admin/add_SubCategory')}}" enctype="multipart/form-data">
                     
                  <div class="form-group">
-                        <label for="text1" class="control-label col-lg-4">Sub Cateory Name</label>
+                        <label for="text1" class="control-label col-lg-4">Car Model Name</label>
 
                         <div class="col-lg-8">
-                            <input type="text" id="text1" name="name" value="" placeholder="e.g Python Programming " class="form-control" />
+                            <input type="text" id="text1" name="name" value="{{ old('name') }}" placeholder="e.g Toyota, Nissan, Honda" class="form-control" required />
                         </div>
                     </div>
 
@@ -77,11 +77,12 @@
                         
 
                     <div class="col-lg-8">
-                        <select name="cat_id" data-placeholder="Choose a Country" class="form-control chzn-select" tabindex="2">
+                        <select name="cat_id" data-placeholder="Choose parent category" class="form-control chzn-select" tabindex="2" required>
+                           <option value="">-- Select Parent Category --</option>
                           
                            <?php $TheCategoryList = DB::table('category')->get(); ?>
                            @foreach($TheCategoryList as $value)
-                              <option value="{{$value->id}}">{{$value->cat}}</option>
+                              <option value="{{$value->id}}" {{ (string) old('cat_id') === (string) $value->id ? 'selected' : '' }}>{{$value->cat}}</option>
                            @endforeach
 
                         </select>

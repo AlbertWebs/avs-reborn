@@ -145,12 +145,18 @@
                                         <label class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
                                             Category <span style="color: #dc3545;">*</span>
                                         </label>
+                                        @php
+                                            $selectedCategory = old('cat');
+                                            $selectedSubCategory = old('sub_cat');
+                                            $allSubCategories = DB::table('sub_category')->orderBy('name')->get();
+                                            $androidByModelCategoryId = DB::table('category')->where('slung', 'android-radios-by-car-model')->value('id');
+                                        @endphp
                                         <div class="col-lg-8">
-                                            <select name="cat" data-placeholder="Choose Category" class="form-control chzn-select" tabindex="2" required style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;">
+                                            <select id="product-category-select" name="cat" data-placeholder="Choose Category" class="form-control chzn-select" tabindex="2" required style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;">
                                                 <option value="">-- Select Category --</option>
                                                 <?php $TheCategoryList = DB::table('category')->get(); ?>
                                                 @foreach($TheCategoryList as $value)
-                                                    <option value="{{$value->id}}">{{$value->cat}}</option>
+                                                    <option value="{{$value->id}}" {{ (string)$selectedCategory === (string)$value->id ? 'selected' : '' }}>{{$value->cat}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -172,23 +178,22 @@
                                         </div>
                                     </div>
 
-                    <!-- <div class="form-group">
-                    <label class="control-label col-lg-4">Sub Category</label>
-
-                    
-                        
-
-                    <div class="col-lg-8">
-                        <select name="sub_cat" data-placeholder="Choose Sub Category" class="form-control chzn-select" tabindex="2">
-                          
-                           <?php $TheSubCategoryList = DB::table('sub_category')->get(); ?>
-                           @foreach($TheSubCategoryList as $value)
-                              <option value="{{$value->id}}">{{$value->name}}</option>
-                           @endforeach
-
-                        </select>
-                    </div>
-                    </div> -->
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            Car Model
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <select id="product-sub-category-select" name="sub_cat" data-placeholder="Choose Car Model" class="form-control chzn-select" tabindex="2" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;">
+                                                <option value="">-- Select Car Model --</option>
+                                                @foreach($allSubCategories as $subCategory)
+                                                    <option value="{{$subCategory->id}}" data-parent-category="{{$subCategory->cat_id}}" {{ (string)$selectedSubCategory === (string)$subCategory->id ? 'selected' : '' }}>
+                                                        {{$subCategory->name}}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <small id="sub-category-help" class="help-block" style="color: #666; margin-top: 5px;">Optional for most categories. Required for Android Radios by Car Model.</small>
+                                        </div>
+                                    </div>
 
 
                                     <div class="form-group" style="margin-bottom: 20px;">
@@ -377,6 +382,10 @@
                     document.addEventListener('DOMContentLoaded', function () {
                         var nameInput = document.getElementById('product-name');
                         var codeInput = document.getElementById('product-code');
+                        var categorySelect = document.getElementById('product-category-select');
+                        var subCategorySelect = document.getElementById('product-sub-category-select');
+                        var subCategoryHelp = document.getElementById('sub-category-help');
+                        var androidByModelCategoryId = '{{ (string) ($androidByModelCategoryId ?? '') }}';
                         var codeEdited = {{ old('code') ? 'true' : 'false' }};
 
                         function slugifyCode(name) {
@@ -419,6 +428,55 @@
                                 codeEdited = true;
                                 codeInput.value = codeInput.value.toUpperCase();
                             });
+                        }
+
+                        function refreshSubCategories() {
+                            if (!categorySelect || !subCategorySelect) {
+                                return;
+                            }
+
+                            var selectedCategoryId = categorySelect.value;
+                            var hasVisibleSelectedOption = false;
+
+                            Array.prototype.forEach.call(subCategorySelect.options, function (option, index) {
+                                if (index === 0) {
+                                    option.hidden = false;
+                                    return;
+                                }
+
+                                var parentCategory = option.getAttribute('data-parent-category');
+                                var shouldShow = !!selectedCategoryId && parentCategory === selectedCategoryId;
+                                option.hidden = !shouldShow;
+
+                                if (!shouldShow && option.selected) {
+                                    option.selected = false;
+                                }
+
+                                if (shouldShow && option.selected) {
+                                    hasVisibleSelectedOption = true;
+                                }
+                            });
+
+                            if (!hasVisibleSelectedOption && subCategorySelect.value && subCategorySelect.selectedOptions.length === 0) {
+                                subCategorySelect.value = '';
+                            }
+
+                            if (selectedCategoryId === androidByModelCategoryId) {
+                                subCategorySelect.required = true;
+                                if (subCategoryHelp) {
+                                    subCategoryHelp.textContent = 'Required: select a car model for Android Radios by Car Model.';
+                                }
+                            } else {
+                                subCategorySelect.required = false;
+                                if (subCategoryHelp) {
+                                    subCategoryHelp.textContent = 'Optional for most categories. Required for Android Radios by Car Model.';
+                                }
+                            }
+                        }
+
+                        if (categorySelect) {
+                            categorySelect.addEventListener('change', refreshSubCategories);
+                            refreshSubCategories();
                         }
                     });
                     </script>

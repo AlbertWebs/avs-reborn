@@ -21,6 +21,23 @@
         <div class="container">
             @include('front.tool')
 
+            @if(!empty($isAndroidByModel) && isset($SubCategories) && count($SubCategories) > 0)
+            <div class="car-model-filter-panel">
+                <h4>Shop by Car Model</h4>
+                <div class="car-model-filter-list">
+                    <a href="{{ url('/products/' . ($Category[0]->slung ?? '')) }}" class="car-model-filter-item {{ empty($selectedSubCategory) ? 'active' : '' }}">
+                        All Models
+                    </a>
+                    @foreach($SubCategories as $subCategory)
+                        <a href="{{ url('/products/' . ($Category[0]->slung ?? '') . '/model/' . ($subCategory->slung ?? $subCategory->id)) }}"
+                           class="car-model-filter-item {{ !empty($selectedSubCategory) && (int)$selectedSubCategory->id === (int)$subCategory->id ? 'active' : '' }}">
+                            {{$subCategory->name}}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
             <div class="products">
                 <div class="row">
                     @foreach($Products as $item)
@@ -78,6 +95,18 @@
                                     <a href="{{url('/products')}}/{{$Cat->slung}}"> {{$Cat->cat}} </a>
                                     @endforeach
                                 </div><!-- End .product-cat -->
+                                @if(!empty($item->sub_cat))
+                                    @php
+                                        $productSubCategory = DB::table('sub_category')->where('id', $item->sub_cat)->first();
+                                    @endphp
+                                    @if($productSubCategory)
+                                    <div class="product-cat" style="margin-top: 0.25rem;">
+                                        <a href="{{ url('/products/' . ($Category[0]->slung ?? '') . '/model/' . ($productSubCategory->slung ?? $productSubCategory->id)) }}">
+                                            {{$productSubCategory->name}}
+                                        </a>
+                                    </div>
+                                    @endif
+                                @endif
                                 <h3 class="product-title"><a href="{{url('/')}}/product/{{$item->slung}}">{{$item->name}}</a></h3><!-- End .product-title -->
                                 <div class="product-price">
                                     KES{{$item->price}}
@@ -136,6 +165,49 @@
 .products .row > [class*="col-"] {
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+}
+
+.car-model-filter-panel {
+    background: #fff;
+    border: 1px solid #ececec;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.car-model-filter-panel h4 {
+    margin-bottom: 0.75rem;
+    font-size: 1.4rem;
+}
+
+.car-model-filter-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.car-model-filter-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid #d9d9d9;
+    color: #333;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.car-model-filter-item:hover {
+    border-color: #cc9966;
+    color: #cc9966;
+}
+
+.car-model-filter-item.active {
+    background: #cc9966;
+    border-color: #cc9966;
+    color: #fff;
 }
 
 @media (max-width: 768px) {

@@ -212,6 +212,10 @@
                                 $tagRow = DB::table('tags')->where('id', $Product->tag)->first();
                                 $productTag = $tagRow->title ?? null;
                             }
+                            $productSubCategory = null;
+                            if (!empty($Product->sub_cat)) {
+                                $productSubCategory = DB::table('sub_category')->where('id', $Product->sub_cat)->first();
+                            }
                             $whatsappNumber = str_replace([' ', '-', '(', ')'], '', $Settings->mobile_one ?? $Settings->mobile ?? '254794301190');
                             $whatsappPriceText = $formattedPrice ? ", Price: KES {$formattedPrice}" : '';
                             $whatsappMessage = urlencode("Hello, I am interested in {$Product->name}{$whatsappPriceText} from your website");
@@ -287,6 +291,14 @@
                                     <span class="spec-label">Brand</span>
                                     <span class="spec-value">
                                         <a href="{{ url('/products/brand/' . $brandName) }}">{{ $brandName }}</a>
+                                    </span>
+                                </li>
+                                @endif
+                                @if($productSubCategory)
+                                <li>
+                                    <span class="spec-label">Car Model</span>
+                                    <span class="spec-value">
+                                        <a href="{{ url('/products/' . ($categorySlug ?? '') . '/model/' . ($productSubCategory->slung ?? $productSubCategory->id)) }}">{{ $productSubCategory->name }}</a>
                                     </span>
                                 </li>
                                 @endif

@@ -146,15 +146,36 @@
                                         <?php
                                             $CatID = $Product->cat;
                                             $TheCategory = DB::table('category')->where('id',$CatID)->get();
+                                            $allSubCategories = DB::table('sub_category')->orderBy('name')->get();
+                                            $androidByModelCategoryId = DB::table('category')->where('slung', 'android-radios-by-car-model')->value('id');
+                                            $selectedCategory = old('cat', $Product->cat);
+                                            $selectedSubCategory = old('sub_cat', $Product->sub_cat);
                                         ?>
                                         <div class="col-lg-8">
-                                            <select name="cat" data-placeholder="Choose Category" class="form-control chzn-select" tabindex="2" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;">
-                                                <option selected="selected" value="{{$Product->cat}}">@foreach($TheCategory as $valuee){{$valuee->cat}} @endforeach</option>
+                                            <select id="product-category-select" name="cat" data-placeholder="Choose Category" class="form-control chzn-select" tabindex="2" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;">
+                                                <option value="">-- Select Category --</option>
                                                 <?php $TheCategoryList = DB::table('category')->get(); ?>
                                                 @foreach($TheCategoryList as $value)
-                                                    <option value="{{$value->id}}">{{$value->cat}}</option>
+                                                    <option value="{{$value->id}}" {{ (string)$selectedCategory === (string)$value->id ? 'selected' : '' }}>{{$value->cat}}</option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
+                                            Car Model
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <select id="product-sub-category-select" name="sub_cat" data-placeholder="Choose Car Model" class="form-control chzn-select" tabindex="2" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px 15px;">
+                                                <option value="">-- Select Car Model --</option>
+                                                @foreach($allSubCategories as $subCategory)
+                                                    <option value="{{$subCategory->id}}" data-parent-category="{{$subCategory->cat_id}}" {{ (string)$selectedSubCategory === (string)$subCategory->id ? 'selected' : '' }}>
+                                                        {{$subCategory->name}}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <small id="sub-category-help" class="help-block" style="color: #666; margin-top: 5px;">Optional for most categories. Required for Android Radios by Car Model.</small>
                                         </div>
                                     </div>
 
@@ -241,50 +262,6 @@
                                     <h3 style="color: #667eea; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
                                         <i class="icon-check"></i> Stock Status
                                     </h3>
-
-                    <!-- <div class="form-group">
-                    <label class="control-label col-lg-4">Sub Category</label>
-
-
-                    <?php
-                            $CatID = $Product->sub_cat;
-                            $TheCategory = DB::table('sub_category')->where('id',$CatID)->get();
-
-                    ?>
-
-                    <div class="col-lg-8">
-                        <select name="sub_cat" data-placeholder="Choose Sub Category" class="form-control chzn-select" tabindex="2">
-                           <option selected="selected" value="{{$Product->sub_cat}}">@foreach($TheCategory as $valuee){{$valuee->name}} @endforeach</option>
-                           <?php $TheSubCategoryList = DB::table('sub_category')->get(); ?>
-                           @foreach($TheSubCategoryList as $value)
-                              <option value="{{$value->id}}">{{$value->name}}</option>
-                           @endforeach
-
-                        </select>
-                    </div>
-                    </div> -->
-
-                    <!-- Brands -->
-
-                    <div class="form-group">
-                    <label class="control-label col-lg-4">Brand</label>
-
-
-
-
-                    <div class="col-lg-8">
-                        <select name="brand" data-placeholder="Choose Sub Category" class="form-control chzn-select" tabindex="2">
-                           <option selected="selected" value="{{$Product->brand}}">{{$Product->brand}}</option>
-
-                           <?php $ThebrandList = DB::table('brands')->get(); ?>
-                           @foreach($ThebrandList as $brandvalue)
-                              <option value="{{$brandvalue->name}}">{{$brandvalue->name}}</option>
-                           @endforeach
-
-                        </select>
-                    </div>
-                    </div>
-                    <!-- Brands -->
 
                                     <div class="form-group" style="margin-bottom: 20px;">
                                         <label class="control-label col-lg-4" style="font-weight: 600; color: #333; padding-top: 10px;">
@@ -476,6 +453,63 @@
                             height: auto;
                         }
                     </style>
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var categorySelect = document.getElementById('product-category-select');
+                        var subCategorySelect = document.getElementById('product-sub-category-select');
+                        var subCategoryHelp = document.getElementById('sub-category-help');
+                        var androidByModelCategoryId = '{{ (string) ($androidByModelCategoryId ?? '') }}';
+
+                        function refreshSubCategories() {
+                            if (!categorySelect || !subCategorySelect) {
+                                return;
+                            }
+
+                            var selectedCategoryId = categorySelect.value;
+                            var hasVisibleSelectedOption = false;
+
+                            Array.prototype.forEach.call(subCategorySelect.options, function (option, index) {
+                                if (index === 0) {
+                                    option.hidden = false;
+                                    return;
+                                }
+
+                                var parentCategory = option.getAttribute('data-parent-category');
+                                var shouldShow = !!selectedCategoryId && parentCategory === selectedCategoryId;
+                                option.hidden = !shouldShow;
+
+                                if (!shouldShow && option.selected) {
+                                    option.selected = false;
+                                }
+
+                                if (shouldShow && option.selected) {
+                                    hasVisibleSelectedOption = true;
+                                }
+                            });
+
+                            if (!hasVisibleSelectedOption && subCategorySelect.value && subCategorySelect.selectedOptions.length === 0) {
+                                subCategorySelect.value = '';
+                            }
+
+                            if (selectedCategoryId === androidByModelCategoryId) {
+                                subCategorySelect.required = true;
+                                if (subCategoryHelp) {
+                                    subCategoryHelp.textContent = 'Required: select a car model for Android Radios by Car Model.';
+                                }
+                            } else {
+                                subCategorySelect.required = false;
+                                if (subCategoryHelp) {
+                                    subCategoryHelp.textContent = 'Optional for most categories. Required for Android Radios by Car Model.';
+                                }
+                            }
+                        }
+
+                        if (categorySelect) {
+                            categorySelect.addEventListener('change', refreshSubCategories);
+                            refreshSubCategories();
+                        }
+                    });
+                    </script>
                 </div>
 
             </div>

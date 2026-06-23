@@ -23,7 +23,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         
-                        <center><h2> Sub Category </h2></center>
+                        <center><h2> Car Models (Sub Categories) </h2></center>
                         
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                         <div class="col-lg-12">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    Sub Categories
+                                    Car Models
                                 </div>
                                 <div class="panel-body">
                                     <div class="table-responsive">

@@ -126,6 +126,7 @@ use App\Models\ServiceRequest;
 class AdminsController extends Controller
 {
     private const PRODUCT_CATEGORY_MAX_UPLOAD_BYTES = 20971520; // 20MB
+    private const ANDROID_BY_MODEL_SLUG = 'android-radios-by-car-model';
 
      /**
      * Create a new controller instance.
@@ -995,10 +996,31 @@ public function addSubCategory(){
 }
 
 public function add_SubCategory(Request $request){
-    
+    $name = trim((string) $request->name);
+    if ($name === '') {
+        Session::flash('messageError', 'Sub category name is required.');
+        return Redirect::back()->withInput();
+    }
+
+    if (empty($request->cat_id)) {
+        Session::flash('messageError', 'Please select a parent category.');
+        return Redirect::back()->withInput();
+    }
+
+    $duplicate = DB::table('sub_category')
+        ->where('cat_id', $request->cat_id)
+        ->whereRaw('LOWER(name) = ?', [Str::lower($name)])
+        ->exists();
+
+    if ($duplicate) {
+        Session::flash('messageError', 'This sub category already exists under the selected parent category.');
+        return Redirect::back()->withInput();
+    }
+
     $SubCategory = new SubCategory;
-    $SubCategory->name = $request->name;
+    $SubCategory->name = $name;
     $SubCategory->cat_id = $request->cat_id;
+    $SubCategory->slung = $this->uniqueSubCategorySlug($name, $request->cat_id);
     
     $SubCategory->save();
     Session::flash('message', "Category Has Been Added");
@@ -1013,10 +1035,32 @@ public function editSubCategories($id){
 }
 
 public function edit_SubCategory(Request $request, $id){
-    
+    $name = trim((string) $request->name);
+    if ($name === '') {
+        Session::flash('messageError', 'Sub category name is required.');
+        return Redirect::back()->withInput();
+    }
+
+    if (empty($request->cat_id)) {
+        Session::flash('messageError', 'Please select a parent category.');
+        return Redirect::back()->withInput();
+    }
+
+    $duplicate = DB::table('sub_category')
+        ->where('cat_id', $request->cat_id)
+        ->whereRaw('LOWER(name) = ?', [Str::lower($name)])
+        ->where('id', '!=', $id)
+        ->exists();
+
+    if ($duplicate) {
+        Session::flash('messageError', 'This sub category already exists under the selected parent category.');
+        return Redirect::back()->withInput();
+    }
+
     $updateDetails = array(
         'cat_id'=>$request->cat_id,
-        'name' =>$request->name,
+        'name' =>$name,
+        'slung' => $this->uniqueSubCategorySlug($name, $request->cat_id, $id),
       
     );
     DB::table('sub_category')->where('id',$id)->update($updateDetails);
@@ -1049,6 +1093,12 @@ public function add_Product(Request $request){
 
     if (empty($request->cat)) {
         Session::flash('messageError', 'Please select a category.');
+        return Redirect::back()->withInput();
+    }
+
+    $subCategoryValidationError = $this->validateSubCategorySelection($request->cat, $request->sub_cat);
+    if ($subCategoryValidationError !== null) {
+        Session::flash('messageError', $subCategoryValidationError);
         return Redirect::back()->withInput();
     }
 
@@ -1086,6 +1136,7 @@ public function add_Product(Request $request){
 
     $slung = Str::slug($request->name);
     $Product = new Product;
+    $subCategoryId = $request->filled('sub_cat') ? $request->sub_cat : null;
     $Product->name = $request->name;
     $Product->google_product_category = $request->google_product_category;
     $Product->slung = $slung;
@@ -1097,7 +1148,7 @@ public function add_Product(Request $request){
     $Product->price_raw = $request->price;
     $Product->code = $productCode;
     $Product->cat = $request->cat;
-    $Product->sub_cat = $request->sub_cat;
+    $Product->sub_cat = $subCategoryId;
     $Product->image_one = $galleryColumns['image_one'];
     $Product->fb_pixels = $fb_pixels;
     $Product->thumbnail = $thumbnail;
@@ -1189,6 +1240,27 @@ public function edit_Product_Details(Request $request, $id){
 
 
 public function edit_Product(Request $request, $id){
+    if (trim((string) $request->name) === '') {
+        Session::flash('messageError', 'Product name is required.');
+        return Redirect::back()->withInput();
+    }
+
+    if ($request->price === null || $request->price === '' || !is_numeric($request->price) || (float) $request->price <= 0) {
+        Session::flash('messageError', 'Product price is required and must be greater than zero.');
+        return Redirect::back()->withInput();
+    }
+
+    if (empty($request->cat)) {
+        Session::flash('messageError', 'Please select a category.');
+        return Redirect::back()->withInput();
+    }
+
+    $subCategoryValidationError = $this->validateSubCategorySelection($request->cat, $request->sub_cat);
+    if ($subCategoryValidationError !== null) {
+        Session::flash('messageError', $subCategoryValidationError);
+        return Redirect::back()->withInput();
+    }
+
     $path = 'uploads/product';
     $productName = $request->name;
 
@@ -1218,6 +1290,8 @@ public function edit_Product(Request $request, $id){
 
 
    
+    $subCategoryId = $request->filled('sub_cat') ? $request->sub_cat : null;
+
     $updateDetails = array(
         'name' => $request->name,
         'slung' => $slung,
@@ -1237,7 +1311,7 @@ public function edit_Product(Request $request, $id){
         'price_raw' =>$request->price_raw,
         'code' =>$request->code,
         'cat' =>$request->cat,
-        'sub_cat' =>$request->sub_cat,
+        'sub_cat' =>$subCategoryId,
         'replaced' => $request->replaced ?? 0,
         'tag' => $request->tag ?? null,
     );
@@ -3159,6 +3233,75 @@ private function syncProductGalleryColumns(array $gallery): array
         'image_two' => $gallery[1] ?? null,
         'image_three' => $gallery[2] ?? null,
     ];
+}
+
+private function isAndroidByModelCategory($categoryId): bool
+{
+    if (empty($categoryId)) {
+        return false;
+    }
+
+    $category = DB::table('category')->where('id', $categoryId)->first();
+    if (!$category) {
+        return false;
+    }
+
+    $slug = trim((string) ($category->slung ?? ''));
+    if ($slug !== '') {
+        return Str::lower($slug) === self::ANDROID_BY_MODEL_SLUG;
+    }
+
+    $name = trim((string) ($category->cat ?? ''));
+    return Str::contains(Str::lower($name), 'android radios by car model');
+}
+
+private function validateSubCategorySelection($categoryId, $subCategoryId): ?string
+{
+    if (!$this->isAndroidByModelCategory($categoryId)) {
+        return null;
+    }
+
+    if (empty($subCategoryId)) {
+        return 'Please select a car model sub category for Android Radios by Car Model.';
+    }
+
+    $belongsToCategory = DB::table('sub_category')
+        ->where('id', $subCategoryId)
+        ->where('cat_id', $categoryId)
+        ->exists();
+
+    if (!$belongsToCategory) {
+        return 'Selected car model does not belong to the chosen category.';
+    }
+
+    return null;
+}
+
+private function uniqueSubCategorySlug(string $name, $categoryId, $excludeId = null): string
+{
+    $baseSlug = Str::slug($name);
+    if ($baseSlug === '') {
+        $baseSlug = 'model';
+    }
+
+    $slug = $baseSlug;
+    $suffix = 2;
+    while (true) {
+        $query = DB::table('sub_category')
+            ->where('cat_id', $categoryId)
+            ->where('slung', $slug);
+
+        if (!empty($excludeId)) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        if (!$query->exists()) {
+            return $slug;
+        }
+
+        $slug = $baseSlug . '-' . $suffix;
+        $suffix++;
+    }
 }
 
 }

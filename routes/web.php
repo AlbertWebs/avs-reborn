@@ -68,6 +68,7 @@ Route::group(['prefix'=>'products'], function(){
 Route::get('/', [App\Http\Controllers\HomeController::class, 'all'])->name('all');
 Route::get('/shop-by-category', [App\Http\Controllers\HomeController::class, 'categories'])->name('shop-by-category');
 Route::get('/shop-by-brand', [App\Http\Controllers\HomeController::class, 'brand'])->name('shop-by-brand');
+Route::get('/{slung}/model/{model}', [App\Http\Controllers\HomeController::class, 'product_category_model'])->name('product-category-model');
 Route::get('/{slung}', [App\Http\Controllers\HomeController::class, 'product_category'])->name('product-category');
 Route::get('/brand/{brand}', [App\Http\Controllers\HomeController::class, 'brands'])->name('shop-by-brand-single-brand');
 });
