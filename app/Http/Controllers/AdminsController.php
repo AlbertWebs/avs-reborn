@@ -983,16 +983,26 @@ public function deleteCategory($id){
 }
 
 public function subCategories(){
-    $Category = SubCategory::all();
+    $androidCategory = DB::table('category')->where('slung', self::ANDROID_BY_MODEL_SLUG)->first();
+    $androidCategoryId = $androidCategory->id ?? null;
+
+    $query = DB::table('sub_category')->orderBy('name');
+    if ($androidCategoryId) {
+        $query->where('cat_id', $androidCategoryId);
+    }
+
+    $Category = $query->get();
     $page_title = 'list';
-    $page_name = 'Categories';
-    return view('admin.SubCategories',compact('page_title','Category','page_name'));
+    $page_name = 'Car Models';
+    return view('admin.SubCategories', compact('page_title', 'Category', 'page_name', 'androidCategory', 'androidCategoryId'));
 }
 
 public function addSubCategory(){
+    $androidCategory = DB::table('category')->where('slung', self::ANDROID_BY_MODEL_SLUG)->first();
+    $androidCategoryId = $androidCategory->id ?? null;
     $page_title = 'formfiletext';
-    $page_name = 'Add Category';
-    return view('admin.addSubCategory',compact('page_title','page_name'));
+    $page_name = 'Add Car Model';
+    return view('admin.addSubCategory', compact('page_title', 'page_name', 'androidCategory', 'androidCategoryId'));
 }
 
 public function add_SubCategory(Request $request){
@@ -1023,14 +1033,14 @@ public function add_SubCategory(Request $request){
     $SubCategory->slung = $this->uniqueSubCategorySlug($name, $request->cat_id);
     
     $SubCategory->save();
-    Session::flash('message', "Category Has Been Added");
-    return Redirect::back();
+    Session::flash('message', 'Car model "' . $name . '" has been added.');
+    return Redirect::to(url('/admin/subCategories'));
 }
 
 public function editSubCategories($id){
     $Category = SubCategory::find($id);
     $page_title = 'formfiletext';
-    $page_name = 'Edit Home Page Slider';
+    $page_name = 'Edit Car Model';
     return view('admin.editSubCategory',compact('page_title','Category','page_name'));
 }
 
@@ -1064,13 +1074,13 @@ public function edit_SubCategory(Request $request, $id){
       
     );
     DB::table('sub_category')->where('id',$id)->update($updateDetails);
-    Session::flash('message', "Changes have been saved");
-    return Redirect::back();
+    Session::flash('message', 'Car model updated successfully.');
+    return Redirect::to(url('/admin/subCategories'));
 }
 
 public function deleteSubCategory($id){
     DB::table('sub_category')->where('id',$id)->delete();
-    return Redirect::back();
+    return Redirect::to(url('/admin/subCategories'));
 }
 
 public function addProduct(){

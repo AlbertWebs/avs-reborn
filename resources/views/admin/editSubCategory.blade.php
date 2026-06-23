@@ -23,7 +23,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         
-                        <center><h2> Edit Sub Category </h2></center>
+                        <center><h2>Edit Car Model</h2></center>
                     </div>
                 </div>
                   <hr />
@@ -98,13 +98,14 @@
                    
                     <br><br>
                     <div class="col-lg-12 text-center">
-                      <button type="submit" class="btn btn-success"><i class="icon-check icon-white"></i> Save </button>
+                      <button type="submit" class="btn btn-success"><i class="icon-check icon-white"></i> Save</button>
+                      <a href="{{ url('/admin/subCategories') }}" class="btn btn-default" style="margin-left: 8px;">Back to Car Models</a>
                     </div>
                     
                     
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     
-                <form>
+                </form>
               </div>
 
             </div>

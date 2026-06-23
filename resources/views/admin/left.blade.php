@@ -118,9 +118,16 @@
         </li>
 
         <li class="menu-item" style="margin: 5px 10px;">
+            <a href="{{url('admin/subCategories')}}" style="display: flex; align-items: center; padding: 12px 15px; color: #333; text-decoration: none; border-radius: 8px; transition: all 0.3s; font-size: 14px; font-weight: 600;">
+                <i class="icon-road" style="width: 24px; font-size: 16px; margin-right: 12px; color: #667eea;"></i>
+                <span style="font-weight: 600;">Car Models</span>
+            </a>
+        </li>
+
+        <li class="menu-item" style="margin: 5px 10px;">
             <a href="{{url('admin/addSubCategory')}}" style="display: flex; align-items: center; padding: 12px 15px; color: #333; text-decoration: none; border-radius: 8px; transition: all 0.3s; font-size: 14px; font-weight: 600;">
-                <i class="icon-folder-close" style="width: 24px; font-size: 16px; margin-right: 12px; color: #667eea;"></i>
-                <span style="font-weight: 600;">Add Sub Category</span>
+                <i class="icon-plus" style="width: 24px; font-size: 16px; margin-right: 12px; color: #667eea;"></i>
+                <span style="font-weight: 600;">Add Car Model</span>
             </a>
         </li>
 

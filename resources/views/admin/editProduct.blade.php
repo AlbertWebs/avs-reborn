@@ -175,7 +175,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            <small id="sub-category-help" class="help-block" style="color: #666; margin-top: 5px;">Optional for most categories. Required for Android Radios by Car Model.</small>
+                                            <small id="sub-category-help" class="help-block" style="color: #666; margin-top: 5px;">Optional for most categories. Required for Android Radios by Car Model. <a href="{{ url('/admin/subCategories') }}" target="_blank">Manage car models</a></small>
                                         </div>
                                     </div>
 
