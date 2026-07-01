@@ -137,7 +137,7 @@
 
                         <div class="col-lg-8">
                             <input type="password" id="password" name="password" placeholder="Leave blank to keep current password" class="form-control" autocomplete="new-password" />
-                            <p class="help-block">Minimum 6 characters. Updates the admin login password when set.</p>
+                            <p class="help-block">Minimum 6 characters. You will be signed out after saving a new password.</p>
                         </div>
                     </div>
 

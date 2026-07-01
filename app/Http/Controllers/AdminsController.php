@@ -552,7 +552,7 @@ class AdminsController extends Controller
          $Admin->image = $image;
          $Admin->save();
 
-         $this->syncAdminLoginUser($email, $name, (string) $request->password, $image);
+         $this->syncAdminLoginUser($email, $name, (string) $request->password, $image, null, (int) $Admin->id);
 
          Session::flash('message', $name . ' has been added as a new admin.');
          return Redirect::to(url('/admin/admins'));
@@ -630,14 +630,25 @@ class AdminsController extends Controller
         DB::table('admins')->where('id', $id)->update($updateDetails);
 
         $plainPassword = $request->filled('password') ? (string) $request->password : null;
-        $this->syncAdminLoginUser($email, $name, $plainPassword, $image, $oldEmail);
+        $passwordChanged = $plainPassword !== null;
+        $this->syncAdminLoginUser($email, $name, $plainPassword, $image, $oldEmail, (int) $id);
 
-        Session::flash('message', 'Admin updated successfully.');
+        $sessionUser = Auth::user();
+        $loginUser = $this->resolveLoginUserForAdmin($email, $oldEmail, (int) $id);
+        $isSelf = $sessionUser && $loginUser && (int) $sessionUser->id === (int) $loginUser->id;
 
-        if (Auth::check() && Auth::user()->email === $oldEmail && $email !== $oldEmail) {
+        if ($isSelf && ($passwordChanged || $email !== $oldEmail)) {
             Auth::logout();
-            return Redirect::to(url('/login'));
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return Redirect::to(url('/login'))
+                ->with('message', 'Your account was updated. Please sign in with your new credentials.');
         }
+
+        Session::flash('message', $passwordChanged
+            ? 'Admin updated successfully. Login password has been changed.'
+            : 'Admin updated successfully.');
 
         return Redirect::to(url('/admin/admins'));
     }
@@ -659,31 +670,28 @@ class AdminsController extends Controller
         return Redirect::to(url('/admin/admins'));
     }
 
-    private function syncAdminLoginUser(string $email, string $name, ?string $plainPassword = null, ?string $image = null, ?string $previousEmail = null): void
+    private function syncAdminLoginUser(string $email, string $name, ?string $plainPassword = null, ?string $image = null, ?string $previousEmail = null, ?int $adminId = null): void
     {
-        $userQuery = User::query();
-        if ($previousEmail && $previousEmail !== $email) {
-            $user = (clone $userQuery)->where('email', $previousEmail)->first();
-        } else {
-            $user = (clone $userQuery)->where('email', $email)->first();
-        }
-
-        $userData = [
-            'name' => $name,
-            'email' => $email,
-            'type' => 1,
-        ];
-
-        if ($image !== null) {
-            $userData['image'] = $image;
-        }
-
-        if ($plainPassword !== null) {
-            $userData['password'] = $plainPassword;
-        }
+        $user = $this->resolveLoginUserForAdmin($email, $previousEmail, $adminId);
+        $hashedPassword = $plainPassword !== null ? Hash::make($plainPassword) : null;
 
         if ($user) {
-            $user->update($userData);
+            $update = [
+                'name' => $name,
+                'email' => $email,
+                'type' => 1,
+                'updated_at' => now(),
+            ];
+
+            if ($image !== null) {
+                $update['image'] = $image;
+            }
+
+            if ($hashedPassword !== null) {
+                $update['password'] = $hashedPassword;
+            }
+
+            DB::table('users')->where('id', $user->id)->update($update);
             return;
         }
 
@@ -691,7 +699,49 @@ class AdminsController extends Controller
             return;
         }
 
-        User::create($userData);
+        User::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => $plainPassword,
+            'type' => 1,
+            'image' => $image,
+        ]);
+    }
+
+    private function resolveLoginUserForAdmin(string $email, ?string $previousEmail = null, ?int $adminId = null): ?User
+    {
+        foreach (array_unique(array_filter([$previousEmail, $email])) as $candidate) {
+            $user = User::where('email', $candidate)->first();
+            if ($user) {
+                return $user;
+            }
+        }
+
+        if (!Auth::check() || Auth::user()->type !== 'admin' || $adminId === null) {
+            return null;
+        }
+
+        $sessionUser = Auth::user();
+        $adminRecord = Admin::find($adminId);
+        if (!$adminRecord) {
+            return null;
+        }
+
+        if (in_array($sessionUser->email, [$adminRecord->email, $previousEmail, $email], true)) {
+            return $sessionUser;
+        }
+
+        $profileAdminId = Admin::where('email', $sessionUser->email)->value('id');
+        if ($profileAdminId && (int) $profileAdminId === (int) $adminId) {
+            return $sessionUser;
+        }
+
+        // Legacy fallback: sidebar links to editAdmin/{userId} when emails differ between tables.
+        if ((int) $sessionUser->id === (int) $adminId) {
+            return $sessionUser;
+        }
+
+        return null;
     }
 
     public function addUser(){

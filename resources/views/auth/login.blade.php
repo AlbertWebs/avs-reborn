@@ -18,6 +18,12 @@
                 </div>
                 <h2 class="login-title">Welcome Back</h2>
                 <p class="login-subtitle">Sign in to your account to continue</p>
+                @if(session('message'))
+                    <div class="alert alert-success" style="margin-top: 15px;">{{ session('message') }}</div>
+                @endif
+                @if(session('error'))
+                    <div class="alert alert-danger" style="margin-top: 15px;">{{ session('error') }}</div>
+                @endif
             </div>
 
             <!-- Login Form -->
