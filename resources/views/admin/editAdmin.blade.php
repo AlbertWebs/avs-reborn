@@ -51,6 +51,9 @@
                  @if(Session::has('message'))
 							   <div class="alert alert-success">{{ Session::get('message') }}</div>
 				@endif
+                 @if(Session::has('messageError'))
+							   <div class="alert alert-danger">{{ Session::get('messageError') }}</div>
+				@endif
                  </center>
 
                  <form class="form-horizontal" method="post"  action="{{url('/admin/edit_Admin')}}/{{$Admin->id}}" enctype="multipart/form-data">
@@ -130,10 +133,11 @@
                     </div>
 
                      <div class="form-group">
-                        <label for="text1" class="control-label col-lg-4">Password</label>
+                        <label for="password" class="control-label col-lg-4">New Password</label>
 
                         <div class="col-lg-8">
-                            <input type="text" id="text1" readonly  placeholder="To Change Your Password Use the 'Forgot Password' Link of your Login Page" class="form-control" />
+                            <input type="password" id="password" name="password" placeholder="Leave blank to keep current password" class="form-control" autocomplete="new-password" />
+                            <p class="help-block">Minimum 6 characters. Updates the admin login password when set.</p>
                         </div>
                     </div>
 
@@ -188,12 +192,13 @@
                     <br><br>
                     <div class="col-lg-12 text-center">
                       <button type="submit" class="btn btn-success"><i class="icon-check icon-white"></i> Save</button>
+                      <a href="{{ url('/admin/admins') }}" class="btn btn-default" style="margin-left: 8px;">Back to Admins</a>
                     </div>
                     
                     <input type="hidden" name="image_cheat" value="{{$Admin->image}}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     
-                <form>
+                </form>
 
 
             </div>

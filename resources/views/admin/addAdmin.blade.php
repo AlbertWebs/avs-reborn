@@ -100,12 +100,13 @@
                     <br><br>
                     <div class="col-lg-12 text-center">
                       <button type="submit" class="btn btn-success"><i class="icon-plus icon-white"></i> Add Admin</button>
+                      <a href="{{ url('/admin/admins') }}" class="btn btn-default" style="margin-left: 8px;">Back to Admins</a>
                     </div>
                     
                    
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     
-                <form>
+                </form>
 
 
             </div>

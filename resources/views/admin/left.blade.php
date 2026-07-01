@@ -2,7 +2,7 @@
     <!-- User Profile Section -->
     <div class="user-profile-section" style="padding: 25px 20px; border-bottom: 1px solid #e9ecef; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
         <?php $SiteSettings = DB::table('sitesettings')->first(); ?>
-        <a class="user-link" href="{{url('/admin')}}/editAdmin/{{Auth::user()->id}}" style="display: flex; align-items: center; text-decoration: none; color: white; transition: all 0.3s;">
+        <a class="user-link" href="{{ url('/admin/editAdmin/' . (DB::table('admins')->where('email', Auth::user()->email)->value('id') ?? Auth::user()->id)) }}" style="display: flex; align-items: center; text-decoration: none; color: white; transition: all 0.3s;">
             <div style="position: relative; margin-right: 15px; display: flex; align-items: center; justify-content: center;">
                 @if($SiteSettings && $SiteSettings->logo)
                     <img width="60" height="60" alt="Logo" 

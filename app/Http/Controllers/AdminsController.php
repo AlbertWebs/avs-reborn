@@ -523,35 +523,53 @@ class AdminsController extends Controller
     }
 
     public function add_Admin(Request $request){
+        $name = trim((string) $request->name);
+        $email = trim((string) $request->email);
+
+        if ($name === '' || $email === '') {
+            Session::flash('messageError', 'Name and email are required.');
+            return Redirect::back()->withInput();
+        }
+
+        if (empty($request->password)) {
+            Session::flash('messageError', 'Password is required for new admins.');
+            return Redirect::back()->withInput();
+        }
+
+        if (Admin::where('email', $email)->exists()) {
+            Session::flash('messageError', 'An admin with this email already exists.');
+            return Redirect::back()->withInput();
+        }
+
         $path = 'uploads/admins';
-        $image = move_upload_with_seo_name($request->file('image'), $path, $request->name, 'profile-image');
+        $image = move_upload_with_seo_name($request->file('image'), $path, $name, 'profile-image');
         
-        $password_inSecured = $request->password;
-        //harshing password Here
-        $password = Hash::make($password_inSecured);
+        $password = Hash::make($request->password);
          $Admin = new Admin;
-         $Admin->name = $request->name;
-         $Admin->email = $request->email;
+         $Admin->name = $name;
+         $Admin->email = $email;
          $Admin->password = $password;
          $Admin->image = $image;
          $Admin->save();
-         Session::flash('message', "$request->name has been added as new admin");
-         return Redirect::back();
+
+         $this->syncAdminLoginUser($email, $name, (string) $request->password, $image);
+
+         Session::flash('message', $name . ' has been added as a new admin.');
+         return Redirect::to(url('/admin/admins'));
 
     }
     public function admins(){
         $page_title = 'list';
         $page_name = 'Site Administrator';
-        $Admin = Admin::all();
+        $Admin = Admin::orderBy('id')->get();
         return view('admin.admins',compact('page_title','Admin','page_name'));
     }
 
     public function editAdmin($id){
         $Admin = Admin::find($id);
         if (!$Admin) {
-            Session::flash('message', 'Admin not found');
             Session::flash('messageError', 'The admin you are trying to edit does not exist.');
-            return redirect()->route('admin.admins');
+            return Redirect::to(url('/admin/admins'));
         }
         $page_title = 'formfiletext';//For Style Inheritance
         $page_name = 'Edit Site Administrator';
@@ -560,62 +578,120 @@ class AdminsController extends Controller
     }
 
     public function edit_Admin(Request $request, $id){
-        $path = 'uploads/admins';
-        if($request->email == Auth::user()->email ){
-            $image = $this->uploadSeoImage($request, 'image', $path, $request->name, 'profile-image', 'image_cheat');
-            if ($image === false) {
-                return Redirect::back();
-            }
-            $updateDetails = array(
-                    'name'=>$request->name,
-                    'email'=>$request->email,
-                    'facebook'=>$request->facebook,
-                    'twitter'=>$request->twitter,
-                    'linkedin'=>$request->linkedin,
-                    'instagram'=>$request->instagram,
-                    'youtube'=>$request->youtube,
-                    'google'=>$request->google,
-                    'content'=>$request->content,
-                    'position'=>$request->position,
-                    'image'=>$image
-            );
-            DB::table('admins')->where('id',$id)->update($updateDetails);
-            Session::flash('message', "Your Changes Have Been Saved");
-            return Redirect::back();
-        }else{
-            $image = $this->uploadSeoImage($request, 'image', $path, $request->name, 'profile-image', 'image_cheat');
-            if ($image === false) {
-                return Redirect::back();
-            }
-            $updateDetails = array(
-                'name'=>$request->name,
-                'email'=>$request->email,
-                'facebook'=>$request->facebook,
-                'twitter'=>$request->twitter,
-                'linkedin'=>$request->linkedin,
-                'instagram'=>$request->instagram,
-                'youtube'=>$request->youtube,
-                'google'=>$request->google,
-                'content'=>$request->content,
-                'position'=>$request->position,
-                'image'=>$image
-            );
-            DB::table('admins')->where('id',$id)->update($updateDetails);
-            Auth::guard('admin')->logout();
-            return Redirect::back();
+        $admin = Admin::find($id);
+        if (!$admin) {
+            Session::flash('messageError', 'Admin not found.');
+            return Redirect::to(url('/admin/admins'));
         }
+
+        $name = trim((string) $request->name);
+        $email = trim((string) $request->email);
+        $oldEmail = $admin->email;
+
+        if ($name === '' || $email === '') {
+            Session::flash('messageError', 'Name and email are required.');
+            return Redirect::back()->withInput();
+        }
+
+        if ($request->filled('password') && strlen((string) $request->password) < 6) {
+            Session::flash('messageError', 'Password must be at least 6 characters.');
+            return Redirect::back()->withInput();
+        }
+
+        if (Admin::where('email', $email)->where('id', '!=', $id)->exists()) {
+            Session::flash('messageError', 'Another admin already uses this email.');
+            return Redirect::back()->withInput();
+        }
+
+        $path = 'uploads/admins';
+        $image = $this->uploadSeoImage($request, 'image', $path, $name, 'profile-image', 'image_cheat');
+        if ($image === false) {
+            return Redirect::back()->withInput();
+        }
+
+        $updateDetails = array(
+            'name' => $name,
+            'email' => $email,
+            'facebook' => $request->facebook,
+            'twitter' => $request->twitter,
+            'linkedin' => $request->linkedin,
+            'instagram' => $request->instagram,
+            'youtube' => $request->youtube,
+            'google' => $request->google,
+            'content' => $request->content,
+            'position' => $request->position,
+            'image' => $image,
+        );
+
+        if ($request->filled('password')) {
+            $updateDetails['password'] = Hash::make($request->password);
+        }
+
+        DB::table('admins')->where('id', $id)->update($updateDetails);
+
+        $plainPassword = $request->filled('password') ? (string) $request->password : null;
+        $this->syncAdminLoginUser($email, $name, $plainPassword, $image, $oldEmail);
+
+        Session::flash('message', 'Admin updated successfully.');
+
+        if (Auth::check() && Auth::user()->email === $oldEmail && $email !== $oldEmail) {
+            Auth::logout();
+            return Redirect::to(url('/login'));
+        }
+
+        return Redirect::to(url('/admin/admins'));
     }
     
 
     public function deleteAdmin($id){
         if($id==1){
-            echo "<script>alert('You cannot Delete the Supper Admin)</script>";
-            
-            return Redirect::back();
-        }else{
-            DB::table('admins')->where('id',$id)->delete();
-            return Redirect::back();
+            Session::flash('messageError', 'You cannot delete the Super Admin.');
+            return Redirect::to(url('/admin/admins'));
         }
+
+        $admin = Admin::find($id);
+        if ($admin) {
+            User::where('email', $admin->email)->where('type', 1)->delete();
+            DB::table('admins')->where('id', $id)->delete();
+            Session::flash('message', 'Admin deleted successfully.');
+        }
+
+        return Redirect::to(url('/admin/admins'));
+    }
+
+    private function syncAdminLoginUser(string $email, string $name, ?string $plainPassword = null, ?string $image = null, ?string $previousEmail = null): void
+    {
+        $userQuery = User::query();
+        if ($previousEmail && $previousEmail !== $email) {
+            $user = (clone $userQuery)->where('email', $previousEmail)->first();
+        } else {
+            $user = (clone $userQuery)->where('email', $email)->first();
+        }
+
+        $userData = [
+            'name' => $name,
+            'email' => $email,
+            'type' => 1,
+        ];
+
+        if ($image !== null) {
+            $userData['image'] = $image;
+        }
+
+        if ($plainPassword !== null) {
+            $userData['password'] = $plainPassword;
+        }
+
+        if ($user) {
+            $user->update($userData);
+            return;
+        }
+
+        if ($plainPassword === null) {
+            return;
+        }
+
+        User::create($userData);
     }
 
     public function addUser(){

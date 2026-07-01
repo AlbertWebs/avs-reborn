@@ -373,7 +373,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
 
     //Admin
-    Route::get('/admins', [AdminsController::class, 'admins']);
+    Route::get('/admins', [AdminsController::class, 'admins'])->name('admin.admins');
     Route::get('/editAdmin/{id}', [AdminsController::class, 'editAdmin']);
     Route::get('/deleteAdmin/{id}', [AdminsController::class, 'deleteAdmin']);
     Route::post('/edit_Admin/{id}',  [AdminsController::class, 'edit_Admin']);
