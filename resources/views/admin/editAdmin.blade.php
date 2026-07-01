@@ -133,6 +133,15 @@
                     </div>
 
                      <div class="form-group">
+                        <label for="login_email" class="control-label col-lg-4">Login Email</label>
+
+                        <div class="col-lg-8">
+                            <input type="email" id="login_email" name="login_email" value="{{ old('login_email', $loginEmail) }}" class="form-control" autocomplete="username" />
+                            <p class="help-block">The email you use to sign in. Password changes always apply to this account.</p>
+                        </div>
+                    </div>
+
+                     <div class="form-group">
                         <label for="password" class="control-label col-lg-4">New Password</label>
 
                         <div class="col-lg-8">

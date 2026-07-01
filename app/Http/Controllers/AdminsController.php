@@ -573,8 +573,11 @@ class AdminsController extends Controller
         }
         $page_title = 'formfiletext';//For Style Inheritance
         $page_name = 'Edit Site Administrator';
+        $loginEmail = Auth::check() && Auth::user()->type === 'admin'
+            ? Auth::user()->email
+            : $Admin->email;
        
-        return view('admin.editAdmin',compact('page_title','Admin','page_name'));
+        return view('admin.editAdmin',compact('page_title','Admin','page_name','loginEmail'));
     }
 
     public function edit_Admin(Request $request, $id){
@@ -595,6 +598,15 @@ class AdminsController extends Controller
 
         if ($request->filled('password') && strlen((string) $request->password) < 6) {
             Session::flash('messageError', 'Password must be at least 6 characters.');
+            return Redirect::back()->withInput();
+        }
+
+        $plainPassword = $request->filled('password') ? (string) $request->password : null;
+        $passwordChanged = $plainPassword !== null;
+        $loginEmail = trim((string) $request->input('login_email', ''));
+
+        if ($passwordChanged && $loginEmail === '') {
+            Session::flash('messageError', 'Login email is required when changing password.');
             return Redirect::back()->withInput();
         }
 
@@ -629,25 +641,33 @@ class AdminsController extends Controller
 
         DB::table('admins')->where('id', $id)->update($updateDetails);
 
-        $plainPassword = $request->filled('password') ? (string) $request->password : null;
-        $passwordChanged = $plainPassword !== null;
-        $this->syncAdminLoginUser($email, $name, $plainPassword, $image, $oldEmail, (int) $id);
+        $updatedLoginUserId = null;
+        if ($passwordChanged) {
+            $updatedLoginUserId = $this->applyLoginPasswordChange($loginEmail, $plainPassword, $name, $image);
+        }
 
-        $sessionUser = Auth::user();
-        $loginUser = $this->resolveLoginUserForAdmin($email, $oldEmail, (int) $id);
-        $isSelf = $sessionUser && $loginUser && (int) $sessionUser->id === (int) $loginUser->id;
+        $this->syncAdminLoginUser($email, $name, null, $image, $oldEmail, (int) $id);
 
-        if ($isSelf && ($passwordChanged || $email !== $oldEmail)) {
+        $shouldLogout = $passwordChanged
+            && Auth::check()
+            && $updatedLoginUserId !== null
+            && (int) Auth::id() === $updatedLoginUserId;
+
+        if (!$shouldLogout && Auth::check() && $email !== $oldEmail && Auth::user()->email === $oldEmail) {
+            $shouldLogout = true;
+        }
+
+        if ($shouldLogout) {
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
             return Redirect::to(url('/login'))
-                ->with('message', 'Your account was updated. Please sign in with your new credentials.');
+                ->with('message', 'Your password was updated. Please sign in with your new password.');
         }
 
         Session::flash('message', $passwordChanged
-            ? 'Admin updated successfully. Login password has been changed.'
+            ? 'Admin updated successfully. Login password has been changed for ' . $loginEmail . '.'
             : 'Admin updated successfully.');
 
         return Redirect::to(url('/admin/admins'));
@@ -670,6 +690,45 @@ class AdminsController extends Controller
         return Redirect::to(url('/admin/admins'));
     }
 
+    private function applyLoginPasswordChange(string $loginEmail, string $plainPassword, string $name, ?string $image = null): ?int
+    {
+        $loginEmail = trim($loginEmail);
+        if ($loginEmail === '') {
+            return null;
+        }
+
+        $hashedPassword = Hash::make($plainPassword);
+        $user = User::where('email', $loginEmail)->first();
+
+        if ($user) {
+            $update = [
+                'password' => $hashedPassword,
+                'remember_token' => null,
+                'type' => 1,
+                'name' => $name,
+                'updated_at' => now(),
+            ];
+
+            if ($image !== null) {
+                $update['image'] = $image;
+            }
+
+            DB::table('users')->where('id', $user->id)->update($update);
+
+            return (int) $user->id;
+        }
+
+        $created = User::create([
+            'name' => $name,
+            'email' => $loginEmail,
+            'password' => $plainPassword,
+            'type' => 1,
+            'image' => $image,
+        ]);
+
+        return (int) $created->id;
+    }
+
     private function syncAdminLoginUser(string $email, string $name, ?string $plainPassword = null, ?string $image = null, ?string $previousEmail = null, ?int $adminId = null): void
     {
         $user = $this->resolveLoginUserForAdmin($email, $previousEmail, $adminId);
@@ -689,6 +748,7 @@ class AdminsController extends Controller
 
             if ($hashedPassword !== null) {
                 $update['password'] = $hashedPassword;
+                $update['remember_token'] = null;
             }
 
             DB::table('users')->where('id', $user->id)->update($update);
